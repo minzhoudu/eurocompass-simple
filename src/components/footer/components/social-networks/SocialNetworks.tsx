@@ -9,7 +9,7 @@ export const SocialNetworks = () => {
     <div className="flex flex-col gap-5">
       <h2 className="text-2xl font-bold">Društvene mreže</h2>
 
-      <div className="flex justify-evenly">
+      <div className="flex justify-center lg:justify-evenly">
         <a
           href="https://www.facebook.com/eurocompasskrusevac"
           target="_blank"

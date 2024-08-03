@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import "./index.css";
+
 import { AppLayout } from "./layouts";
+import { HomePage } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <App />,
+        element: <HomePage />,
       },
     ],
   },

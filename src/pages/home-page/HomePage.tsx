@@ -1,4 +1,4 @@
-function App() {
+export const HomePage = () => {
   return (
     <>
       <div>
@@ -34,6 +34,4 @@ function App() {
       </div>
     </>
   );
-}
-
-export default App;
+};

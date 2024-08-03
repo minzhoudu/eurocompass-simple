@@ -6,33 +6,36 @@ import { DesktopNavBarLinks, MobileNavBarModal } from "./components";
 import { IoCloseSharp } from "react-icons/io5";
 
 export const Header = () => {
-  const [toggleNavBar, setToggleNavBar] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <nav className="z-10 flex h-20 w-3/4 items-center justify-between rounded-b-xl bg-[#2a4060] px-10">
-      <div>
-        <Link to="/" className="text-2xl font-bold">
-          {/* //TODO Add logo */}
-          EUROCOMPASS
-        </Link>
-      </div>
+    <>
+      <nav className="z-10 flex h-20 w-3/4 items-center justify-between rounded-b-xl bg-[#2a4060] px-10">
+        <div>
+          <Link to="/" className="text-2xl font-bold">
+            {/* //TODO Add logo */}
+            EUROCOMPASS
+          </Link>
+        </div>
 
-      {toggleNavBar ? (
-        <IoCloseSharp
-          size={25}
-          className="cursor-pointer lg:hidden"
-          onClick={() => setToggleNavBar(false)}
-        />
-      ) : (
-        <GiHamburgerMenu
-          size={25}
-          className="cursor-pointer lg:hidden"
-          onClick={() => setToggleNavBar(true)}
-        />
-      )}
+        {isNavOpen ? (
+          <IoCloseSharp
+            size={25}
+            className="cursor-pointer lg:hidden"
+            onClick={() => setIsNavOpen(false)}
+          />
+        ) : (
+          <GiHamburgerMenu
+            size={25}
+            className="cursor-pointer lg:hidden"
+            onClick={() => setIsNavOpen(true)}
+          />
+        )}
 
-      <DesktopNavBarLinks />
-      <MobileNavBarModal toggleNavBar={toggleNavBar} />
-    </nav>
+        <DesktopNavBarLinks />
+      </nav>
+
+      <MobileNavBarModal isOpen={isNavOpen} />
+    </>
   );
 };

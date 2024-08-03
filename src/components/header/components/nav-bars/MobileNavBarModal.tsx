@@ -1,25 +1,30 @@
 type MobileNavBarProps = {
-  toggleNavBar: boolean;
+  isOpen: boolean;
 };
 
 import { ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { NAV_LINKS } from "../../utils";
+import { NavLink } from "react-router-dom";
 
-const mountElement = document.getElementById("root")!;
-
-export const MobileNavBarModal = ({
-  toggleNavBar,
-}: MobileNavBarProps): ReactNode => {
+export const MobileNavBarModal = ({ isOpen }: MobileNavBarProps): ReactNode => {
   return (
-    <>
-      {createPortal(
-        <nav
-          className={`left-0 top-0 h-screen w-full bg-black opacity-70 blur-xl ${toggleNavBar ? "fixed" : "hidden"}`}
-        >
-          {toggleNavBar ? "Mobile NavBar open" : "Mobile NavBar closed"}
-        </nav>,
-        mountElement,
-      )}
-    </>
+    <div
+      className={`top-20 w-3/4 bg-[#2a4060] text-white ${isOpen ? "absolute" : "hidden"}`}
+    >
+      <ul className="flex flex-col">
+        {NAV_LINKS.map((link) => (
+          <li key={link.id} className="flex w-full">
+            <NavLink
+              to={link.path}
+              className={({ isActive }) =>
+                `w-full py-7 text-center text-xl font-bold transition-all duration-500 ease-in-out hover:bg-[#fff312c5] ${isActive ? "bg-[#fff312c5] text-black" : "text-white"}`
+              }
+            >
+              {link.name}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };

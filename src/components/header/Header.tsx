@@ -1,9 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
-import { NAV_LINKS } from "./utils";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { GiHamburgerMenu } from "react-icons/gi";
+
+import { DesktopNavBarLinks, MobileNavBarModal } from "./components";
+import { IoCloseSharp } from "react-icons/io5";
 
 export const Header = () => {
+  const [toggleNavBar, setToggleNavBar] = useState(false);
+
   return (
-    <nav className="flex h-20 w-3/4 items-center justify-between rounded-b-xl bg-[#2a4060] px-10">
+    <nav className="z-10 flex h-20 w-3/4 items-center justify-between rounded-b-xl bg-[#2a4060] px-10">
       <div>
         <Link to="/" className="text-2xl font-bold">
           {/* //TODO Add logo */}
@@ -11,21 +17,22 @@ export const Header = () => {
         </Link>
       </div>
 
-      <ul className="flex gap-10 text-2xl font-bold">
-        {NAV_LINKS.map((link) => (
-          <li key={link.id}>
-            <NavLink
-              to={link.path}
-              className={({ isActive }) =>
-                (isActive ? "bg-[#fff312c5] text-black" : "text-white") +
-                " rounded-lg px-4 py-2 transition-all duration-500 ease-in-out hover:bg-[#fff312c5] hover:bg-opacity-80 hover:text-black"
-              }
-            >
-              {link.name}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
+      {toggleNavBar ? (
+        <IoCloseSharp
+          size={25}
+          className="cursor-pointer lg:hidden"
+          onClick={() => setToggleNavBar(false)}
+        />
+      ) : (
+        <GiHamburgerMenu
+          size={25}
+          className="cursor-pointer lg:hidden"
+          onClick={() => setToggleNavBar(true)}
+        />
+      )}
+
+      <DesktopNavBarLinks />
+      <MobileNavBarModal toggleNavBar={toggleNavBar} />
     </nav>
   );
 };

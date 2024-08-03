@@ -11,7 +11,7 @@ export const SocialNetworks = () => {
 
       <div className="flex justify-evenly">
         <a
-          href="https://www.facebook.com"
+          href="https://www.facebook.com/eurocompasskrusevac"
           target="_blank"
           rel="noopener noreferrer"
           className={socialNetworkClasses}

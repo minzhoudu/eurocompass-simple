@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { navLinks } from "./utils";
+import { NAV_LINKS } from "./utils";
 
 export const Header = () => {
   return (
@@ -12,7 +12,7 @@ export const Header = () => {
       </div>
 
       <ul className="flex gap-10 text-2xl font-bold">
-        {navLinks.map((link) => (
+        {NAV_LINKS.map((link) => (
           <li key={link.id}>
             <NavLink
               to={link.path}

@@ -14,7 +14,7 @@ export const HomePageCarousel = () => {
       >
         {CAROUSEL_IMAGES.map((image) => {
           return (
-            <div className="h-96" key={image.id}>
+            <div className="h-[500px]" key={image.id}>
               <img
                 src={image.src}
                 className="h-full w-full object-cover"

@@ -11,7 +11,7 @@ export const HomePage = () => {
         <HomePageCarousel />
       </div>
 
-      <div className="flex gap-20">
+      <div className="flex flex-col gap-20 lg:flex-row">
         <div className="flex flex-col items-center gap-5 rounded-lg bg-[#fff312c5] p-5 text-xl font-bold text-black">
           <h2>Prevoz putnika na relaciji</h2>
 
@@ -33,8 +33,6 @@ export const HomePage = () => {
                 <li>17:30</li>
               </ul>
             </div>
-
-            <Devider />
 
             <div className="flex-1 border border-black p-3">
               <h3>Beograd</h3>

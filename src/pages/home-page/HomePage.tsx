@@ -38,6 +38,7 @@ export const HomePage = () => {
               <ol className="underline">
                 <li>09:40</li>
                 <li>12:50</li>
+                <li>18:00</li>
                 <li className="mt-1 border-b-2 border-dashed border-black"></li>
                 <li>nedeljom 21:00</li>
               </ol>

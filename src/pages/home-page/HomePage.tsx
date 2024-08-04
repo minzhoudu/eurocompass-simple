@@ -2,7 +2,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { HomePageCarousel } from "../../components/carousel";
-import { Devider } from "../../components/footer/components";
 
 export const HomePage = () => {
   return (

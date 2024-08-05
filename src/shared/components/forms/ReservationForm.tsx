@@ -50,7 +50,11 @@ export const ReservationForm = () => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="flex flex-col">
+    <form
+      onSubmit={handleFormSubmit}
+      className="flex flex-col"
+      data-netlify="true"
+    >
       {FORM_INPUTS.map((input) => (
         <FormInput
           key={input.id}

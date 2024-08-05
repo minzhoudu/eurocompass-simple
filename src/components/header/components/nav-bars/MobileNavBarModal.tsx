@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 export const MobileNavBarModal = ({ isOpen }: MobileNavBarProps): ReactNode => {
   return (
     <div
-      className={`top-20 z-10 w-full bg-[#2a4060] text-white ${isOpen ? "absolute" : "hidden"}`}
+      className={`top-20 z-10 w-full bg-[#2a4060] text-white ${isOpen ? "absolute" : "hidden"} lg:hidden`}
     >
       <ul className="flex flex-col">
         {NAV_LINKS.map((link) => (

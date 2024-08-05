@@ -5,17 +5,27 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 
 import { AppLayout } from "./layouts";
-import { HomePage } from "./pages";
+import { ErrorPage, HomePage, Reservations } from "./pages";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
         element: <HomePage />,
+        errorElement: <ErrorPage />,
       },
+      {
+        path: "rezervacije",
+        element: <Reservations />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "o-nama",
+      }
     ],
   },
 ]);

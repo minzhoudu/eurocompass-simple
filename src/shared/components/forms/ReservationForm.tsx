@@ -12,6 +12,7 @@ import {
 import { useSendEmail } from "../email";
 
 export const ReservationForm = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -29,6 +30,8 @@ export const ReservationForm = () => {
 
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    setLoading(true);
 
     const isFormInvalidValid = validateFormData(formData);
 
@@ -53,6 +56,8 @@ export const ReservationForm = () => {
     } catch (error) {
       alert("Došlo je do greške prilikom slanja emaila!");
       console.log("Došlo je do greške prilikom slanja emaila!", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -123,9 +128,10 @@ export const ReservationForm = () => {
 
       <button
         type="submit"
-        className="mb-5 mt-7 self-center rounded-lg bg-[#fff312c5] px-4 py-2 text-lg font-bold"
+        className="mb-5 mt-7 self-center rounded-lg bg-[#fff312c5] px-4 py-2 text-lg font-bold disabled:opacity-50"
+        disabled={loading}
       >
-        REZERVIŠI KARTU
+        {!loading ? "REZERVIŠI KARTU" : "SLANJE PODATAKA..."}
       </button>
     </form>
   );

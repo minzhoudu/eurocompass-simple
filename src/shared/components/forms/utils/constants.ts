@@ -49,9 +49,10 @@ export const CITIES = [
 ];
 
 export const KRUSEVAC_TIME_OPTIONS = ["07:00", "13:00", "17:30"];
-export const BEOGRAD_TIME_OPTIONS = [
+export const BEOGRAD_TIME_OPTIONS = ["09:40", "12:50", "18:00"];
+export const BEOGRAD_TIME_OPTIONS_WEEKEND = [
   "09:40",
   "12:50",
   "18:00",
-  "21:00 (nedeljom)",
+  "21:00",
 ];

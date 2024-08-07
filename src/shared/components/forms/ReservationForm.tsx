@@ -6,10 +6,10 @@ import {
   CITIES,
   FORM_INPUTS,
   FormData,
-  getFormattedDate,
   getTravelTimes,
   validateFormData,
 } from "./utils";
+import { useSendEmail } from "../email";
 
 export const ReservationForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -22,7 +22,12 @@ export const ReservationForm = () => {
     note: "",
   });
 
-  const handleFormSubmit = (event: FormEvent) => {
+  const { sendEmail } = useSendEmail({
+    formData,
+    subject: "Rezervacija karte",
+  });
+
+  const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     const isFormInvalidValid = validateFormData(formData);
@@ -30,6 +35,24 @@ export const ReservationForm = () => {
     if (isFormInvalidValid) {
       alert("Molimo Vas popunite sva polja!");
       return;
+    }
+
+    try {
+      await sendEmail();
+
+      alert("Uspešno ste rezervisali kartu!");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        startingLocation: "",
+        date: "",
+        time: "",
+        note: "",
+      });
+    } catch (error) {
+      alert("Došlo je do greške prilikom slanja emaila!");
+      console.log("Došlo je do greške prilikom slanja emaila!", error);
     }
   };
 
@@ -41,10 +64,7 @@ export const ReservationForm = () => {
     setFormData((prev) => {
       return {
         ...prev,
-        [event.target.name]:
-          event.target.name === "date"
-            ? getFormattedDate(event.target.value)
-            : event.target.value,
+        [event.target.name]: event.target.value,
       };
     });
   };
@@ -67,6 +87,7 @@ export const ReservationForm = () => {
       <FormSelect
         name="startingLocation"
         text="Izaberite polaznu lokaciju"
+        value={formData.startingLocation}
         options={CITIES}
         onChange={onChange}
         required
@@ -76,6 +97,7 @@ export const ReservationForm = () => {
         name="date"
         text="Izaberite datum polaska"
         type="date"
+        value={formData.date}
         onChange={onChange}
         required
       />
@@ -84,6 +106,7 @@ export const ReservationForm = () => {
         name="time"
         text="Izaberite vreme polaska"
         onChange={onChange}
+        value={formData.time}
         options={getTravelTimes(formData.startingLocation)}
         disabled={!formData.startingLocation}
         required
@@ -93,6 +116,7 @@ export const ReservationForm = () => {
         name="note"
         text="Napomena"
         type="textarea"
+        value={formData.note}
         placeholder="Unesite napomenu"
         onChange={onChange}
       />

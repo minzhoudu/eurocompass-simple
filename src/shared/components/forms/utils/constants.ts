@@ -19,7 +19,6 @@ export const FORM_INPUTS: FormInputType[] = [
     text: "Prezime i ime",
     placeholder: "Unesite svoje prezime i ime",
     required: true,
-    pattern: "^[a-zA-Z]+(?: [a-zA-Z]+)*$",
     errorMessage: "Ovo polje je obavezno",
   },
   {

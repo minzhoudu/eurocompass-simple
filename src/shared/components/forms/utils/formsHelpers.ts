@@ -43,3 +43,19 @@ export const validateFormData = (formData: FormData) => {
 
   return Object.values(requiredFormData).some((value) => !value);
 };
+
+export const formatFormValues = (formData: FormData) => {
+  const copyFormData = { ...formData };
+
+  Object.keys(copyFormData).forEach((key) => {
+    if (typeof copyFormData[key] === "string") {
+      copyFormData[key] = copyFormData[key].trim();
+    }
+
+    if (key === "date") {
+      copyFormData[key] = getFormattedDate(copyFormData[key]);
+    }
+  });
+
+  return copyFormData;
+};

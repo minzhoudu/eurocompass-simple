@@ -53,11 +53,13 @@ const handler: Handler = async (event) => {
 
     await transporter.sendMail(mailOptions);
 
+    console.log("Email sent successfully by user:", formData.email);
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Email sent successfully" }),
     };
   } catch (error) {
+    console.error("Error sending email:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Internal Server Error:", error }),

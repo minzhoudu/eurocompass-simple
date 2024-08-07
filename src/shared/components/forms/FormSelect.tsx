@@ -20,7 +20,7 @@ export const FormSelect = ({
   onChange,
 }: FormSelectProps) => {
   return (
-    <div className="mt-5 flex flex-col items-center gap-2">
+    <div className="mt-5 flex flex-col gap-2">
       <label className="text-lg">
         {text} {required && <span className="text-red-700">*</span>}
       </label>

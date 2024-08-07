@@ -112,8 +112,8 @@ export const ReservationForm = () => {
         text="Izaberite vreme polaska"
         onChange={onChange}
         value={formData.time}
-        options={getTravelTimes(formData.startingLocation)}
-        disabled={!formData.startingLocation}
+        options={getTravelTimes(formData.startingLocation, formData.date)}
+        disabled={!formData.startingLocation || !formData.date}
         required
       />
 

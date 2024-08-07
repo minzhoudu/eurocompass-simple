@@ -1,5 +1,6 @@
 import {
   BEOGRAD_TIME_OPTIONS,
+  BEOGRAD_TIME_OPTIONS_WEEKEND,
   FORM_INPUTS,
   KRUSEVAC_TIME_OPTIONS,
 } from "./constants";
@@ -10,13 +11,18 @@ export type FormData = {
   [key: FormInputNames]: string;
 };
 
-export const getTravelTimes = (startingLocation: string) => {
+export const getTravelTimes = (startingLocation: string, date: string) => {
   if (startingLocation.includes("Kruševac")) {
     return KRUSEVAC_TIME_OPTIONS;
   }
 
   if (startingLocation.includes("Beograd")) {
-    return BEOGRAD_TIME_OPTIONS;
+    const choosenDate = new Date(date);
+    const isSunday = choosenDate.getDay() === 0;
+
+    if (!isSunday) return BEOGRAD_TIME_OPTIONS;
+
+    return BEOGRAD_TIME_OPTIONS_WEEKEND;
   }
 
   return [];

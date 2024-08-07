@@ -35,7 +35,10 @@ export const Header = () => {
         <DesktopNavBarLinks />
       </nav>
 
-      <MobileNavBarModal isOpen={isNavOpen} />
+      <MobileNavBarModal
+        isOpen={isNavOpen}
+        closeNav={() => setIsNavOpen(false)}
+      />
     </>
   );
 };

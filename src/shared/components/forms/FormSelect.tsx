@@ -4,6 +4,7 @@ type FormSelectProps = {
   options: string[];
   name: string;
   text: string;
+  value?: string;
   required?: boolean;
   disabled?: boolean;
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
@@ -13,6 +14,7 @@ export const FormSelect = ({
   name,
   options,
   text,
+  value,
   required,
   disabled,
   onChange,
@@ -25,7 +27,7 @@ export const FormSelect = ({
 
       <select
         name={name}
-        defaultValue=""
+        value={value}
         disabled={disabled}
         onChange={onChange}
         className="rounded-lg border px-1 py-2"

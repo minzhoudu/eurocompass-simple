@@ -5,7 +5,12 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 
 import { AppLayout } from "./layouts";
-import { ErrorPage, HomePage, Reservations } from "./pages";
+import {
+  ErrorPage,
+  HomePage,
+  PageUnderConstruction,
+  Reservations,
+} from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +30,8 @@ const router = createBrowserRouter([
       },
       {
         path: "o-nama",
-      }
+        element: <PageUnderConstruction />,
+      },
     ],
   },
 ]);

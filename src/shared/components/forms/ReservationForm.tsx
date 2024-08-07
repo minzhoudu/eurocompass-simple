@@ -67,6 +67,13 @@ export const ReservationForm = () => {
     >,
   ) => {
     setFormData((prev) => {
+      if (event.target.name === "date") {
+        return {
+          ...prev,
+          [event.target.name]: event.target.value,
+          time: "",
+        };
+      }
       return {
         ...prev,
         [event.target.name]: event.target.value,

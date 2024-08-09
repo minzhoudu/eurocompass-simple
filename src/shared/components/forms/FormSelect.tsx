@@ -21,7 +21,7 @@ export const FormSelect = ({
 }: FormSelectProps) => {
   return (
     <div className="mt-5 flex flex-col gap-2">
-      <label className="text-lg">
+      <label className="text-lg font-semibold">
         {text} {required && <span className="text-red-700">*</span>}
       </label>
 

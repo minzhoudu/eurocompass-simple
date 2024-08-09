@@ -1,11 +1,20 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import { Helmet } from "react-helmet";
+
 import { HomePageCarousel } from "../../components/carousel";
 
 export const HomePage = () => {
   return (
     <>
+      <Helmet>
+        <title>Eurocompass doo | Početna stranica</title>
+        <meta
+          name="description"
+          content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac"
+        />
+      </Helmet>
       <div className="w-full">
         <HomePageCarousel />
       </div>

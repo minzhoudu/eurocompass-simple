@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Allow: /rezervacije
+Allow: /o-nama

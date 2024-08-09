@@ -4,7 +4,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 
 import { DesktopNavBarLinks, MobileNavBarModal } from "./components";
-import logo from "/images/eurocompass_logo.png";
+import logo from "/images/eurocompass_logo.webp";
 
 export const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);

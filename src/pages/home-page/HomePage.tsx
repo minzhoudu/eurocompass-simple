@@ -12,7 +12,7 @@ export const HomePage = () => {
         <title>Eurocompass doo | Početna stranica</title>
         <meta
           name="description"
-          content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac"
+          content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Autobus Kruševac - Beograd i Beograd - Kruševac"
         />
       </Helmet>
       <div className="w-full">

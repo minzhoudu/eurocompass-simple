@@ -107,6 +107,7 @@ export const ReservationForm = () => {
 
       <FormInput
         name="date"
+        placeholder="Izaberite datum polaska"
         text="Izaberite datum polaska"
         type="date"
         value={formData.date}

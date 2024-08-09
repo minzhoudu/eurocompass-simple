@@ -26,7 +26,7 @@ export const FormInput = ({
 }: FormInputProps) => {
   return (
     <div className="mt-6 flex flex-col">
-      <label htmlFor={name} className="text-lg">
+      <label htmlFor={name} className="text-lg font-semibold">
         {text} {required && <span className="text-red-700">*</span>}
       </label>
 

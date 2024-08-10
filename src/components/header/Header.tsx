@@ -11,7 +11,7 @@ export const Header = () => {
 
   return (
     <>
-      <nav className="z-10 flex h-20 w-full items-center justify-between rounded-b-xl bg-primaryBlue px-10 xl:w-3/4">
+      <nav className="z-10 flex h-20 w-full items-center justify-between bg-primaryBlue px-10 xl:w-3/4 xl:rounded-b-xl">
         <Link to="/" className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6">
           <img
             src={logo}

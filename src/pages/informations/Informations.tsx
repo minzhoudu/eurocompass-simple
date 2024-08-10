@@ -12,11 +12,11 @@ export const Informations = () => {
         />
       </Helmet>
 
-      <div className="my-10 flex flex-col self-center rounded-lg bg-primaryYellow px-5 py-3 text-center text-lg font-bold lg:text-left lg:text-2xl">
+      <div className="my-10 flex flex-col self-center rounded-lg bg-primaryYellow px-5 py-3 text-center text-xl font-bold lg:text-left lg:text-2xl">
         <h1>Informacije o cenama i polascima</h1>
       </div>
 
-      <div className="flex w-full flex-col gap-2 rounded-lg bg-primaryBlue p-5 text-center text-sm font-semibold text-white lg:text-left lg:text-xl">
+      <div className="flex w-full flex-col gap-2 rounded-lg bg-primaryBlue p-5 text-center font-semibold text-white lg:text-left lg:text-xl">
         <p>
           Petkom u <TravelTime>13:00</TravelTime> iz Kruševca povratna karta je{" "}
           <Price>2.050,00 RSD</Price>
@@ -31,7 +31,7 @@ export const Informations = () => {
         </p>
       </div>
 
-      <div className="flex w-full flex-col gap-3 rounded-lg bg-primaryBlue p-5 text-center text-sm font-semibold lg:text-left lg:text-xl">
+      <div className="flex w-full flex-col gap-3 rounded-lg bg-primaryBlue p-5 text-center font-semibold lg:text-left lg:text-xl">
         <h2 className="self-center rounded-md bg-primaryYellow px-3 py-1 text-lg font-bold tracking-wide lg:text-xl">
           Akcije
         </h2>

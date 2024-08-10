@@ -1,6 +1,10 @@
 import { Helmet } from "react-helmet";
 import { Devider, Price, TravelTime } from "../../shared";
-import { InformationsContainer, InformationsParagraph } from "../../components";
+import {
+  InformationsContainer,
+  InformationsParagraph,
+  InformationTitle,
+} from "../../components";
 
 export const Informations = () => {
   return (
@@ -18,6 +22,7 @@ export const Informations = () => {
       </div>
 
       <InformationsContainer textCenter>
+        <InformationTitle>Specijalne ponude</InformationTitle>
         <InformationsParagraph>
           Petkom u <TravelTime>13:00</TravelTime> iz Kruševca povratna karta je{" "}
           <Price>2.050,00 RSD</Price>
@@ -33,9 +38,7 @@ export const Informations = () => {
       </InformationsContainer>
 
       <InformationsContainer textCenter>
-        <h2 className="self-center rounded-md bg-primaryYellow px-3 py-1 text-lg font-bold tracking-wide lg:text-xl">
-          Akcije
-        </h2>
+        <InformationTitle>Akcije</InformationTitle>
         <InformationsParagraph>
           Uz dve povratne karte od <Price>2.300,00 RSD</Price> treća povrtna
           karta je za
@@ -52,9 +55,9 @@ export const Informations = () => {
       </InformationsContainer>
 
       <InformationsContainer>
-        <h2 className="gap-3 self-center rounded-md border-2 border-red-700 bg-primaryYellow px-3 py-1 font-bold">
+        <InformationTitle className="border-2 border-red-700">
           VAŽNO
-        </h2>
+        </InformationTitle>
         <InformationsParagraph className="text-center underline underline-offset-2">
           KARTE NA BAS-u KUPUJETE DO STALAĆA A MI VAS VOZIMO DO KRUŠEVCA{" "}
         </InformationsParagraph>

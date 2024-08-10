@@ -20,7 +20,7 @@ export const HomePage = () => {
       </div>
 
       <div className="flex flex-col gap-20 lg:flex-row">
-        <div className="flex flex-col items-center gap-5 rounded-lg bg-[#fff312c5] p-5 text-xl font-bold text-black">
+        <div className="flex flex-col items-center gap-5 rounded-lg bg-primaryYellow p-5 text-xl font-bold text-black">
           <h2>Prevoz putnika na relaciji</h2>
 
           <div className="mt-7 flex flex-col gap-10">
@@ -29,7 +29,7 @@ export const HomePage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 rounded-lg bg-[#fff312c5] p-5 text-center text-xl font-bold text-black">
+        <div className="flex flex-col gap-5 rounded-lg bg-primaryYellow p-5 text-center text-xl font-bold text-black">
           <h2>Polasci:</h2>
 
           <div className="flex flex-row items-center gap-10">

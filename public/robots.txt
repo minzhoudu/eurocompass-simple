@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Allow: /rezervacije
+Allow: /informacije
 Allow: /o-nama

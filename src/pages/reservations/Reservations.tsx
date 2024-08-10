@@ -11,7 +11,7 @@ export const Reservations = () => {
           content="Rezervacija karte za prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac"
         />
       </Helmet>
-      <div className="mb-5 text-center text-2xl font-bold underline underline-offset-8">
+      <div className="mb-5 rounded-lg bg-primaryYellow px-5 py-3 text-center text-2xl font-bold">
         <h1>Rezervacija karte</h1>
       </div>
 

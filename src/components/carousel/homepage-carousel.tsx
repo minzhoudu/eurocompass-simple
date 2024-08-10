@@ -19,7 +19,7 @@ export const HomePageCarousel = () => {
                 src={image.src}
                 className="h-full w-full object-cover"
                 alt={image.alt}
-                loading="lazy"
+                loading={image.id !== 1 ? "lazy" : "eager"}
               />
             </div>
           );

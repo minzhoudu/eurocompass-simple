@@ -1,13 +1,22 @@
+import { Helmet } from "react-helmet";
 import { Price, TravelTime } from "../../shared";
 
 export const Informations = () => {
   return (
-    <div className="flex w-2/3 flex-col items-center gap-14">
-      <div className="my-10 flex flex-col self-center rounded-lg bg-primaryYellow px-5 py-3 text-2xl font-semibold">
+    <div className="flex w-3/4 flex-col items-center gap-14 lg:w-2/3">
+      <Helmet>
+        <title>Eurocompass doo | Informacije</title>
+        <meta
+          name="description"
+          content="Informacije o cenama i polascima autobusa Eurocompass"
+        />
+      </Helmet>
+
+      <div className="my-10 flex flex-col self-center rounded-lg bg-primaryYellow px-5 py-3 text-center text-lg font-semibold lg:text-left lg:text-2xl">
         <h1>Informacije o cenama i polascima</h1>
       </div>
 
-      <div className="flex w-full flex-col gap-2 rounded-lg bg-primaryBlue p-5 text-xl font-semibold text-white">
+      <div className="flex w-full flex-col gap-2 rounded-lg bg-primaryBlue p-5 text-sm font-semibold text-white lg:text-xl">
         <p>
           Petkom u <TravelTime>13:00</TravelTime> iz Kruševca povratna karta je{" "}
           <Price>2.050,00 RSD</Price>
@@ -19,8 +28,8 @@ export const Informations = () => {
         </p>
       </div>
 
-      <div className="flex w-full flex-col gap-3 rounded-lg bg-primaryBlue p-5 text-xl font-semibold">
-        <h2 className="self-center rounded-md bg-primaryYellow px-3 py-1 font-bold tracking-wide">
+      <div className="flex w-full flex-col gap-3 rounded-lg bg-primaryBlue p-5 text-sm font-semibold lg:text-xl">
+        <h2 className="self-center rounded-md bg-primaryYellow px-3 py-1 text-lg font-bold tracking-wide lg:text-xl">
           Akcije
         </h2>
         <p className="text-white">
@@ -35,11 +44,11 @@ export const Informations = () => {
         </p>
       </div>
 
-      <div className="flex w-full flex-col items-center gap-2 rounded-lg bg-primaryBlue p-5 text-xl font-semibold">
+      <div className="border-primaryYellow flex w-full flex-col items-center gap-2 rounded-lg border-4 bg-primaryBlue p-5 font-semibold lg:text-xl">
         <h2 className="gap-3 rounded-md border-2 border-red-700 bg-primaryYellow px-3 py-1 font-bold">
           VAŽNO
         </h2>
-        <p className="text-white underline underline-offset-2">
+        <p className="text-center text-white underline underline-offset-2">
           KARTE NA BAS-u KUPUJETE DO STALAĆA A MI VAS VOZIMO DO KRUŠEVCA{" "}
         </p>
       </div>

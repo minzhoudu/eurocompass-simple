@@ -11,8 +11,8 @@ export const Header = () => {
 
   return (
     <>
-      <nav className="z-10 flex h-20 w-full items-center justify-between rounded-b-xl bg-primaryBlue px-10 lg:w-3/4">
-        <Link to="/" className="w-1/2 md:w-1/3 lg:w-1/5 xl:w-1/6">
+      <nav className="z-10 flex h-20 w-full items-center justify-between rounded-b-xl bg-primaryBlue px-10 xl:w-3/4">
+        <Link to="/" className="w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6">
           <img
             src={logo}
             alt="eurocompass_logo"

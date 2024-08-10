@@ -6,6 +6,14 @@ export default {
       fontFamily: {
         sans: ["Exo", "sans-serif"],
       },
+      backgroundColor: {
+        primaryYellow: "#fff312c5",
+        primaryBlue: "#2a4060",
+      },
+      textColor: {
+        primaryYellow: "#fff312c5",
+        primaryBlue: "#2a4060",
+      },
     },
   },
   plugins: [

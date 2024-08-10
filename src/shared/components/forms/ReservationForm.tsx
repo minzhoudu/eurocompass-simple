@@ -136,7 +136,7 @@ export const ReservationForm = () => {
 
       <button
         type="submit"
-        className="mb-5 mt-7 self-center rounded-lg bg-[#fff312c5] px-4 py-2 text-lg font-bold disabled:opacity-50"
+        className="mb-5 mt-7 self-center rounded-lg bg-primaryYellow px-4 py-2 text-lg font-bold disabled:opacity-50"
         disabled={loading}
       >
         {!loading ? "REZERVIŠI KARTU" : "SLANJE PODATAKA..."}

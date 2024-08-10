@@ -8,6 +8,7 @@ import { AppLayout } from "./layouts";
 import {
   ErrorPage,
   HomePage,
+  Informations,
   PageUnderConstruction,
   Reservations,
 } from "./pages";
@@ -26,6 +27,11 @@ const router = createBrowserRouter([
       {
         path: "rezervacije",
         element: <Reservations />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "informacije",
+        element: <Informations />,
         errorElement: <ErrorPage />,
       },
       {

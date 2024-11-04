@@ -1,12 +1,10 @@
-// import { Helmet } from "react-helmet";
-// import { ReservationForm } from "../../shared";
+import { Helmet } from "react-helmet";
+import { ReservationForm } from "../../shared";
 
 export const Reservations = () => {
-  window.location.href = "https://www.eurocompass.rs/";
-
   return (
     <div className="mt-10">
-      {/* <Helmet>
+      <Helmet>
         <title>Eurocompass doo | Rezervacija karte</title>
         <meta
           name="description"
@@ -17,11 +15,7 @@ export const Reservations = () => {
         <h1>Rezervacija karte</h1>
       </div>
 
-      <ReservationForm /> */}
-
-      <h1 className="h-screen text-3xl font-bold text-white">
-        Prebacivanje na stari sajt
-      </h1>
+      <ReservationForm />
     </div>
   );
 };

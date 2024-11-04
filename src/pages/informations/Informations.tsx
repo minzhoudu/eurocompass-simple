@@ -13,7 +13,7 @@ export const Informations = () => {
         <title>Eurocompass doo | Informacije</title>
         <meta
           name="description"
-          content="Informacije o cenama i polascima autobusa Eurocompass"
+          content="Informacije o cenama karata, specijalnim ponudama i polascima autobusa Eurocompass. Pronađite sve potrebne informacije o destinacijama, polascima i cenama na našoj stranici."
         />
       </Helmet>
 
@@ -33,7 +33,7 @@ export const Informations = () => {
           VAŽNO
         </InformationTitle>
         <InformationsParagraph className="text-center underline underline-offset-2">
-          KARTE NA BAS-u KUPUJETE DO STALAĆA A MI VAS VOZIMO DO KRUŠEVCA{" "}
+          KARTE NA BAS-u KUPUJETE DO STALAĆA A MI VAS VOZIMO DO KRUŠEVCA
         </InformationsParagraph>
       </InformationsContainer>
     </div>

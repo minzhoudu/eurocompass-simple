@@ -31,7 +31,7 @@ const handler: Handler = async (event) => {
 
     const mailOptions = {
       from: formData.email,
-      to: "paja98100@gmail.com",
+      to: process.env.SMTP_EMAIL_USER,
       replyTo: formData.email,
       subject: subject,
       html: `

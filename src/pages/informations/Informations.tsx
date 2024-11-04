@@ -1,10 +1,10 @@
 import { Helmet } from "react-helmet";
-import { Devider, Price, TravelTime } from "../../shared";
 import {
   InformationsContainer,
   InformationsParagraph,
   InformationTitle,
 } from "../../components";
+import { Price } from "../../shared";
 
 export const Informations = () => {
   return (
@@ -22,35 +22,9 @@ export const Informations = () => {
       </div>
 
       <InformationsContainer textCenter>
-        <InformationTitle>Specijalne ponude</InformationTitle>
-        <InformationsParagraph>
-          Petkom u <TravelTime>13:00</TravelTime> iz Kruševca povratna karta je{" "}
-          <Price>2.050,00 RSD</Price>
-        </InformationsParagraph>
-
-        <Devider />
-
-        <InformationsParagraph>
-          Nedeljom iz Kruševca ujutru u <TravelTime>7:00</TravelTime> povratak
-          iz Beograda u <TravelTime>21:00</TravelTime> povratna karte je{" "}
-          <Price>1.630,00 RSD</Price>
-        </InformationsParagraph>
-      </InformationsContainer>
-
-      <InformationsContainer textCenter>
-        <InformationTitle>Akcije</InformationTitle>
-        <InformationsParagraph>
-          Uz dve povratne karte od <Price>2.300,00 RSD</Price> treća povrtna
-          karta je za
-          <Price>2.050,00 RSD</Price>
-        </InformationsParagraph>
-
-        <Devider />
-
-        <InformationsParagraph>
-          Uz tri studentske karte od
-          <Price> 1.880,00 RSD</Price>
-          četvrta je za <Price>1.550,00 RSD</Price>
+        <InformationTitle>Cene karata</InformationTitle>
+        <InformationsParagraph className="text-center">
+          Redovna cena karte je <Price>2.600,00 RSD</Price>
         </InformationsParagraph>
       </InformationsContainer>
 

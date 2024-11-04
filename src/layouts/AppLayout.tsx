@@ -3,7 +3,7 @@ import { Header, Footer, Main } from "../components";
 
 export const AppLayout = () => {
   return (
-    <main className="flex flex-col items-center gap-5 bg-slate-400">
+    <main className="flex min-h-screen flex-col items-center gap-5 bg-slate-400">
       <Header />
 
       <Main>

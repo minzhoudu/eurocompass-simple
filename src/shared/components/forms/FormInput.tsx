@@ -1,4 +1,4 @@
-import { ChangeEvent, HTMLInputTypeAttribute } from "react";
+import { ChangeEvent, FocusEvent, HTMLInputTypeAttribute, useRef } from "react";
 import { getCurrentDate } from "./utils";
 
 type FormInputProps = {
@@ -24,6 +24,13 @@ export const FormInput = ({
   placeholder,
   type,
 }: FormInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.target.type === "date" && e.target.showPicker) {
+      e.target.showPicker();
+    }
+  };
   return (
     <div className="mt-6 flex flex-col">
       <label htmlFor={name} className="text-lg font-semibold">
@@ -53,6 +60,8 @@ export const FormInput = ({
           pattern={pattern}
           onChange={onChange}
           className="mt-2 appearance-none rounded-lg p-2 text-center invalid:border invalid:border-red-600 invalid:text-red-600 focus:outline-none focus:invalid:border-red-600 focus:invalid:ring-red-600"
+          ref={inputRef}
+          onFocus={handleFocus}
         />
       )}
     </div>

@@ -5,13 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 
 import { AppLayout } from "./layouts";
-import {
-  ErrorPage,
-  HomePage,
-  Informations,
-  PageUnderConstruction,
-  Reservations,
-} from "./pages";
+import { ErrorPage, HomePage, Informations, Reservations } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -33,10 +27,6 @@ const router = createBrowserRouter([
         path: "informacije",
         element: <Informations />,
         errorElement: <ErrorPage />,
-      },
-      {
-        path: "o-nama",
-        element: <PageUnderConstruction />,
       },
     ],
   },

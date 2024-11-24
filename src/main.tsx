@@ -1,17 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 
 import "./index.css";
 
 import { AppLayout } from "./layouts";
-import {
-  ErrorPage,
-  HomePage,
-  Informations,
-  PageUnderConstruction,
-  Reservations,
-} from "./pages";
+import { ErrorPage, HomePage, Informations, Reservations } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -35,8 +33,8 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
       },
       {
-        path: "o-nama",
-        element: <PageUnderConstruction />,
+        path: "*",
+        element: <Navigate to="/" replace />,
       },
     ],
   },

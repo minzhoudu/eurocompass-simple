@@ -83,6 +83,7 @@ export const ReservationForm = () => {
 
   return (
     <form
+      name="reservation-form"
       onSubmit={handleFormSubmit}
       className="flex flex-col"
       data-netlify="true"

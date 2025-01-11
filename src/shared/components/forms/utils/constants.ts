@@ -44,7 +44,7 @@ export const FORM_INPUTS: FormInputType[] = [
 export const CITIES = [
   "Kruševac - Glavna autobuska stanica",
   "Kruševac - Gornja pijaca",
-  "Kruševac - Polazna stanica Varvarin",
+  //TODO "Kruševac - Polazna stanica Varvarin", check if this is needed?
   "Beograd - Glavna autobuska stanica",
   "Beograd - Autokomanda",
 ];

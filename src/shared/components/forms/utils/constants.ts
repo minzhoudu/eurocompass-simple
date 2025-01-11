@@ -44,6 +44,7 @@ export const FORM_INPUTS: FormInputType[] = [
 export const CITIES = [
   "Kruševac - Glavna autobuska stanica",
   "Kruševac - Gornja pijaca",
+  "Kruševac - Polazna stanica Varvarin",
   "Beograd - Glavna autobuska stanica",
   "Beograd - Autokomanda",
 ];

@@ -45,6 +45,7 @@ const handler: Handler = async (event) => {
                 <p style="margin: 10px 0;"><strong style="color: #333;">Polazna lokacija:</strong> ${formData.startingLocation}</p>
                 <p style="margin: 10px 0;"><strong style="color: #333;">Datum polaska:</strong> ${formData.date}</p>
                 <p style="margin: 10px 0;"><strong style="color: #333;">Vreme polaska:</strong> ${formData.time}</p>
+                <p style="margin: 10px 0;"><strong style="color: #333;">Broj mesta:</strong> ${formData.numberOfTickets}</p>
                 <p style="margin: 10px 0;"><strong style="color: #333;">Napomena:</strong> ${formData.note}</p>
                 </div>
             </body>

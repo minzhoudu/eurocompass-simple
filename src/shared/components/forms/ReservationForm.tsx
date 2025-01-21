@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 
+import { useSendEmail } from "../email";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import {
@@ -9,7 +10,6 @@ import {
   getTravelTimes,
   validateFormData,
 } from "./utils";
-import { useSendEmail } from "../email";
 
 export const ReservationForm = () => {
   const [loading, setLoading] = useState(false);
@@ -20,6 +20,7 @@ export const ReservationForm = () => {
     startingLocation: "",
     date: "",
     time: "",
+    numberOfTickets: "1",
     note: "",
   });
 
@@ -51,6 +52,7 @@ export const ReservationForm = () => {
         startingLocation: "",
         date: "",
         time: "",
+        numberOfTickets: "1",
         note: "",
       });
     } catch (error) {
@@ -58,6 +60,28 @@ export const ReservationForm = () => {
       console.log("Došlo je do greške prilikom slanja emaila!", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleNumberOfTickets = (operation: "add" | "remove") => {
+    if (operation === "add") {
+      setFormData((prev) => {
+        return {
+          ...prev,
+          numberOfTickets: (Number(prev.numberOfTickets) + 1).toString(),
+        };
+      });
+    }
+
+    if (operation === "remove") {
+      setFormData((prev) => {
+        if (Number(prev.numberOfTickets) === 1) return prev;
+
+        return {
+          ...prev,
+          numberOfTickets: (Number(prev.numberOfTickets) - 1).toString(),
+        };
+      });
     }
   };
 
@@ -74,6 +98,7 @@ export const ReservationForm = () => {
           time: "",
         };
       }
+
       return {
         ...prev,
         [event.target.name]: event.target.value,
@@ -125,6 +150,33 @@ export const ReservationForm = () => {
         disabled={!formData.startingLocation || !formData.date}
         required
       />
+
+      <FormInput
+        name="numberOfTickets"
+        text="Broj mesta"
+        type="number"
+        value={formData.numberOfTickets}
+        placeholder="Unesite količinu karata za rezervaciju"
+        onChange={onChange}
+        required
+      />
+
+      <div className="m-auto mt-1 flex w-4/5 justify-center gap-2">
+        <button
+          type="button"
+          className="rounded-lg border-2 px-16 text-3xl text-white"
+          onClick={() => handleNumberOfTickets("remove")}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border-2 px-16 text-3xl text-white"
+          onClick={() => handleNumberOfTickets("add")}
+        >
+          +
+        </button>
+      </div>
 
       <FormInput
         name="note"

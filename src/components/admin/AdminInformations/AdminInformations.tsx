@@ -91,7 +91,12 @@ export const AdminInformations = () => {
                 id="importantInfo"
                 name="importantInfo"
                 className="w-full rounded-md border border-primaryBlue px-2 py-1"
-                rows={data?.info?.importantInfo.length || 1}
+                rows={
+                  data?.info?.importantInfo.length &&
+                  data?.info?.importantInfo.length > 3
+                    ? data?.info?.importantInfo.length
+                    : 4
+                }
                 defaultValue={importantInformations}
               />
               <p className="mt-2 self-center rounded-lg bg-primaryBlue px-3 py-1 text-center text-xs font-semibold text-green-400">

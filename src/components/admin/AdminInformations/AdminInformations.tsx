@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AiOutlineLoading } from "react-icons/ai";
 import axios from "../../../config/axiosInstance";
 import { Information, InformationResponse } from "../../../shared";
 
@@ -11,7 +12,7 @@ export const AdminInformations = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isError, isPending } = useMutation({
     mutationKey: ["updateInformation"],
     mutationFn: async (updatedInfo: Information) => {
       await axios.patch("/information", updatedInfo);
@@ -104,9 +105,19 @@ export const AdminInformations = () => {
           </div>
         </div>
 
-        <button className="self-center rounded-lg border border-primaryBlue px-4 py-2 font-semibold text-primaryBlue transition-colors hover:bg-primaryBlue hover:text-white">
-          Sačuvaj promene
+        <button
+          disabled={isPending}
+          className="flex items-center gap-5 self-center rounded-lg border border-primaryBlue px-4 py-2 font-semibold text-primaryBlue transition-colors hover:bg-primaryBlue hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-primaryBlue"
+        >
+          Sačuvaj promene{" "}
+          {isPending && <AiOutlineLoading className="animate-spin" />}
         </button>
+
+        {isError && (
+          <p className="animate-bounce text-center font-bold text-red-500">
+            Došlo je do greške pri čuvanju podataka
+          </p>
+        )}
       </form>
     </div>
   );

@@ -49,7 +49,7 @@ export const AdminLogin = () => {
   }, [status, navigate]);
 
   return (
-    <main className="flex h-screen w-screen items-center justify-center bg-gray-600">
+    <main className="flex h-screen w-screen items-center justify-center bg-gray-400">
       <div className="flex flex-col gap-5 rounded-xl bg-primaryBlue p-10 shadow-lg shadow-black">
         <h1 className="text-center text-2xl font-bold text-white">
           Admin Login

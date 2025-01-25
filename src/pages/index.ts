@@ -4,3 +4,4 @@ export * from "./error-page";
 export * from "./page-under-construction";
 export * from "./about";
 export * from "./informations";
+export * from "./admin-pages";

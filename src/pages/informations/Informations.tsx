@@ -4,9 +4,20 @@ import {
   InformationsParagraph,
   InformationTitle,
 } from "../../components";
-import { Price } from "../../shared";
+import { InformationResponse, Price } from "../../shared";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../../config/axiosInstance";
 
 export const Informations = () => {
+  const { data, isError } = useQuery({
+    queryKey: ["information"],
+    queryFn: async () => {
+      const { data } =
+        await axiosInstance.get<InformationResponse>("/information");
+      return data;
+    },
+  });
+
   return (
     <div className="flex w-3/4 flex-col items-center gap-14 lg:w-2/3">
       <Helmet>
@@ -21,21 +32,39 @@ export const Informations = () => {
         <h1>Informacije o cenama i polascima</h1>
       </div>
 
-      <InformationsContainer textCenter>
-        <InformationTitle>Cene karata</InformationTitle>
-        <InformationsParagraph className="text-center">
-          Redovna cena karte je <Price>2.600,00 RSD</Price>
-        </InformationsParagraph>
-      </InformationsContainer>
+      {!isError ? (
+        <>
+          <InformationsContainer textCenter>
+            <InformationTitle>Cene karata</InformationTitle>
+            <InformationsParagraph className="text-center">
+              Cena redovne karte je{" "}
+              <Price>{data?.info?.regularPrice},00 RSD</Price>
+            </InformationsParagraph>
+            <InformationsParagraph className="text-center">
+              Cena povratne karte je{" "}
+              <Price>{data?.info?.roundtripPrice},00 RSD</Price>
+            </InformationsParagraph>
+          </InformationsContainer>
 
-      <InformationsContainer>
-        <InformationTitle className="border-2 border-red-700">
-          VAŽNO
-        </InformationTitle>
-        <InformationsParagraph className="text-center underline underline-offset-2">
-          KARTE NA BAS-u KUPUJETE DO STALAĆA A MI VAS VOZIMO DO KRUŠEVCA
-        </InformationsParagraph>
-      </InformationsContainer>
+          <InformationsContainer>
+            <InformationTitle className="border-2 border-red-700">
+              VAŽNO
+            </InformationTitle>
+            {data?.info?.importantInfo.map((item, idx) => (
+              <InformationsParagraph
+                key={idx}
+                className="text-center underline underline-offset-2"
+              >
+                {item}
+              </InformationsParagraph>
+            ))}
+          </InformationsContainer>
+        </>
+      ) : (
+        <p className="text-xl font-bold text-red-700">
+          Došlo je do greške! Pokušajte ponovo kasnije...
+        </p>
+      )}
     </div>
   );
 };

@@ -36,13 +36,12 @@ export const Informations = () => {
         <>
           <InformationsContainer textCenter>
             <InformationTitle>Cene karata</InformationTitle>
-            <InformationsParagraph className="text-center">
-              Cena redovne karte je{" "}
+            <InformationsParagraph className="mx-auto xl:w-1/2">
+              Cena karte u jednom smeru:{" "}
               <Price>{data?.info?.regularPrice},00 RSD</Price>
             </InformationsParagraph>
-            <InformationsParagraph className="text-center">
-              Cena povratne karte je{" "}
-              <Price>{data?.info?.roundtripPrice},00 RSD</Price>
+            <InformationsParagraph className="mx-auto xl:w-1/2">
+              Povratna karta: <Price>{data?.info?.roundtripPrice},00 RSD</Price>
             </InformationsParagraph>
           </InformationsContainer>
 

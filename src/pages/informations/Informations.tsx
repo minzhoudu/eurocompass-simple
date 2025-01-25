@@ -52,11 +52,8 @@ export const Informations = () => {
                 VAŽNO
               </InformationTitle>
               {data?.info?.importantInfo.map((item, idx) => (
-                <InformationsParagraph
-                  key={idx}
-                  className="text-center underline underline-offset-2"
-                >
-                  {item}
+                <InformationsParagraph key={idx} className="mx-auto xl:w-2/3">
+                  - {item}
                 </InformationsParagraph>
               ))}
             </InformationsContainer>

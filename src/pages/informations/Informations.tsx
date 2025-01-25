@@ -54,9 +54,9 @@ export const Informations = () => {
               {data?.info?.importantInfo.map((item, idx) => (
                 <InformationsParagraph
                   key={idx}
-                  className="text-center underline underline-offset-2"
+                  className="mx-auto underline underline-offset-2 xl:w-2/3"
                 >
-                  {item}
+                  - {item}
                 </InformationsParagraph>
               ))}
             </InformationsContainer>

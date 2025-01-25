@@ -24,13 +24,19 @@ export const AdminInformations = () => {
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const importantInfoArray = (
+      e.currentTarget.importantInfo.value as string
+    ).split(",\n");
+
     mutate({
       id: 1,
       regularPrice: e.currentTarget.regularPrice.value,
       roundtripPrice: e.currentTarget.roundtripPrice.value,
-      importantInfo: data?.info?.importantInfo || [],
+      importantInfo: importantInfoArray,
     });
   };
+
+  const importantInformations = data?.info?.importantInfo.join(",\n");
 
   return (
     <div className="flex h-[95%] w-full flex-col items-center justify-center">
@@ -72,6 +78,28 @@ export const AdminInformations = () => {
                 defaultValue={data?.info?.roundtripPrice}
               />
               <span className="ml-1">RSD</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <label htmlFor="importantInfo" className="text-lg">
+              Važne informacije:
+            </label>
+            <div className="flex w-full flex-col">
+              <textarea
+                id="importantInfo"
+                name="importantInfo"
+                className="w-full rounded-md border border-primaryBlue px-2 py-1"
+                rows={data?.info?.importantInfo.length || 1}
+                defaultValue={importantInformations}
+              />
+              <p className="mt-2 self-center rounded-lg bg-primaryBlue px-3 py-1 text-center text-xs font-semibold text-green-400">
+                Nakon svake nove informacije (osim poslednje) morate staviti
+                zarez
+              </p>
+              <p className="mt-1 self-center rounded-lg bg-primaryBlue px-3 py-1 text-center text-xs font-semibold text-green-400">
+                Svaka nova informacija mora biti u novom redu.
+              </p>
             </div>
           </div>
         </div>

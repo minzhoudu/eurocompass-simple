@@ -12,6 +12,7 @@ export const AdminDashboard = () => {
         await axiosInstance.get<InformationResponse>("/information");
       return data;
     },
+    staleTime: 1000 * 60 * 5,
   });
 
   const {

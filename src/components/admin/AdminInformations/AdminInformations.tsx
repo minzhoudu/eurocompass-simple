@@ -10,6 +10,7 @@ export const AdminInformations = () => {
       const { data } = await axios.get<InformationResponse>("/information");
       return data;
     },
+    staleTime: 1000 * 60 * 5
   });
 
   const { mutate, isError, isPending } = useMutation({

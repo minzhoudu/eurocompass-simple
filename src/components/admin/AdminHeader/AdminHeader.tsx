@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import axios from "../../../config/axiosInstance";
 import { useUserContext } from "../../../contexts";
 
@@ -31,12 +31,30 @@ export const AdminHeader = () => {
 
       <ul className="flex h-full gap-5">
         <li className="h-full">
-          <Link
+          <NavLink
+            to="/admin/dashboard"
+            end
+            className={({ isActive }) =>
+              isActive
+                ? "flex h-full items-center text-primaryYellow"
+                : "flex h-full items-center"
+            }
+          >
+            Početna
+          </NavLink>
+        </li>
+
+        <li className="h-full">
+          <NavLink
             to="/admin/dashboard/informacije"
-            className="flex h-full items-center"
+            className={({ isActive }) =>
+              isActive
+                ? "flex h-full items-center text-primaryYellow"
+                : "flex h-full items-center"
+            }
           >
             Informacije
-          </Link>
+          </NavLink>
         </li>
 
         <li className="h-full">

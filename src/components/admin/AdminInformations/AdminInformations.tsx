@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AiOutlineLoading } from "react-icons/ai";
 import axios from "../../../config/axiosInstance";
-import { Information, InformationResponse } from "../../../shared";
+import { InformationResponse, UpdateInformationDto } from "../../../shared";
 
 export const AdminInformations = () => {
   const { data, refetch } = useQuery({
@@ -14,7 +14,7 @@ export const AdminInformations = () => {
 
   const { mutate, isError, isPending } = useMutation({
     mutationKey: ["updateInformation"],
-    mutationFn: async (updatedInfo: Information) => {
+    mutationFn: async (updatedInfo: UpdateInformationDto) => {
       await axios.patch("/information", updatedInfo);
     },
     onSuccess: () => {
@@ -40,10 +40,10 @@ export const AdminInformations = () => {
   const importantInformations = data?.info?.importantInfo.join(",\n");
 
   return (
-    <div className="flex h-[95%] w-full flex-col items-center justify-center">
+    <div className="flex h-[95%] w-full flex-col items-center justify-center bg-gray-400">
       <form
         onSubmit={onFormSubmit}
-        className="flex w-[500px] flex-col gap-5 rounded-xl border-2 border-primaryBlue p-6"
+        className="flex w-[500px] flex-col gap-5 rounded-xl border-2 border-primaryBlue bg-white p-6"
       >
         <div className="rounded-lg bg-primaryBlue p-5 text-center">
           <h1 className="font-bold text-white">Configuracija informacije</h1>
@@ -114,7 +114,7 @@ export const AdminInformations = () => {
           disabled={isPending}
           className="flex items-center gap-5 self-center rounded-lg border border-primaryBlue px-4 py-2 font-semibold text-primaryBlue transition-colors hover:bg-primaryBlue hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-primaryBlue"
         >
-          Sačuvaj promene{" "}
+          SAČUVAJ PROMENE{" "}
           {isPending && <AiOutlineLoading className="animate-spin" />}
         </button>
 

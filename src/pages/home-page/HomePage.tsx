@@ -16,7 +16,7 @@ export const HomePage = () => {
         await axiosInstance.get<InformationResponse>("/information");
       return data;
     },
-    staleTime: 1000 * 60 * 30,
+    staleTime: 1000 * 60 * 60,
   });
 
   return (

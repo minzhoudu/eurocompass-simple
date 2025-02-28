@@ -17,7 +17,7 @@ export const HomePageCarousel = () => {
             <div className="h-[500px]" key={image.id}>
               <img
                 src={image.src}
-                className="h-full w-full object-cover"
+                className={`h-full w-full ${image.id !== 6 ? "object-cover" : "object-fill"}`}
                 alt={image.alt}
                 loading={image.id !== 1 ? "lazy" : "eager"}
               />

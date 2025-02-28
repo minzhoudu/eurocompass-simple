@@ -3,6 +3,7 @@ import image2 from "/images/eurocompass2.webp";
 import image3 from "/images/eurocompass3.webp";
 import image4 from "/images/eurocompass4.webp";
 import image5 from "/images/eurocompass5.webp";
+import image6 from "/images/eurocompass6.webp";
 
 export const CAROUSEL_IMAGES = [
   {
@@ -29,5 +30,10 @@ export const CAROUSEL_IMAGES = [
     id: 5,
     alt: "eurocompass-5",
     src: image5,
+  },
+  {
+    id: 6,
+    alt: "eurocompass-6",
+    src: image6,
   },
 ];

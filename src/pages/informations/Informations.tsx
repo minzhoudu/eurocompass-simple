@@ -69,6 +69,15 @@ export const Informations = () => {
           Došlo je do greške! Pokušajte ponovo kasnije...
         </p>
       )}
+
+      <InformationsContainer textCenter>
+        <InformationTitle>Novo</InformationTitle>
+        <InformationsParagraph className="mx-auto xl:w-1/2">
+          Karte od sada možete rezervisati preko{" "}
+          <span className="text-[#019c4e]">Whatsapp</span> i{" "}
+          <span className="text-[#9585ff]">Viber</span> aplikacije.
+        </InformationsParagraph>
+      </InformationsContainer>
     </div>
   );
 };

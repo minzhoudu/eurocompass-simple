@@ -10,7 +10,7 @@ export const AdminInformations = () => {
       const { data } = await axios.get<InformationResponse>("/information");
       return data;
     },
-    staleTime: 1000 * 60 * 5
+    staleTime: 1000 * 60 * 5,
   });
 
   const { mutate, isError, isPending } = useMutation({
@@ -78,6 +78,22 @@ export const AdminInformations = () => {
                 name="roundtripPrice"
                 className="rounded-md border border-primaryBlue p-1 text-center"
                 defaultValue={data?.info?.roundtripPrice}
+              />
+              <span className="ml-1">RSD</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label htmlFor="studentPrice" className="text-lg">
+              Cena studentske karte:
+            </label>
+            <div>
+              <input
+                type="text"
+                id="studentPrice"
+                name="studentPrice"
+                className="rounded-md border border-primaryBlue p-1 text-center"
+                defaultValue={data?.info?.studentPrice}
               />
               <span className="ml-1">RSD</span>
             </div>

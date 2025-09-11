@@ -46,6 +46,10 @@ export const Informations = () => {
                 Povratna karta:{" "}
                 <Price>{data?.info?.roundtripPrice},00 RSD</Price>
               </InformationsParagraph>
+              <InformationsParagraph className="mx-auto xl:w-1/2">
+                Studentska povratna karta:{" "}
+                <Price>{data?.info?.studentPrice},00 RSD</Price>
+              </InformationsParagraph>
             </InformationsContainer>
 
             <InformationsContainer>

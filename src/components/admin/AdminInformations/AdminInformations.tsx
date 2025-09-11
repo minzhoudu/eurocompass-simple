@@ -34,6 +34,7 @@ export const AdminInformations = () => {
       id: 1,
       regularPrice: e.currentTarget.regularPrice.value,
       roundtripPrice: e.currentTarget.roundtripPrice.value,
+      studentPrice: e.currentTarget.studentPrice.value,
       importantInfo: importantInfoArray,
     });
   };

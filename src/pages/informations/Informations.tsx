@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import {
+  GoogleMap,
   InformationsContainer,
   InformationsParagraph,
   InformationTitle,
@@ -82,6 +83,8 @@ export const Informations = () => {
           <span className="text-[#9585ff]">Viber</span> aplikacije.
         </InformationsParagraph>
       </InformationsContainer>
+
+      <GoogleMap />
     </div>
   );
 };

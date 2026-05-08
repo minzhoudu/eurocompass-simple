@@ -12,6 +12,7 @@ type FormInputProps = {
   value?: string;
   type?: HTMLInputTypeAttribute | "textarea";
   placeholder?: string;
+  min?: string | number;
 };
 
 export const FormInput = ({
@@ -23,6 +24,7 @@ export const FormInput = ({
   value,
   placeholder,
   type,
+  min,
 }: FormInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,7 +55,7 @@ export const FormInput = ({
           id={name}
           name={name}
           type={type || "text"}
-          min={type === "date" ? getCurrentDate() : undefined}
+          min={min ?? (type === "date" ? getCurrentDate() : undefined)}
           placeholder={placeholder}
           value={value}
           required={required}

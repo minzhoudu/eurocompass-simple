@@ -47,7 +47,12 @@ export const validateFormData = (formData: FormData) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { note, ...requiredFormData } = formData;
 
-  return Object.values(requiredFormData).some((value) => !value);
+  const hasEmptyFields = Object.values(requiredFormData).some(
+    (value) => !value,
+  );
+  const hasInvalidTicketCount = Number(formData.numberOfTickets) < 1;
+
+  return hasEmptyFields || hasInvalidTicketCount;
 };
 
 export const formatFormValues = (formData: FormData) => {

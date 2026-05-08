@@ -158,6 +158,7 @@ export const ReservationForm = () => {
         value={formData.numberOfTickets}
         placeholder="Unesite količinu karata za rezervaciju"
         onChange={onChange}
+        min={1}
         required
       />
 

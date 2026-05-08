@@ -44,9 +44,8 @@ export const FORM_INPUTS: FormInputType[] = [
 export const CITIES = [
   "Kruševac - Glavna autobuska stanica",
   "Kruševac - Gornja pijaca",
-  //TODO "Kruševac - Polazna stanica Varvarin", check if this is needed?
   "Beograd - Glavna autobuska stanica",
-  "Beograd - Autokomanda",
+  "Beograd - Autokomanda (Beograd Jug)",
 ];
 
 export const KRUSEVAC_TIME_OPTIONS = ["07:00", "13:00", "17:30"];

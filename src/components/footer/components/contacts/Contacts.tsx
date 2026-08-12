@@ -8,7 +8,7 @@ export const Contacts = () => {
           className="underline underline-offset-2"
           href="mailto:info@eurocompass.rs"
         >
-          info@eurocompass.rs
+          eurocompassdoo@gmail.com
         </a>
       </p>
       <p className="text-lg">Telefon: 037/443-277</p>

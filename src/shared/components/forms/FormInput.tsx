@@ -15,6 +15,9 @@ type FormInputProps = {
   min?: string | number;
 };
 
+const fieldClasses =
+  "mt-2 w-full rounded-lg border border-gray-300 p-2 text-brand-black-900 placeholder:text-gray-400 focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200 [&:user-invalid]:border-red-500 [&:user-invalid]:text-red-600 [&:focus:user-invalid]:ring-red-200";
+
 export const FormInput = ({
   text,
   name,
@@ -35,8 +38,8 @@ export const FormInput = ({
   };
   return (
     <div className="mt-6 flex flex-col">
-      <label htmlFor={name} className="text-lg font-semibold">
-        {text} {required && <span className="text-red-700">*</span>}
+      <label htmlFor={name} className="text-lg font-semibold text-brand-black-900">
+        {text} {required && <span className="text-red-600">*</span>}
       </label>
 
       {type === "textarea" ? (
@@ -48,7 +51,7 @@ export const FormInput = ({
           onChange={onChange}
           placeholder={placeholder}
           rows={5}
-          className="mt-2 rounded-lg p-2 invalid:border invalid:border-red-600 invalid:text-red-600 focus:outline-none focus:invalid:border-red-600 focus:invalid:ring-red-600"
+          className={fieldClasses}
         />
       ) : (
         <input
@@ -61,7 +64,7 @@ export const FormInput = ({
           required={required}
           pattern={pattern}
           onChange={onChange}
-          className="mt-2 appearance-none rounded-lg p-2 text-center invalid:border invalid:border-red-600 invalid:text-red-600 focus:outline-none focus:invalid:border-red-600 focus:invalid:ring-red-600"
+          className={`${fieldClasses} appearance-none text-center`}
           ref={inputRef}
           onFocus={handleFocus}
         />

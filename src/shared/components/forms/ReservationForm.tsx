@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 
 import { useSendEmail } from "../email";
+import { Button } from "../ui";
 import { FormInput } from "./FormInput";
 import { FormSelect } from "./FormSelect";
 import {
@@ -162,21 +163,23 @@ export const ReservationForm = () => {
         required
       />
 
-      <div className="m-auto mt-1 flex w-4/5 justify-center gap-2">
-        <button
+      <div className="m-auto mt-1 flex justify-center gap-4">
+        <Button
           type="button"
-          className="rounded-lg border-2 px-16 text-3xl text-white"
+          variant="outline"
+          size="sm"
           onClick={() => handleNumberOfTickets("remove")}
         >
           -
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="rounded-lg border-2 px-16 text-3xl text-white"
+          variant="outline"
+          size="sm"
           onClick={() => handleNumberOfTickets("add")}
         >
           +
-        </button>
+        </Button>
       </div>
 
       <FormInput
@@ -188,13 +191,14 @@ export const ReservationForm = () => {
         onChange={onChange}
       />
 
-      <button
+      <Button
         type="submit"
-        className="mb-5 mt-7 self-center rounded-lg bg-primaryYellow px-4 py-2 text-lg font-bold disabled:opacity-50"
+        size="lg"
+        className="mb-5 mt-7 self-center"
         disabled={loading}
       >
         {!loading ? "REZERVIŠI KARTU" : "SLANJE PODATAKA..."}
-      </button>
+      </Button>
     </form>
   );
 };

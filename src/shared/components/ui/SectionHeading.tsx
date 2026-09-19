@@ -2,17 +2,26 @@ import { HTMLAttributes, ReactNode } from "react";
 
 import { cn } from "../../utils";
 
+type SectionHeadingAlign = "center" | "responsive";
+
 type SectionHeadingProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
   as?: "h1" | "h2";
+  align?: SectionHeadingAlign;
   eyebrow?: ReactNode;
   children: ReactNode;
 };
 
+const alignClasses: Record<SectionHeadingAlign, string> = {
+  center: "items-center text-center",
+  responsive: "items-center text-center lg:items-start lg:text-left",
+};
+
 export const SectionHeading = ({
   as = "h2",
+  align = "center",
   eyebrow,
   children,
   className,
@@ -22,10 +31,7 @@ export const SectionHeading = ({
 
   return (
     <div
-      className={cn(
-        "flex flex-col items-center gap-2 text-center lg:items-start lg:text-left",
-        className,
-      )}
+      className={cn("flex flex-col gap-2", alignClasses[align], className)}
       {...props}
     >
       {eyebrow && (

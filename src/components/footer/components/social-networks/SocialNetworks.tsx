@@ -2,7 +2,7 @@ import { FaFacebook, FaInstagram, FaWhatsapp, FaViber } from "react-icons/fa";
 
 export const SocialNetworks = () => {
   const socialNetworkClasses =
-    "cursor-pointer rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-primaryYellow hover:text-black";
+    "cursor-pointer rounded-full p-2 transition-colors duration-300 ease-in-out hover:bg-brand-yellow-500 hover:text-brand-black-900";
   const socialNetworkSize = 30;
 
   return (

@@ -6,7 +6,7 @@ type TravelTimeProps = {
 
 export const TravelTime = ({ children }: TravelTimeProps) => {
   return (
-    <span className="text-primaryYellow underline underline-offset-2">
+    <span className="text-brand-yellow-700 underline underline-offset-2">
       {children}
     </span>
   );

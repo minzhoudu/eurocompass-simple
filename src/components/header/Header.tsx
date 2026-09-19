@@ -11,7 +11,7 @@ export const Header = () => {
 
   return (
     <>
-      <nav className="z-10 flex h-20 w-full items-center justify-between bg-primaryBlue px-10 xl:w-3/4 xl:rounded-b-xl">
+      <nav className="z-10 flex h-20 w-full items-center justify-between bg-brand-black-900 px-10 xl:w-3/4 xl:rounded-b-xl">
         <Link to="/" className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6">
           <img
             src={logo}
@@ -22,12 +22,12 @@ export const Header = () => {
 
         {isNavOpen ? (
           <IoCloseSharp
-            className="size-7 cursor-pointer lg:hidden"
+            className="size-7 cursor-pointer text-white lg:hidden"
             onClick={() => setIsNavOpen(false)}
           />
         ) : (
           <GiHamburgerMenu
-            className="size-7 cursor-pointer lg:hidden"
+            className="size-7 cursor-pointer text-white lg:hidden"
             onClick={() => setIsNavOpen(true)}
           />
         )}

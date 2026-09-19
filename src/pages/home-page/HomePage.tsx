@@ -4,7 +4,14 @@ import "slick-carousel/slick/slick.css";
 import { Helmet } from "react-helmet";
 
 import { HomePageCarousel } from "../../components/carousel";
-import { useInformation } from "../../shared";
+import {
+  Alert,
+  Badge,
+  Card,
+  SectionHeading,
+  Skeleton,
+  useInformation,
+} from "../../shared";
 
 export const HomePage = () => {
   const { data, isError, isLoading } = useInformation();
@@ -22,60 +29,83 @@ export const HomePage = () => {
         <HomePageCarousel />
       </div>
 
-      <div className="flex flex-col gap-20 lg:flex-row">
-        <div className="flex flex-col items-center gap-5 rounded-lg bg-primaryYellow p-5 text-xl font-bold text-black">
-          <h2>Prevoz putnika na relaciji</h2>
+      <div className="flex w-full flex-col gap-6 px-4 lg:flex-row lg:px-0">
+        <Card className="flex flex-1 flex-col items-center gap-5">
+          <SectionHeading>Prevoz putnika na relaciji</SectionHeading>
 
-          <div className="mt-7 flex flex-col gap-10">
-            <p className="border border-black p-1">Kruševac - Beograd</p>
-            <p className="border border-black p-1">Beograd - Kruševac</p>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Badge variant="black">Kruševac - Beograd</Badge>
+            <Badge variant="black">Beograd - Kruševac</Badge>
           </div>
-        </div>
+        </Card>
 
         {!isError ? (
-          <div className="flex flex-col gap-5 rounded-lg bg-primaryYellow p-5 text-center text-xl font-bold text-black">
-            <h2>Polasci:</h2>
+          <Card className="flex flex-1 flex-col items-center gap-5">
+            <SectionHeading>Polasci</SectionHeading>
 
             {!isLoading ? (
-              <div className="flex flex-row items-center gap-10">
-                <div className="flex-1 border border-black p-3">
-                  <h3>Kruševac</h3>
-                  <ul className="underline">
+              <div className="flex w-full flex-row justify-center gap-10">
+                <div className="flex flex-1 flex-col items-center">
+                  <h3 className="mb-3 font-bold text-brand-black-900">
+                    Kruševac
+                  </h3>
+                  <ul className="flex flex-col items-center gap-2">
                     {data?.info?.startingTimesKrusevac
                       .sort()
-                      .map((time, index) => <li key={index}>{time}</li>)}
+                      .map((time, index) => (
+                        <li key={index}>
+                          <Badge variant="outline">{time}</Badge>
+                        </li>
+                      ))}
                   </ul>
                 </div>
 
-                <div className="flex-1 border border-black p-3">
-                  <h3>Beograd</h3>
-                  <ol className="underline">
+                <div className="flex flex-1 flex-col items-center">
+                  <h3 className="mb-3 font-bold text-brand-black-900">
+                    Beograd
+                  </h3>
+                  <ul className="flex flex-col items-center gap-2">
                     {data?.info?.startingTimesBeograd
                       .sort()
-                      .map((time, index) => <li key={index}>{time}</li>)}
+                      .map((time, index) => (
+                        <li key={index}>
+                          <Badge variant="outline">{time}</Badge>
+                        </li>
+                      ))}
 
                     {data?.info?.saturdayBeograd &&
-                      data?.info?.saturdayBeograd.length && (
+                      data?.info?.saturdayBeograd.length > 0 && (
                         <>
-                          <li className="mt-1 border-b-2 border-dashed border-black"></li>
-                          <li>nedeljom</li>
+                          <li className="my-1 w-full border-t border-dashed border-gray-300" />
+                          <li>
+                            <Badge variant="yellow">nedeljom</Badge>
+                          </li>
                           {data?.info?.saturdayBeograd
                             .sort()
-                            .map((time, index) => <li key={index}> {time}</li>)}
+                            .map((time, index) => (
+                              <li key={index}>
+                                <Badge variant="outline">{time}</Badge>
+                              </li>
+                            ))}
                         </>
                       )}
-                  </ol>
+                  </ul>
                 </div>
               </div>
             ) : (
-              <div className="animate-pulse">Učitavanje podataka...</div>
+              <div className="flex w-full flex-row gap-10">
+                <Skeleton className="h-32 flex-1" />
+                <Skeleton className="h-32 flex-1" />
+              </div>
             )}
-          </div>
+          </Card>
         ) : (
-          <div className="flex flex-col justify-center font-semibold text-red-700">
-            <p>Došlo je do greške prilikom učitavanja podataka</p>
-            <p>Pokušajte ponovo</p>
-          </div>
+          <Card className="flex flex-1 items-center justify-center">
+            <Alert variant="error">
+              Došlo je do greške prilikom učitavanja podataka. Pokušajte
+              ponovo.
+            </Alert>
+          </Card>
         )}
       </div>
     </>

@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet";
-import { ReservationForm } from "../../shared";
+import { Card, ReservationForm, SectionHeading } from "../../shared";
 
 export const Reservations = () => {
   return (
-    <div className="mt-10">
+    <div className="flex w-full flex-col items-center gap-8 px-4 lg:px-0">
       <Helmet>
         <title>Eurocompass doo | Rezervacija karte</title>
         <meta
@@ -11,11 +11,14 @@ export const Reservations = () => {
           content="Rezervacija karte za prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Rezervišite autobuske karte brzo i lako online. Jednostavna i sigurna rezervacija u par klikova."
         />
       </Helmet>
-      <div className="mb-5 rounded-lg bg-primaryYellow px-5 py-3 text-center text-2xl font-bold">
-        <h1>Rezervacija karte</h1>
-      </div>
 
-      <ReservationForm />
+      <SectionHeading as="h1" className="mt-10">
+        Rezervacija karte
+      </SectionHeading>
+
+      <Card className="w-full max-w-2xl">
+        <ReservationForm />
+      </Card>
     </div>
   );
 };

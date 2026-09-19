@@ -11,7 +11,7 @@ export const InformationsContainer = ({
 }: InformationsContainerProps) => {
   return (
     <div
-      className={`border-primaryYellow flex w-full flex-col ${textCenter ? "text-center lg:text-left" : ""} gap-2 rounded-lg border-4 bg-primaryBlue p-5 font-semibold lg:text-xl`}
+      className={`flex w-full flex-col ${textCenter ? "text-center lg:text-left" : ""} gap-2 rounded-2xl border border-t-4 border-gray-200 border-t-brand-yellow-500 bg-white p-5 font-semibold text-brand-black-900 shadow-card lg:text-xl`}
     >
       {children}
     </div>

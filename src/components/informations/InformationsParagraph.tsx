@@ -9,5 +9,5 @@ export const InformationsParagraph = ({
   children,
   className,
 }: InformationsParagraphProps) => {
-  return <p className={`text-white ${className}`}>{children}</p>;
+  return <p className={`text-gray-700 ${className}`}>{children}</p>;
 };

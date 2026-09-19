@@ -8,22 +8,25 @@ export default {
       },
       colors: {
         brand: {
+          // Soft ink for text/borders - no longer used as large panel fills.
           black: {
-            DEFAULT: "#141414",
-            900: "#0b0b0c",
-            800: "#141414",
-            700: "#232326",
+            DEFAULT: "#1e293b",
+            900: "#1e293b",
+            800: "#334155",
+            700: "#475569",
           },
+          // Light, warm yellow accent - used sparingly (buttons, highlights),
+          // never as a large solid fill.
           yellow: {
-            DEFAULT: "#f5c400",
-            50: "#fffbea",
-            100: "#fff3c4",
-            200: "#fce588",
-            300: "#fad65f",
-            400: "#f7c948",
-            500: "#f5c400",
-            600: "#d1a300",
-            700: "#a67f00",
+            DEFAULT: "#ffc94d",
+            50: "#fffdf5",
+            100: "#fff6dd",
+            200: "#ffecb3",
+            300: "#ffdf85",
+            400: "#ffd35c",
+            500: "#ffc94d",
+            600: "#f0b22e",
+            700: "#c98a12",
           },
         },
       },

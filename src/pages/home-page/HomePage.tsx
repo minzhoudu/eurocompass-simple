@@ -1,9 +1,6 @@
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
-
 import { Helmet } from "react-helmet";
 
-import { HomePageCarousel } from "../../components/carousel";
+import { RouteMap } from "../../components/route-map";
 import {
   Alert,
   Badge,
@@ -25,8 +22,8 @@ export const HomePage = () => {
           content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Autobus Kruševac - Beograd i Beograd - Kruševac"
         />
       </Helmet>
-      <div className="w-full">
-        <HomePageCarousel />
+      <div className="w-full bg-brand-yellow-50 py-10">
+        <RouteMap />
       </div>
 
       <div className="flex w-full flex-col gap-6 px-4 lg:flex-row lg:px-0">

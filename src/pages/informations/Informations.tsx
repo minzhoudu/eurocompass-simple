@@ -5,20 +5,10 @@ import {
   InformationsParagraph,
   InformationTitle,
 } from "../../components";
-import { InformationResponse, Price } from "../../shared";
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../../config/axiosInstance";
+import { Price, useInformation } from "../../shared";
 
 export const Informations = () => {
-  const { data, isError, isLoading } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<InformationResponse>("/information");
-      return data;
-    },
-    staleTime: 1000 * 60 * 60,
-  });
+  const { data, isError, isLoading } = useInformation();
 
   return (
     <div className="flex w-3/4 flex-col items-center gap-14 lg:w-2/3">

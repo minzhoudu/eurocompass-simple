@@ -1,23 +1,13 @@
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 
-import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 
 import { HomePageCarousel } from "../../components/carousel";
-import axiosInstance from "../../config/axiosInstance";
-import { InformationResponse } from "../../shared";
+import { useInformation } from "../../shared";
 
 export const HomePage = () => {
-  const { data, isError, isLoading } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<InformationResponse>("/information");
-      return data;
-    },
-    staleTime: 1000 * 60 * 60,
-  });
+  const { data, isError, isLoading } = useInformation();
 
   return (
     <>

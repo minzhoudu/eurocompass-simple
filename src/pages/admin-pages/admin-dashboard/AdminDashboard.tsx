@@ -1,17 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import axiosInstance from "../../../config/axiosInstance";
-import { InformationResponse, UpdateInformationDto } from "../../../shared";
+import { UpdateInformationDto, useInformation } from "../../../shared";
 import { StartingTime, StartingTimeId } from "./components";
 
 export const AdminDashboard = () => {
-  const { data, refetch: refetchInfo } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<InformationResponse>("/information");
-      return data;
-    },
+  const { data, refetch: refetchInfo } = useInformation({
     staleTime: 1000 * 60 * 5,
   });
 

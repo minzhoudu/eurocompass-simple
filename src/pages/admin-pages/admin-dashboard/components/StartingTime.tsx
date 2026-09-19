@@ -29,7 +29,7 @@ export const StartingTime = ({
         {times && times.length ? (
           times.sort().map((time, idx) => (
             <div className="flex items-center justify-between" key={time + idx}>
-              <p className="rounded-md bg-primaryBlue px-2 py-1 text-white">
+              <p className="rounded-md bg-brand-black-900 px-2 py-1 text-white">
                 {time}
               </p>
               <button
@@ -42,7 +42,7 @@ export const StartingTime = ({
             </div>
           ))
         ) : (
-          <p className="text-center text-primaryBlue">Nema polaznih vremena.</p>
+          <p className="text-center text-brand-black-900">Nema polaznih vremena.</p>
         )}
       </div>
 
@@ -54,7 +54,7 @@ export const StartingTime = ({
         />
         <button
           onClick={() => handleAddTime(id, newTime)}
-          className="rounded-md border border-primaryBlue bg-white p-2 text-primaryBlue transition-colors hover:bg-primaryBlue hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-primaryBlue"
+          className="rounded-md border border-brand-black-900 bg-white p-2 text-brand-black-900 transition-colors hover:bg-brand-black-900 hover:text-white disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-brand-black-900"
           disabled={!newTime || isLoading}
         >
           Dodaj

@@ -45,9 +45,9 @@ export const AdminInformations = () => {
     <div className="flex h-[95%] w-full flex-col items-center justify-center bg-gray-400">
       <form
         onSubmit={onFormSubmit}
-        className="flex w-[500px] flex-col gap-5 rounded-xl border-2 border-primaryBlue bg-white p-6"
+        className="flex w-[500px] flex-col gap-5 rounded-xl border-2 border-brand-black-900 bg-white p-6"
       >
-        <div className="rounded-lg bg-primaryBlue p-5 text-center">
+        <div className="rounded-lg bg-brand-black-900 p-5 text-center">
           <h1 className="font-bold text-white">Configuracija informacije</h1>
         </div>
 
@@ -61,7 +61,7 @@ export const AdminInformations = () => {
                 type="text"
                 id="regularPrice"
                 name="regularPrice"
-                className="rounded-md border border-primaryBlue p-1 text-center"
+                className="rounded-md border border-brand-black-900 p-1 text-center"
                 defaultValue={data?.info?.regularPrice}
               />
               <span className="ml-1">RSD</span>
@@ -77,7 +77,7 @@ export const AdminInformations = () => {
                 type="text"
                 id="roundtripPrice"
                 name="roundtripPrice"
-                className="rounded-md border border-primaryBlue p-1 text-center"
+                className="rounded-md border border-brand-black-900 p-1 text-center"
                 defaultValue={data?.info?.roundtripPrice}
               />
               <span className="ml-1">RSD</span>
@@ -93,7 +93,7 @@ export const AdminInformations = () => {
                 type="text"
                 id="studentPrice"
                 name="studentPrice"
-                className="rounded-md border border-primaryBlue p-1 text-center"
+                className="rounded-md border border-brand-black-900 p-1 text-center"
                 defaultValue={data?.info?.studentPrice}
               />
               <span className="ml-1">RSD</span>
@@ -108,7 +108,7 @@ export const AdminInformations = () => {
               <textarea
                 id="importantInfo"
                 name="importantInfo"
-                className="w-full rounded-md border border-primaryBlue px-2 py-1"
+                className="w-full rounded-md border border-brand-black-900 px-2 py-1"
                 rows={
                   data?.info?.importantInfo.length &&
                   data?.info?.importantInfo.length > 3
@@ -117,11 +117,11 @@ export const AdminInformations = () => {
                 }
                 defaultValue={importantInformations}
               />
-              <p className="mt-2 self-center rounded-lg bg-primaryBlue px-3 py-1 text-center text-xs font-semibold text-green-400">
+              <p className="mt-2 self-center rounded-lg bg-brand-black-900 px-3 py-1 text-center text-xs font-semibold text-green-400">
                 Nakon svake nove informacije (osim poslednje) morate staviti
                 zarez
               </p>
-              <p className="mt-1 self-center rounded-lg bg-primaryBlue px-3 py-1 text-center text-xs font-semibold text-green-400">
+              <p className="mt-1 self-center rounded-lg bg-brand-black-900 px-3 py-1 text-center text-xs font-semibold text-green-400">
                 Svaka nova informacija mora biti u novom redu.
               </p>
             </div>
@@ -130,7 +130,7 @@ export const AdminInformations = () => {
 
         <button
           disabled={isPending}
-          className="flex items-center gap-5 self-center rounded-lg border border-primaryBlue px-4 py-2 font-semibold text-primaryBlue transition-colors hover:bg-primaryBlue hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-primaryBlue"
+          className="flex items-center gap-5 self-center rounded-lg border border-brand-black-900 px-4 py-2 font-semibold text-brand-black-900 transition-colors hover:bg-brand-black-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-brand-black-900"
         >
           SAČUVAJ PROMENE{" "}
           {isPending && <AiOutlineLoading className="animate-spin" />}

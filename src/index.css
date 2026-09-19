@@ -30,13 +30,16 @@
   font-style: normal;
 }
 
-.route-line {
-  stroke-dasharray: 8 6;
-  animation: route-dash 25s linear infinite;
+.map-highlight {
+  animation: map-highlight-pulse 3s ease-in-out infinite;
 }
 
-@keyframes route-dash {
-  to {
-    stroke-dashoffset: -200;
+@keyframes map-highlight-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }

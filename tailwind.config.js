@@ -15,18 +15,19 @@ export default {
             800: "#334155",
             700: "#475569",
           },
-          // Light, warm yellow accent - used sparingly (buttons, highlights),
-          // never as a large solid fill.
+          // Amber gold accent - used sparingly (buttons, highlights),
+          // never as a large solid fill. The single accent color for the
+          // whole app: public site and admin both pull from this token.
           yellow: {
-            DEFAULT: "#ffc94d",
-            50: "#fffdf5",
-            100: "#fff6dd",
-            200: "#ffecb3",
-            300: "#ffdf85",
-            400: "#ffd35c",
-            500: "#ffc94d",
-            600: "#f0b22e",
-            700: "#c98a12",
+            DEFAULT: "#f5a623",
+            50: "#fff8ec",
+            100: "#feedd1",
+            200: "#fddba3",
+            300: "#fbc470",
+            400: "#f8ae49",
+            500: "#f5a623",
+            600: "#d98f12",
+            700: "#b5790e",
           },
         },
       },
@@ -34,19 +35,6 @@ export default {
         card: "0 1px 2px 0 rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.08)",
         cardHover:
           "0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06)",
-      },
-      // Legacy tokens, still used by pages that haven't migrated to the brand.* palette yet
-      backgroundColor: {
-        primaryYellow: "#fff312c5",
-        primaryBlue: "#2a4060",
-      },
-      textColor: {
-        primaryYellow: "#fff312c5",
-        primaryBlue: "#2a4060",
-      },
-      borderColor: {
-        primaryYellow: "#fff312c5",
-        primaryBlue: "#2a4060",
       },
     },
   },

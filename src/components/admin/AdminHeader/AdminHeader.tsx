@@ -36,7 +36,7 @@ export const AdminHeader = () => {
             end
             className={({ isActive }) =>
               isActive
-                ? "flex h-full items-center text-primaryYellow"
+                ? "flex h-full items-center text-brand-yellow-500"
                 : "flex h-full items-center"
             }
           >
@@ -49,7 +49,7 @@ export const AdminHeader = () => {
             to="/admin/dashboard/informacije"
             className={({ isActive }) =>
               isActive
-                ? "flex h-full items-center text-primaryYellow"
+                ? "flex h-full items-center text-brand-yellow-500"
                 : "flex h-full items-center"
             }
           >

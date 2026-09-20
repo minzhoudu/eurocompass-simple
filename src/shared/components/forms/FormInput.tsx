@@ -1,74 +1,95 @@
-import { ChangeEvent, FocusEvent, HTMLInputTypeAttribute, useRef } from "react";
-import { getCurrentDate } from "./utils";
+import {
+  ChangeEvent,
+  FocusEvent,
+  HTMLInputTypeAttribute,
+  ReactNode,
+} from "react";
+
+import { cn } from "../../utils";
+import { FieldError } from "./FieldError";
 
 type FormInputProps = {
   text: string;
   name: string;
   required?: boolean;
-  pattern?: string;
   onChange: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   value?: string;
   type?: HTMLInputTypeAttribute | "textarea";
   placeholder?: string;
-  min?: string | number;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  icon?: ReactNode;
+  error?: string;
 };
 
 const fieldClasses =
-  "mt-2 w-full rounded-lg border border-line-strong bg-raised p-2 text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200 [&:user-invalid]:border-red-500 [&:user-invalid]:text-danger [&:focus:user-invalid]:ring-red-200";
+  "w-full rounded-lg border border-line-strong bg-raised text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200 aria-[invalid=true]:border-red-500 aria-[invalid=true]:focus:ring-red-200";
 
 export const FormInput = ({
   text,
   name,
   required,
-  pattern,
   onChange,
+  onBlur,
   value,
   placeholder,
   type,
-  min,
+  autoComplete,
+  autoFocus,
+  icon,
+  error,
 }: FormInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.target.type === "date" && e.target.showPicker) {
-      e.target.showPicker();
-    }
+  const errorId = `${name}-error`;
+  const sharedProps = {
+    id: name,
+    name,
+    value,
+    onChange,
+    onBlur,
+    placeholder,
+    autoComplete,
+    autoFocus,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
   };
+
   return (
-    <div className="mt-6 flex flex-col">
-      <label htmlFor={name} className="text-lg font-semibold text-ink">
-        {text} {required && <span className="text-danger">*</span>}
+    <div className="flex flex-col gap-2">
+      <label htmlFor={name} className="text-sm font-semibold text-ink">
+        {text}{" "}
+        {required && (
+          <span className="text-danger" aria-hidden="true">
+            *
+          </span>
+        )}
       </label>
 
-      {type === "textarea" ? (
-        <textarea
-          id={name}
-          name={name}
-          value={value}
-          required={required}
-          onChange={onChange}
-          placeholder={placeholder}
-          rows={5}
-          className={fieldClasses}
-        />
-      ) : (
-        <input
-          id={name}
-          name={name}
-          type={type || "text"}
-          min={min ?? (type === "date" ? getCurrentDate() : undefined)}
-          placeholder={placeholder}
-          value={value}
-          required={required}
-          pattern={pattern}
-          onChange={onChange}
-          className={`${fieldClasses} appearance-none text-center`}
-          ref={inputRef}
-          onFocus={handleFocus}
-        />
-      )}
+      <div className="relative">
+        {icon && (
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-subtle">
+            {icon}
+          </span>
+        )}
+
+        {type === "textarea" ? (
+          <textarea
+            {...sharedProps}
+            rows={4}
+            className={cn(fieldClasses, "px-3 py-3")}
+          />
+        ) : (
+          <input
+            {...sharedProps}
+            type={type || "text"}
+            className={cn(fieldClasses, "h-12", icon ? "pl-11 pr-3" : "px-3")}
+          />
+        )}
+      </div>
+
+      {error && <FieldError id={errorId}>{error}</FieldError>}
     </div>
   );
 };

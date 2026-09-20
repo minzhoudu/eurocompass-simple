@@ -21,8 +21,8 @@ export const HomePage = () => {
 
         <div className="pointer-events-none absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-6xl px-6 pb-8 lg:px-10 lg:pb-12">
-            <h1 className="text-4xl font-bold tracking-wide text-ink sm:text-5xl lg:text-6xl">
-              Eurocompass D.o.o
+            <h1 className="text-3xl font-bold tracking-wide text-ink sm:text-5xl lg:text-6xl">
+              Eurocompass
             </h1>
             <span className="mt-3 block h-1 w-16 rounded-full bg-brand-yellow-500" />
           </div>
@@ -44,8 +44,7 @@ export const HomePage = () => {
             />
           ) : (
             <Alert variant="error">
-              Došlo je do greške prilikom učitavanja podataka. Pokušajte
-              ponovo.
+              Došlo je do greške prilikom učitavanja podataka. Pokušajte ponovo.
             </Alert>
           )}
         </Card>

@@ -1,14 +1,8 @@
 import { Helmet } from "react-helmet";
 
+import { Departures } from "../../components/departures";
 import { RouteMap } from "../../components/route-map";
-import {
-  Alert,
-  Badge,
-  Card,
-  SectionHeading,
-  Skeleton,
-  useInformation,
-} from "../../shared";
+import { Alert, Card, SectionHeading, useInformation } from "../../shared";
 
 export const HomePage = () => {
   const { data, isError, isLoading } = useInformation();
@@ -35,84 +29,26 @@ export const HomePage = () => {
         </div>
       </div>
 
-      <div className="flex w-full flex-col gap-6 px-4 lg:flex-row lg:px-0">
-        <Card className="flex flex-1 flex-col items-center gap-5">
-          <SectionHeading>Prevoz putnika na relaciji</SectionHeading>
+      <div className="w-full max-w-4xl px-4 lg:px-0">
+        <Card className="flex flex-col gap-8">
+          <SectionHeading eyebrow="Prevoz putnika na relaciji">
+            Polasci
+          </SectionHeading>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Badge variant="black">Kruševac - Beograd</Badge>
-            <Badge variant="black">Beograd - Kruševac</Badge>
-          </div>
-        </Card>
-
-        {!isError ? (
-          <Card className="flex flex-1 flex-col items-center gap-5">
-            <SectionHeading>Polasci</SectionHeading>
-
-            {!isLoading ? (
-              <div className="flex w-full flex-row justify-center gap-10">
-                <div className="flex flex-1 flex-col items-center">
-                  <h3 className="mb-3 font-bold text-ink">
-                    Kruševac
-                  </h3>
-                  <ul className="flex flex-col items-center gap-2">
-                    {data?.info?.startingTimesKrusevac
-                      .sort()
-                      .map((time, index) => (
-                        <li key={index}>
-                          <Badge variant="outline">{time}</Badge>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-
-                <div className="flex flex-1 flex-col items-center">
-                  <h3 className="mb-3 font-bold text-ink">
-                    Beograd
-                  </h3>
-                  <ul className="flex flex-col items-center gap-2">
-                    {data?.info?.startingTimesBeograd
-                      .sort()
-                      .map((time, index) => (
-                        <li key={index}>
-                          <Badge variant="outline">{time}</Badge>
-                        </li>
-                      ))}
-
-                    {data?.info?.saturdayBeograd &&
-                      data?.info?.saturdayBeograd.length > 0 && (
-                        <>
-                          <li className="my-1 w-full border-t border-dashed border-line-strong" />
-                          <li>
-                            <Badge variant="yellow">nedeljom</Badge>
-                          </li>
-                          {data?.info?.saturdayBeograd
-                            .sort()
-                            .map((time, index) => (
-                              <li key={index}>
-                                <Badge variant="outline">{time}</Badge>
-                              </li>
-                            ))}
-                        </>
-                      )}
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              <div className="flex w-full flex-row gap-10">
-                <Skeleton className="h-32 flex-1" />
-                <Skeleton className="h-32 flex-1" />
-              </div>
-            )}
-          </Card>
-        ) : (
-          <Card className="flex flex-1 items-center justify-center">
+          {!isError ? (
+            <Departures
+              isLoading={isLoading}
+              krusevac={data?.info?.startingTimesKrusevac}
+              beograd={data?.info?.startingTimesBeograd}
+              beogradSunday={data?.info?.saturdayBeograd}
+            />
+          ) : (
             <Alert variant="error">
               Došlo je do greške prilikom učitavanja podataka. Pokušajte
               ponovo.
             </Alert>
-          </Card>
-        )}
+          )}
+        </Card>
       </div>
     </>
   );

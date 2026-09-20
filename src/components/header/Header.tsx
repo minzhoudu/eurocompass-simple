@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 
-import { DesktopNavBarLinks, MobileNavBarModal } from "./components";
+import {
+  DesktopNavBarLinks,
+  MobileNavBarModal,
+  ThemeToggle,
+} from "./components";
 import logo from "/images/eurocompass_logo.webp";
 
 export const Header = () => {
@@ -20,7 +24,7 @@ export const Header = () => {
   return (
     <>
       <nav
-        className={`sticky top-0 z-20 w-full bg-white/95 backdrop-blur transition-shadow duration-300 ${isScrolled ? "shadow-md" : "border-b border-gray-100"}`}
+        className={`sticky top-0 z-20 w-full bg-raised/95 backdrop-blur transition-shadow duration-300 ${isScrolled ? "shadow-md" : "border-b border-line"}`}
       >
         <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-6 lg:px-10">
           <Link to="/" className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6">
@@ -31,19 +35,23 @@ export const Header = () => {
             />
           </Link>
 
-          {isNavOpen ? (
-            <IoCloseSharp
-              className="size-7 cursor-pointer text-brand-black-900 lg:hidden"
-              onClick={() => setIsNavOpen(false)}
-            />
-          ) : (
-            <GiHamburgerMenu
-              className="size-7 cursor-pointer text-brand-black-900 lg:hidden"
-              onClick={() => setIsNavOpen(true)}
-            />
-          )}
+          <div className="flex items-center gap-2">
+            <DesktopNavBarLinks />
 
-          <DesktopNavBarLinks />
+            <ThemeToggle />
+
+            {isNavOpen ? (
+              <IoCloseSharp
+                className="size-7 cursor-pointer text-ink lg:hidden"
+                onClick={() => setIsNavOpen(false)}
+              />
+            ) : (
+              <GiHamburgerMenu
+                className="size-7 cursor-pointer text-ink lg:hidden"
+                onClick={() => setIsNavOpen(true)}
+              />
+            )}
+          </div>
         </div>
       </nav>
 

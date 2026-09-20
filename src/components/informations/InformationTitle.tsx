@@ -11,7 +11,7 @@ export const InformationTitle = ({
 }: InformationTitleProps) => {
   return (
     <h2
-      className={`self-center border-b-4 border-brand-yellow-500 pb-1 text-lg font-bold tracking-wide text-brand-black-900 lg:text-xl ${className}`}
+      className={`self-center border-b-4 border-brand-yellow-500 pb-1 text-lg font-bold tracking-wide text-ink lg:text-xl ${className}`}
     >
       {children}
     </h2>

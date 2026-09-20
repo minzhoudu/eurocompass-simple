@@ -35,11 +35,11 @@ export const SectionHeading = ({
       {...props}
     >
       {eyebrow && (
-        <span className="text-sm font-semibold uppercase tracking-widest text-brand-yellow-600">
+        <span className="text-sm font-semibold uppercase tracking-widest text-accent-ink">
           {eyebrow}
         </span>
       )}
-      <Heading className="text-2xl font-bold text-brand-black-900 lg:text-3xl">
+      <Heading className="text-2xl font-bold text-ink lg:text-3xl">
         {children}
       </Heading>
       <span className="h-1 w-16 rounded-full bg-brand-yellow-500" />

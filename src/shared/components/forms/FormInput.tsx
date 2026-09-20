@@ -16,7 +16,7 @@ type FormInputProps = {
 };
 
 const fieldClasses =
-  "mt-2 w-full rounded-lg border border-gray-300 p-2 text-brand-black-900 placeholder:text-gray-400 focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200 [&:user-invalid]:border-red-500 [&:user-invalid]:text-red-600 [&:focus:user-invalid]:ring-red-200";
+  "mt-2 w-full rounded-lg border border-line-strong bg-raised p-2 text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200 [&:user-invalid]:border-red-500 [&:user-invalid]:text-danger [&:focus:user-invalid]:ring-red-200";
 
 export const FormInput = ({
   text,
@@ -38,8 +38,8 @@ export const FormInput = ({
   };
   return (
     <div className="mt-6 flex flex-col">
-      <label htmlFor={name} className="text-lg font-semibold text-brand-black-900">
-        {text} {required && <span className="text-red-600">*</span>}
+      <label htmlFor={name} className="text-lg font-semibold text-ink">
+        {text} {required && <span className="text-danger">*</span>}
       </label>
 
       {type === "textarea" ? (

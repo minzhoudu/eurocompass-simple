@@ -9,7 +9,7 @@ type CardProps = HTMLAttributes<HTMLDivElement> & {
 export const Card = ({ padded = true, className, ...props }: CardProps) => (
   <div
     className={cn(
-      "rounded-2xl border border-gray-200 bg-white shadow-card",
+      "rounded-2xl border border-line bg-raised shadow-card",
       padded && "p-6",
       className,
     )}

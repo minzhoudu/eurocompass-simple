@@ -11,7 +11,7 @@ export const InformationsContainer = ({
 }: InformationsContainerProps) => {
   return (
     <div
-      className={`flex w-full flex-col ${textCenter ? "text-center lg:text-left" : ""} gap-2 rounded-2xl border border-t-4 border-gray-200 border-t-brand-yellow-500 bg-white p-5 font-semibold text-brand-black-900 shadow-card lg:text-xl`}
+      className={`flex w-full flex-col ${textCenter ? "text-center lg:text-left" : ""} gap-2 rounded-2xl border border-t-4 border-line border-t-brand-yellow-500 bg-raised p-5 font-semibold text-ink shadow-card lg:text-xl`}
     >
       {children}
     </div>

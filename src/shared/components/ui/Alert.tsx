@@ -10,9 +10,9 @@ type AlertProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const variantClasses: Record<AlertVariant, string> = {
-  warning: "border-brand-yellow-500 bg-brand-yellow-50 text-brand-black-900",
-  error: "border-red-400 bg-red-50 text-red-700",
-  info: "border-gray-300 bg-gray-50 text-gray-700",
+  warning: "border-brand-yellow-500 bg-brand-yellow-500/10 text-ink",
+  error: "border-red-400 bg-red-500/10 text-danger",
+  info: "border-line-strong bg-sunken/50 text-ink-muted",
 };
 
 export const Alert = ({

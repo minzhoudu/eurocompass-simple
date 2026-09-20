@@ -10,8 +10,8 @@ type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
 
 const variantClasses: Record<BadgeVariant, string> = {
   yellow: "bg-brand-yellow-500 text-brand-black-900",
-  black: "bg-brand-black-900 text-white",
-  outline: "border border-gray-300 text-gray-700",
+  black: "bg-ink text-on-ink",
+  outline: "border border-line-strong text-ink-muted",
 };
 
 export const Badge = ({

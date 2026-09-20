@@ -6,5 +6,5 @@ export const Skeleton = ({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("animate-pulse rounded-md bg-gray-200", className)} {...props} />
+  <div className={cn("animate-pulse rounded-md bg-sunken", className)} {...props} />
 );

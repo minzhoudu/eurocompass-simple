@@ -22,8 +22,17 @@ export const HomePage = () => {
           content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Autobus Kruševac - Beograd i Beograd - Kruševac"
         />
       </Helmet>
-      <div className="w-full bg-brand-yellow-50 py-10">
+      <div className="relative left-1/2 h-72 w-screen -translate-x-1/2 self-start overflow-hidden bg-brand-yellow-500/10 sm:h-96 lg:h-[30rem]">
         <RouteMap />
+
+        <div className="pointer-events-none absolute inset-0 flex items-end">
+          <div className="mx-auto w-full max-w-6xl px-6 pb-8 lg:px-10 lg:pb-12">
+            <h1 className="text-4xl font-bold tracking-wide text-ink sm:text-5xl lg:text-6xl">
+              Eurocompass D.o.o
+            </h1>
+            <span className="mt-3 block h-1 w-16 rounded-full bg-brand-yellow-500" />
+          </div>
+        </div>
       </div>
 
       <div className="flex w-full flex-col gap-6 px-4 lg:flex-row lg:px-0">
@@ -43,7 +52,7 @@ export const HomePage = () => {
             {!isLoading ? (
               <div className="flex w-full flex-row justify-center gap-10">
                 <div className="flex flex-1 flex-col items-center">
-                  <h3 className="mb-3 font-bold text-brand-black-900">
+                  <h3 className="mb-3 font-bold text-ink">
                     Kruševac
                   </h3>
                   <ul className="flex flex-col items-center gap-2">
@@ -58,7 +67,7 @@ export const HomePage = () => {
                 </div>
 
                 <div className="flex flex-1 flex-col items-center">
-                  <h3 className="mb-3 font-bold text-brand-black-900">
+                  <h3 className="mb-3 font-bold text-ink">
                     Beograd
                   </h3>
                   <ul className="flex flex-col items-center gap-2">
@@ -73,7 +82,7 @@ export const HomePage = () => {
                     {data?.info?.saturdayBeograd &&
                       data?.info?.saturdayBeograd.length > 0 && (
                         <>
-                          <li className="my-1 w-full border-t border-dashed border-gray-300" />
+                          <li className="my-1 w-full border-t border-dashed border-line-strong" />
                           <li>
                             <Badge variant="yellow">nedeljom</Badge>
                           </li>

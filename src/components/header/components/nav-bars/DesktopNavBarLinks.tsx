@@ -10,7 +10,7 @@ export const DesktopNavBarLinks = () => {
           <NavLink
             to={link.path}
             className={({ isActive }) =>
-              `${isActive ? "bg-brand-yellow-50 text-brand-yellow-700" : "text-brand-black-900"} rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:bg-brand-yellow-50 hover:text-brand-yellow-700`
+              `${isActive ? "bg-brand-yellow-500/10 text-accent-ink" : "text-ink"} rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:bg-brand-yellow-500/10 hover:text-accent-ink`
             }
           >
             {link.name}

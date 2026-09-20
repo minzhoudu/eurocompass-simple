@@ -30,8 +30,11 @@ export const SocialNetworks = () => {
 
       <div className="flex justify-center gap-5 lg:justify-evenly">
         <div className="flex items-center gap-2 text-lg font-semibold">
-          <FaWhatsapp color="#019c4e" size={socialNetworkSize} />
-          <FaViber color="#9585ff" size={28} />
+          <FaWhatsapp
+            className="text-social-whatsapp"
+            size={socialNetworkSize}
+          />
+          <FaViber className="text-social-viber" size={28} />
           <p>060 / 74-21-006</p>
         </div>
       </div>

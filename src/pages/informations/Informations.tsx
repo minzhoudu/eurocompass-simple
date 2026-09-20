@@ -73,8 +73,8 @@ export const Informations = () => {
         <InformationTitle>Novo</InformationTitle>
         <InformationsParagraph className="mx-auto xl:w-1/2">
           Karte od sada možete rezervisati preko{" "}
-          <span className="font-semibold text-[#019c4e]">Whatsapp</span> i{" "}
-          <span className="font-semibold text-[#9585ff]">Viber</span>{" "}
+          <span className="font-semibold text-social-whatsapp">Whatsapp</span> i{" "}
+          <span className="font-semibold text-social-viber">Viber</span>{" "}
           aplikacije.
         </InformationsParagraph>
       </InformationsContainer>

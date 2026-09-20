@@ -1,41 +1,17 @@
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
-import { cn } from "../../utils";
-
-type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
-type ButtonSize = "sm" | "md" | "lg";
+import { ButtonSize, ButtonVariant, getButtonClasses } from "./buttonStyles";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
 };
 
-const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    "bg-brand-yellow-500 text-brand-black-900 hover:bg-brand-yellow-600 focus-visible:ring-brand-yellow-600",
-  secondary:
-    "bg-ink text-on-ink hover:bg-ink-muted focus-visible:ring-ink-muted",
-  outline:
-    "border border-ink text-ink hover:bg-ink hover:text-on-ink focus-visible:ring-ink-muted",
-  ghost: "text-ink hover:bg-sunken focus-visible:ring-line-strong",
-};
-
-const sizeClasses: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-5 py-2.5 text-base",
-  lg: "px-7 py-3 text-lg",
-};
-
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", className, ...props }, ref) => (
+  ({ variant, size, className, ...props }, ref) => (
     <button
       ref={ref}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-raised disabled:cursor-not-allowed disabled:opacity-50",
-        variantClasses[variant],
-        sizeClasses[size],
-        className,
-      )}
+      className={getButtonClasses({ variant, size, className })}
       {...props}
     />
   ),

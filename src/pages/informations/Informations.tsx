@@ -1,23 +1,13 @@
 import { Helmet } from "react-helmet";
-import {
-  GoogleMap,
-  InformationsContainer,
-  InformationsParagraph,
-  InformationTitle,
-} from "../../components";
-import {
-  Alert,
-  Price,
-  SectionHeading,
-  Skeleton,
-  useInformation,
-} from "../../shared";
+import { BookingChannels, FareTicket, GoogleMap } from "../../components";
+import { Alert, SectionHeading, Skeleton, useInformation } from "../../shared";
 
 export const Informations = () => {
   const { data, isError, isLoading } = useInformation();
+  const info = data?.info;
 
   return (
-    <div className="flex w-3/4 flex-col items-center gap-14 lg:w-2/3">
+    <div className="flex w-full max-w-4xl flex-col gap-8 px-4 lg:px-0">
       <Helmet>
         <title>Eurocompass doo | Informacije</title>
         <meta
@@ -26,41 +16,46 @@ export const Informations = () => {
         />
       </Helmet>
 
-      <SectionHeading as="h1" align="responsive" className="mt-10">
+      <SectionHeading as="h1" className="mt-10">
         Informacije o cenama i polascima
       </SectionHeading>
 
       {!isError ? (
         !isLoading ? (
           <>
-            <InformationsContainer textCenter>
-              <InformationTitle>Cene karata</InformationTitle>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Cena karte u jednom smeru:{" "}
-                <Price>{data?.info?.regularPrice},00 RSD</Price>
-              </InformationsParagraph>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Povratna karta:{" "}
-                <Price>{data?.info?.roundtripPrice},00 RSD</Price>
-              </InformationsParagraph>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Studentska povratna karta:{" "}
-                <Price>{data?.info?.studentPrice},00 RSD</Price>
-              </InformationsParagraph>
-            </InformationsContainer>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <FareTicket label="Jedan smer" price={info?.regularPrice} />
+              <FareTicket
+                label="Povratna karta"
+                price={info?.roundtripPrice}
+              />
+              <FareTicket
+                label="Studentska povratna karta"
+                price={info?.studentPrice}
+              />
+            </div>
 
-            <Alert variant="warning" title="VAŽNO" className="w-full">
-              <div className="flex flex-col gap-2 text-center lg:text-left">
-                {data?.info?.importantInfo.map((item, idx) => (
-                  <p key={idx}>- {item}</p>
-                ))}
-              </div>
-            </Alert>
+            {info && info.importantInfo.length > 0 && (
+              <Alert variant="warning" title="VAŽNO" className="w-full">
+                <ul className="flex flex-col gap-2 text-base">
+                  {info.importantInfo.map((item, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-brand-yellow-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Alert>
+            )}
           </>
         ) : (
           <div className="flex w-full flex-col gap-4">
-            <Skeleton className="h-40 w-full" />
-            <Skeleton className="h-20 w-full" />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+            </div>
+            <Skeleton className="h-24 w-full" />
           </div>
         )
       ) : (
@@ -69,15 +64,7 @@ export const Informations = () => {
         </Alert>
       )}
 
-      <InformationsContainer textCenter>
-        <InformationTitle>Novo</InformationTitle>
-        <InformationsParagraph className="mx-auto xl:w-1/2">
-          Karte od sada možete rezervisati preko{" "}
-          <span className="font-semibold text-social-whatsapp">Whatsapp</span> i{" "}
-          <span className="font-semibold text-social-viber">Viber</span>{" "}
-          aplikacije.
-        </InformationsParagraph>
-      </InformationsContainer>
+      <BookingChannels />
 
       <GoogleMap />
     </div>

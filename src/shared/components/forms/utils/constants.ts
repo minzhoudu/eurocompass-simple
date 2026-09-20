@@ -6,10 +6,15 @@ export type FormInputType = {
   type: HTMLInputTypeAttribute;
   text: string;
   placeholder: string;
+  autoComplete: string;
   required: boolean;
-  pattern?: string;
   errorMessage: string;
+  invalidMessage?: string;
+  isValid?: (value: string) => boolean;
 };
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^\+?[\d\s/().-]+$/;
 
 export const FORM_INPUTS: FormInputType[] = [
   {
@@ -18,26 +23,34 @@ export const FORM_INPUTS: FormInputType[] = [
     type: "text",
     text: "Prezime i ime",
     placeholder: "Unesite svoje prezime i ime",
+    autoComplete: "name",
     required: true,
-    errorMessage: "Ovo polje je obavezno",
+    errorMessage: "Unesite prezime i ime",
   },
   {
     id: 2,
     name: "email",
     type: "email",
     text: "Email adresa",
-    placeholder: "Unesite svoju Email adresu",
+    placeholder: "Unesite svoju email adresu",
+    autoComplete: "email",
     required: true,
-    errorMessage: "Ovo polje je obavezno",
+    errorMessage: "Unesite email adresu",
+    invalidMessage: "Unesite ispravnu email adresu",
+    isValid: (value) => EMAIL_PATTERN.test(value),
   },
   {
     id: 3,
     name: "phone",
-    type: "number",
+    type: "tel",
     text: "Broj telefona",
-    placeholder: "(npr. 0631234567)",
+    placeholder: "npr. 0631234567",
+    autoComplete: "tel",
     required: true,
-    errorMessage: "Ovo polje je obavezno",
+    errorMessage: "Unesite broj telefona",
+    invalidMessage: "Unesite ispravan broj telefona",
+    isValid: (value) =>
+      PHONE_PATTERN.test(value) && value.replace(/\D/g, "").length >= 6,
   },
 ];
 

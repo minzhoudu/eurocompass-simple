@@ -1,27 +1,13 @@
 import { Helmet } from "react-helmet";
-import {
-  GoogleMap,
-  InformationsContainer,
-  InformationsParagraph,
-  InformationTitle,
-} from "../../components";
-import { InformationResponse, Price } from "../../shared";
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../../config/axiosInstance";
+import { BookingChannels, FareTicket, GoogleMap } from "../../components";
+import { Alert, SectionHeading, Skeleton, useInformation } from "../../shared";
 
 export const Informations = () => {
-  const { data, isError, isLoading } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<InformationResponse>("/information");
-      return data;
-    },
-    staleTime: 1000 * 60 * 60,
-  });
+  const { data, isError, isLoading } = useInformation();
+  const info = data?.info;
 
   return (
-    <div className="flex w-3/4 flex-col items-center gap-14 lg:w-2/3">
+    <div className="flex w-full max-w-4xl flex-col gap-8 px-4 lg:px-0">
       <Helmet>
         <title>Eurocompass doo | Informacije</title>
         <meta
@@ -30,59 +16,55 @@ export const Informations = () => {
         />
       </Helmet>
 
-      <div className="mt-10 flex flex-col self-center rounded-lg bg-primaryYellow px-5 py-3 text-center text-xl font-bold lg:text-left lg:text-2xl">
-        <h1>Informacije o cenama i polascima</h1>
-      </div>
+      <SectionHeading as="h1" className="mt-10">
+        Informacije o cenama i polascima
+      </SectionHeading>
 
       {!isError ? (
         !isLoading ? (
           <>
-            <InformationsContainer textCenter>
-              <InformationTitle>Cene karata</InformationTitle>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Cena karte u jednom smeru:{" "}
-                <Price>{data?.info?.regularPrice},00 RSD</Price>
-              </InformationsParagraph>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Povratna karta:{" "}
-                <Price>{data?.info?.roundtripPrice},00 RSD</Price>
-              </InformationsParagraph>
-              <InformationsParagraph className="mx-auto xl:w-1/2">
-                Studentska povratna karta:{" "}
-                <Price>{data?.info?.studentPrice},00 RSD</Price>
-              </InformationsParagraph>
-            </InformationsContainer>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <FareTicket label="Jedan smer" price={info?.regularPrice} />
+              <FareTicket
+                label="Povratna karta"
+                price={info?.roundtripPrice}
+              />
+              <FareTicket
+                label="Studentska povratna karta"
+                price={info?.studentPrice}
+              />
+            </div>
 
-            <InformationsContainer>
-              <InformationTitle className="border-2 border-red-700">
-                VAŽNO
-              </InformationTitle>
-              {data?.info?.importantInfo.map((item, idx) => (
-                <InformationsParagraph key={idx} className="mx-auto xl:w-2/3">
-                  - {item}
-                </InformationsParagraph>
-              ))}
-            </InformationsContainer>
+            {info && info.importantInfo.length > 0 && (
+              <Alert variant="warning" title="VAŽNO" className="w-full">
+                <ul className="flex flex-col gap-2 text-base">
+                  {info.importantInfo.map((item, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-brand-yellow-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Alert>
+            )}
           </>
         ) : (
-          <div className="animate-pulse rounded-lg border border-white px-2 py-1 text-lg text-white">
-            <p>UČITAVANJE PODATAKA...</p>
+          <div className="flex w-full flex-col gap-4">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+            </div>
+            <Skeleton className="h-24 w-full" />
           </div>
         )
       ) : (
-        <p className="text-xl font-bold text-red-700">
+        <Alert variant="error" className="w-full text-center font-bold">
           Došlo je do greške! Pokušajte ponovo kasnije...
-        </p>
+        </Alert>
       )}
 
-      <InformationsContainer textCenter>
-        <InformationTitle>Novo</InformationTitle>
-        <InformationsParagraph className="mx-auto xl:w-1/2">
-          Karte od sada možete rezervisati preko{" "}
-          <span className="text-[#019c4e]">Whatsapp</span> i{" "}
-          <span className="text-[#9585ff]">Viber</span> aplikacije.
-        </InformationsParagraph>
-      </InformationsContainer>
+      <BookingChannels />
 
       <GoogleMap />
     </div>

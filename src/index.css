@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 /* * {
   font-family: "Exo", sans-serif;
   font-optical-sizing: auto;
@@ -28,4 +33,36 @@
   src: url("/fonts/Exo-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
+}
+
+.map-highlight {
+  animation: map-highlight-pulse 3s ease-in-out infinite;
+}
+
+@keyframes map-highlight-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.route-line {
+  stroke-dasharray: 1 10;
+  animation: route-flow 1.2s linear infinite;
+}
+
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -11;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-highlight,
+  .route-line {
+    animation: none;
+  }
 }

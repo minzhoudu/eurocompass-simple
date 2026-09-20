@@ -1,27 +1,44 @@
-import { Devider } from "../../shared";
-import { Addresses, Contacts, SocialNetworks } from "./components";
+import { Link } from "react-router-dom";
+
+import { NAV_LINKS } from "../header/utils";
+import { Addresses, Brand, Contacts, SocialNetworks } from "./components";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="flex w-full flex-col bg-primaryBlue text-center text-white xl:w-3/4 xl:rounded-t-xl">
-      <div className="flex justify-center border-b-2 py-8 font-semibold tracking-wide lg:text-3xl">
-        <div className="rounded-lg bg-primaryYellow px-3 py-2 text-black">
-          <p>{year}.©Eurocompass </p>
-        </div>
-      </div>
-
-      <div className="flex flex-col justify-evenly gap-7 py-10 lg:flex-row lg:gap-0">
-        <Addresses />
-
-        <Devider />
-
-        <SocialNetworks />
-
-        <Devider />
+    <footer className="w-full border-t border-line bg-raised text-ink">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_1.4fr_1.2fr_1fr] lg:gap-8 lg:px-10">
+        <Brand />
 
         <Contacts />
+
+        <Addresses />
+
+        <SocialNetworks />
+      </div>
+
+      <div className="border-t border-line">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-sm text-ink-muted sm:flex-row lg:px-10">
+          <p>
+            © {year} Eurocompass D.o.o
+          </p>
+
+          <nav aria-label="Footer">
+            <ul className="flex gap-5 font-semibold">
+              {NAV_LINKS.map((link) => (
+                <li key={link.id}>
+                  <Link
+                    to={link.path}
+                    className="transition-colors hover:text-accent-ink"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </footer>
   );

@@ -1,115 +1,165 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { ReactNode } from "react";
+import { Helmet } from "react-helmet";
+import { IoOpenOutline } from "react-icons/io5";
 
-import axiosInstance from "../../../config/axiosInstance";
-import { InformationResponse, UpdateInformationDto } from "../../../shared";
-import { StartingTime, StartingTimeId } from "./components";
+import { AdminPageHeader, EditableList } from "../../../components";
+import { Departures } from "../../../components/departures";
+import {
+  Alert,
+  Card,
+  Skeleton,
+  UpdateInformationDto,
+  useInformation,
+  useUpdateInformation,
+} from "../../../shared";
+
+type TimesField =
+  | "startingTimesKrusevac"
+  | "startingTimesBeograd"
+  | "saturdayBeograd";
+
+type TimesCardProps = {
+  title: string;
+  description?: string;
+  count: number;
+  children: ReactNode;
+};
+
+const TimesCard = ({ title, description, count, children }: TimesCardProps) => (
+  <Card className="flex flex-col gap-4">
+    <div className="flex items-start justify-between gap-3">
+      <div>
+        <h2 className="text-lg font-bold text-ink">{title}</h2>
+        {description && (
+          <p className="text-sm text-ink-muted">{description}</p>
+        )}
+      </div>
+
+      <span className="shrink-0 rounded-full bg-sunken px-3 py-1 text-xs font-semibold text-ink-muted">
+        {count} {count === 1 ? "polazak" : "polazaka"}
+      </span>
+    </div>
+
+    {children}
+  </Card>
+);
 
 export const AdminDashboard = () => {
-  const { data, refetch: refetchInfo } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } =
-        await axiosInstance.get<InformationResponse>("/information");
-      return data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data, isLoading, isError } = useInformation({ staleTime: 0 });
+  const { mutateAsync } = useUpdateInformation();
 
-  const {
-    mutate,
-    isError: isDeleteError,
-    isPending,
-  } = useMutation({
-    mutationKey: ["updateInformation"],
-    mutationFn: async (updatedInfo: UpdateInformationDto) => {
-      await axiosInstance.patch("/information", updatedInfo);
-    },
-    onSuccess: () => {
-      refetchInfo();
-    },
-  });
+  const info = data?.info;
 
-  const handleDeleteTime = (id: StartingTimeId, time: string) => {
-    if (!data || !data.info) return;
+  const saveTimes = (field: TimesField) => async (times: string[]) => {
+    if (!info) throw new Error("Information is not loaded");
 
-    if (id === "krusevac") {
-      const startingTimesKrusevac = data?.info?.startingTimesKrusevac.filter(
-        (startingTime) => startingTime.trim() !== time.trim(),
-      );
+    const updatedInfo: UpdateInformationDto = { id: info.id };
+    updatedInfo[field] = times;
 
-      mutate({
-        id: data.info.id,
-        startingTimesKrusevac,
-      });
-    }
-
-    if (id === "beograd") {
-      const startingTimesBeograd = data?.info?.startingTimesBeograd.filter(
-        (startingTime) => startingTime.trim() !== time.trim(),
-      );
-
-      mutate({
-        id: data.info.id,
-        startingTimesBeograd,
-      });
-    }
+    await mutateAsync(updatedInfo);
   };
 
-  const handleAddTime = (id: StartingTimeId, time: string) => {
-    if (!data || !data.info) return;
-
-    if (id === "krusevac") {
-      const startingTimesKrusevac = [...data.info.startingTimesKrusevac, time];
-
-      mutate({
-        id: data.info.id,
-        startingTimesKrusevac,
-      });
-    }
-
-    if (id === "beograd") {
-      const startingTimesBeograd = [...data.info.startingTimesBeograd, time];
-
-      mutate({
-        id: data.info.id,
-        startingTimesBeograd,
-      });
-    }
-  };
+  const timeListProps = {
+    inputType: "time",
+    layout: "chips",
+    sort: true,
+    emptyText: "Nema polaznih vremena.",
+    addLabel: "Novo vreme polaska",
+    emptyMessage: "Izaberite vreme polaska.",
+    duplicateMessage: "To vreme već postoji.",
+    confirmTitle: (time: string) => `Obrisati polazak u ${time}?`,
+    confirmDescription:
+      "Polazak će odmah nestati sa sajta i iz forme za rezervaciju.",
+  } as const;
 
   return (
-    <div className="flex h-[95%] w-full flex-col items-center justify-center gap-5 bg-gray-400">
-      <div className="rounded-md bg-primaryBlue px-4 py-2">
-        <h1 className="text-2xl font-semibold text-white">
-          Eurocompass Admin Panel
-        </h1>
-      </div>
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+      <Helmet>
+        <title>Admin | Polasci</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-      <div className="flex gap-36">
-        <StartingTime
-          id="krusevac"
-          title="Polazna vremena Kruševac"
-          times={data?.info?.startingTimesKrusevac}
-          handleDeleteTime={handleDeleteTime}
-          handleAddTime={handleAddTime}
-          isLoading={isPending}
-        />
+      <AdminPageHeader
+        title="Polasci"
+        description="Izmene se odmah prikazuju na sajtu i u formi za rezervaciju."
+      />
 
-        <StartingTime
-          id="beograd"
-          title="Polazna vremena Beograd"
-          times={data?.info?.startingTimesBeograd}
-          handleDeleteTime={handleDeleteTime}
-          handleAddTime={handleAddTime}
-          isLoading={isPending}
-        />
-      </div>
-
-      {isDeleteError && (
-        <p className="font-bold text-red-600">
-          Došlo je do greške, pokušajte ponovo ili kontaktirajte podršku!
-        </p>
+      {isError && (
+        <Alert variant="error">
+          Učitavanje podataka nije uspelo. Osvežite stranicu i pokušajte ponovo.
+        </Alert>
       )}
+
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        <div className="flex flex-col gap-4">
+          {isLoading || !info ? (
+            <>
+              <Skeleton className="h-44" />
+              <Skeleton className="h-44" />
+              <Skeleton className="h-36" />
+            </>
+          ) : (
+            <>
+              <TimesCard
+                title="Kruševac"
+                count={info.startingTimesKrusevac.length}
+              >
+                <EditableList
+                  {...timeListProps}
+                  items={info.startingTimesKrusevac}
+                  onChange={saveTimes("startingTimesKrusevac")}
+                />
+              </TimesCard>
+
+              <TimesCard
+                title="Beograd"
+                count={info.startingTimesBeograd.length}
+              >
+                <EditableList
+                  {...timeListProps}
+                  items={info.startingTimesBeograd}
+                  onChange={saveTimes("startingTimesBeograd")}
+                />
+              </TimesCard>
+
+              <TimesCard
+                title="Beograd, nedeljom"
+                description="Dodatni polasci nedeljom, pored redovnih."
+                count={info.saturdayBeograd.length}
+              >
+                <EditableList
+                  {...timeListProps}
+                  items={info.saturdayBeograd}
+                  onChange={saveTimes("saturdayBeograd")}
+                />
+              </TimesCard>
+            </>
+          )}
+        </div>
+
+        <Card className="flex flex-col gap-6 lg:sticky lg:top-10">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-bold text-ink">Tako izgleda na sajtu</h2>
+
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sm font-semibold text-accent-ink hover:underline"
+            >
+              Otvori sajt
+              <IoOpenOutline className="size-4" />
+            </a>
+          </div>
+
+          <Departures
+            isLoading={isLoading}
+            krusevac={info?.startingTimesKrusevac}
+            beograd={info?.startingTimesBeograd}
+            beogradSunday={info?.saturdayBeograd}
+          />
+        </Card>
+      </div>
     </div>
   );
 };

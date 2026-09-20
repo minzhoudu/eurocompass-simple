@@ -16,7 +16,7 @@ export const PageUnderConstruction = () => {
         <p>Molim vas vratite se kasnije</p>
       </div>
 
-      <Link to="/" className="rounded-lg bg-primaryYellow p-2">
+      <Link to="/" className="rounded-lg bg-brand-yellow-500 p-2 text-brand-black-900">
         Vrati se na početnu stranu
       </Link>
     </div>

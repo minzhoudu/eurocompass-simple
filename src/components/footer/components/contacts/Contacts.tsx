@@ -1,17 +1,28 @@
+import { FaEnvelope, FaPhone } from "react-icons/fa6";
+
+import { FooterHeading } from "../footer-heading";
+
 export const Contacts = () => {
   return (
-    <div className="flex flex-col gap-5">
-      <h2 className="text-2xl font-bold">Kontakti</h2>
-      <p className="text-lg">
-        Email:{" "}
-        <a
-          className="underline underline-offset-2"
-          href="mailto:info@eurocompass.rs"
-        >
-          eurocompassdoo@gmail.com
-        </a>
-      </p>
-      <p className="text-lg">Telefon: 037/443-277</p>
+    <div className="flex flex-col gap-4">
+      <FooterHeading>Kontakti</FooterHeading>
+
+      <div className="flex flex-col gap-3">
+        <p className="flex items-start gap-2">
+          <FaEnvelope className="mt-1 shrink-0 text-accent-ink" />
+          <a
+            className="break-words underline underline-offset-2 transition-colors hover:text-accent-ink"
+            href="mailto:info@eurocompass.rs"
+          >
+            eurocompassdoo@gmail.com
+          </a>
+        </p>
+
+        <p className="flex items-start gap-2">
+          <FaPhone className="mt-1 shrink-0 text-accent-ink" />
+          037/443-277
+        </p>
+      </div>
     </div>
   );
 };

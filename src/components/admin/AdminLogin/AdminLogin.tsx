@@ -1,36 +1,26 @@
+import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { IoArrowBack, IoLockClosedOutline, IoMailOutline } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 
 import axiosInstance from "../../../config/axiosInstance";
+import { Alert, Button, Card, cn, FormInput, useTheme } from "../../../shared";
+import { ThemeToggle } from "../../header/components/theme-toggle";
 import { LoginResponse } from "../models";
-import { useQuery } from "@tanstack/react-query";
+import logo from "/images/eurocompass_logo.webp";
+
+const DEFAULT_ERROR_MESSAGE =
+  "Prijava nije uspela. Proverite podatke i pokušajte ponovo.";
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage(null);
-
-    const email = (e.target as HTMLFormElement).email.value;
-    const password = (e.target as HTMLFormElement).password.value;
-
-    try {
-      await axiosInstance.post<LoginResponse>("/auth/login", {
-        email,
-        password,
-      });
-
-      navigate("/admin/dashboard");
-    } catch (error) {
-      if (isAxiosError(error)) {
-        setErrorMessage(error.response?.data.message);
-      }
-    }
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { status } = useQuery({
     queryKey: ["me"],
@@ -48,49 +38,110 @@ export const AdminLogin = () => {
     }
   }, [status, navigate]);
 
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = event.target;
+
+    setCredentials((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      await axiosInstance.post<LoginResponse>("/auth/login", credentials);
+
+      navigate("/admin/dashboard");
+    } catch (error) {
+      const message = isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+
+      setErrorMessage(
+        typeof message === "string" ? message : DEFAULT_ERROR_MESSAGE,
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <main className="flex h-screen w-screen items-center justify-center bg-gray-400">
-      <div className="flex flex-col gap-5 rounded-xl bg-primaryBlue p-10 shadow-lg shadow-black">
-        <h1 className="text-center text-2xl font-bold text-white">
-          Admin Login
-        </h1>
+    <main
+      className={cn(
+        "flex min-h-screen flex-col bg-surface text-ink",
+        theme === "dark" && "dark",
+      )}
+    >
+      <Helmet>
+        <title>Admin | Prijava</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-        <form onSubmit={handleOnSubmit} className="flex w-96 flex-col gap-5">
-          <div>
-            <label htmlFor="email" className="text-lg font-bold text-white">
-              Email
-            </label>
-            <input
+      <div className="flex items-center justify-between px-4 py-4 sm:px-8">
+        <Link
+          to="/"
+          className="flex items-center gap-2 font-semibold text-ink-muted transition-colors hover:text-accent-ink"
+        >
+          <IoArrowBack className="size-5" />
+          Nazad na sajt
+        </Link>
+
+        <ThemeToggle />
+      </div>
+
+      <div className="flex flex-1 items-center justify-center px-4 pb-16">
+        <Card className="flex w-full max-w-md flex-col gap-8 p-6 sm:p-8">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <img src={logo} alt="Eurocompass" className="w-40" />
+
+            <div>
+              <h1 className="text-2xl font-bold text-ink">Prijava</h1>
+              <p className="text-ink-muted">Admin panel</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <FormInput
+              name="email"
+              text="Email"
               type="email"
-              id="email"
-              className="mt-2 w-full rounded-lg px-4 py-2 text-primaryBlue"
+              autoComplete="username"
+              icon={<IoMailOutline className="size-5" />}
+              value={credentials.email}
+              onChange={handleChange}
               required
             />
-          </div>
 
-          <div>
-            <label htmlFor="password" className="text-lg font-bold text-white">
-              Lozinka
-            </label>
-            <input
+            <FormInput
+              name="password"
+              text="Lozinka"
               type="password"
-              id="password"
-              className="mt-2 w-full rounded-lg px-4 py-2 text-primaryBlue"
+              autoComplete="current-password"
+              icon={<IoLockClosedOutline className="size-5" />}
+              value={credentials.password}
+              onChange={handleChange}
               required
             />
-          </div>
 
-          {errorMessage && (
-            <p className="text-center text-red-600">{errorMessage}</p>
-          )}
+            {errorMessage && (
+              <Alert variant="error" role="alert">
+                {errorMessage}
+              </Alert>
+            )}
 
-          <button
-            type="submit"
-            className="self-center rounded-md border px-4 py-2 text-white transition-colors hover:bg-white hover:text-primaryBlue"
-          >
-            Uloguj se
-          </button>
-        </form>
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting || !credentials.email || !credentials.password}
+            >
+              {isSubmitting ? "PRIJAVA..." : "ULOGUJ SE"}
+            </Button>
+          </form>
+        </Card>
       </div>
     </main>
   );

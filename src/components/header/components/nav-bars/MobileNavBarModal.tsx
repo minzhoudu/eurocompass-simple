@@ -13,16 +13,16 @@ export const MobileNavBarModal = ({
 }: MobileNavBarProps): ReactNode => {
   return (
     <div
-      className={`bg-primaryBlue top-20 z-10 w-full text-white ${isOpen ? "absolute" : "hidden"} lg:hidden`}
+      className={`top-20 z-20 w-full border-b border-line bg-raised text-ink shadow-lg ${isOpen ? "fixed" : "hidden"} lg:hidden`}
     >
-      <ul className="flex flex-col">
+      <ul className="flex flex-col divide-y divide-line">
         {NAV_LINKS.map((link) => (
           <li key={link.id} className="flex w-full">
             <NavLink
               to={link.path}
               onClick={closeNav}
               className={({ isActive }) =>
-                `hover:bg-primaryYellow w-full py-7 text-center text-xl font-bold transition-all duration-500 ease-in-out ${isActive ? "bg-primaryYellow text-black" : "text-white"}`
+                `w-full py-6 text-center text-xl font-bold transition-colors duration-300 ease-in-out hover:bg-brand-yellow-500/10 hover:text-accent-ink ${isActive ? "bg-brand-yellow-500/10 text-accent-ink" : "text-ink"}`
               }
             >
               {link.name}

@@ -21,7 +21,9 @@ type FormInputProps = {
   placeholder?: string;
   autoComplete?: string;
   autoFocus?: boolean;
+  inputMode?: "text" | "numeric" | "decimal" | "tel" | "email";
   icon?: ReactNode;
+  suffix?: ReactNode;
   error?: string;
 };
 
@@ -39,7 +41,9 @@ export const FormInput = ({
   type,
   autoComplete,
   autoFocus,
+  inputMode,
   icon,
+  suffix,
   error,
 }: FormInputProps) => {
   const errorId = `${name}-error`;
@@ -52,6 +56,7 @@ export const FormInput = ({
     placeholder,
     autoComplete,
     autoFocus,
+    inputMode,
     "aria-invalid": error ? true : undefined,
     "aria-describedby": error ? errorId : undefined,
   };
@@ -84,8 +89,19 @@ export const FormInput = ({
           <input
             {...sharedProps}
             type={type || "text"}
-            className={cn(fieldClasses, "h-12", icon ? "pl-11 pr-3" : "px-3")}
+            className={cn(
+              fieldClasses,
+              "h-12",
+              icon ? "pl-11" : "pl-3",
+              suffix ? "pr-14" : "pr-3",
+            )}
           />
+        )}
+
+        {suffix && (
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-ink-muted">
+            {suffix}
+          </span>
         )}
       </div>
 

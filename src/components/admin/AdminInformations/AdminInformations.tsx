@@ -1,147 +1,187 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { AiOutlineLoading } from "react-icons/ai";
-import axios from "../../../config/axiosInstance";
-import { InformationResponse, UpdateInformationDto } from "../../../shared";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { Helmet } from "react-helmet";
+import { IoCheckmarkCircle } from "react-icons/io5";
 
-export const AdminInformations = () => {
-  const { data, refetch } = useQuery({
-    queryKey: ["information"],
-    queryFn: async () => {
-      const { data } = await axios.get<InformationResponse>("/information");
-      return data;
-    },
-    staleTime: 1000 * 60 * 5,
+import {
+  Alert,
+  Button,
+  Card,
+  FormInput,
+  Information,
+  Skeleton,
+  useInformation,
+  useUpdateInformation,
+} from "../../../shared";
+import { AdminPageHeader } from "../admin-shell";
+import { EditableList } from "../EditableList";
+
+const PRICE_FIELDS = [
+  { name: "regularPrice", label: "Jedan smer" },
+  { name: "roundtripPrice", label: "Povratna karta" },
+  { name: "studentPrice", label: "Studentska povratna karta" },
+] as const;
+
+type PriceName = (typeof PRICE_FIELDS)[number]["name"];
+
+const PRICE_PATTERN = /^\d[\d.]*$/;
+
+const PricesCard = ({ info }: { info: Information }) => {
+  const { mutate, isPending, isError, isSuccess, reset } =
+    useUpdateInformation();
+
+  const [values, setValues] = useState<Record<PriceName, string>>({
+    regularPrice: info.regularPrice,
+    roundtripPrice: info.roundtripPrice,
+    studentPrice: info.studentPrice,
   });
+  const [showErrors, setShowErrors] = useState(false);
 
-  const { mutate, isError, isPending } = useMutation({
-    mutationKey: ["updateInformation"],
-    mutationFn: async (updatedInfo: UpdateInformationDto) => {
-      await axios.patch("/information", updatedInfo);
-    },
-    onSuccess: () => {
-      refetch();
-    },
-  });
+  const hasError = (name: PriceName) => !PRICE_PATTERN.test(values[name].trim());
+  const isDirty = PRICE_FIELDS.some(
+    ({ name }) => values[name].trim() !== info[name].trim(),
+  );
 
-  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
 
-    const importantInfoArray = (
-      e.currentTarget.importantInfo.value as string
-    ).split(",\n");
+    setValues((prev) => ({ ...prev, [name]: value }));
+    reset();
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    setShowErrors(true);
+
+    if (PRICE_FIELDS.some(({ name }) => hasError(name))) return;
 
     mutate({
-      id: 1,
-      regularPrice: e.currentTarget.regularPrice.value,
-      roundtripPrice: e.currentTarget.roundtripPrice.value,
-      studentPrice: e.currentTarget.studentPrice.value,
-      importantInfo: importantInfoArray,
+      id: info.id,
+      regularPrice: values.regularPrice.trim(),
+      roundtripPrice: values.roundtripPrice.trim(),
+      studentPrice: values.studentPrice.trim(),
     });
   };
 
-  const importantInformations = data?.info?.importantInfo.join(",\n");
-
   return (
-    <div className="flex h-[95%] w-full flex-col items-center justify-center bg-gray-400">
-      <form
-        onSubmit={onFormSubmit}
-        className="flex w-[500px] flex-col gap-5 rounded-xl border-2 border-brand-black-900 bg-white p-6"
-      >
-        <div className="rounded-lg bg-brand-black-900 p-5 text-center">
-          <h1 className="font-bold text-white">Configuracija informacije</h1>
+    <Card>
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+        <div>
+          <h2 className="text-lg font-bold text-ink">Cene karata</h2>
+          <p className="text-sm text-ink-muted">
+            Unesite samo iznos, bez decimala i oznake valute.
+          </p>
         </div>
 
-        <div className="flex flex-col gap-5 px-3">
-          <div className="flex items-center justify-between">
-            <label htmlFor="regularPrice" className="text-lg">
-              Cena redovne karte:
-            </label>
-            <div>
-              <input
-                type="text"
-                id="regularPrice"
-                name="regularPrice"
-                className="rounded-md border border-brand-black-900 p-1 text-center"
-                defaultValue={data?.info?.regularPrice}
-              />
-              <span className="ml-1">RSD</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label htmlFor="roundtripPrice" className="text-lg">
-              Cena povratne karte:
-            </label>
-            <div>
-              <input
-                type="text"
-                id="roundtripPrice"
-                name="roundtripPrice"
-                className="rounded-md border border-brand-black-900 p-1 text-center"
-                defaultValue={data?.info?.roundtripPrice}
-              />
-              <span className="ml-1">RSD</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label htmlFor="studentPrice" className="text-lg">
-              Cena studentske karte:
-            </label>
-            <div>
-              <input
-                type="text"
-                id="studentPrice"
-                name="studentPrice"
-                className="rounded-md border border-brand-black-900 p-1 text-center"
-                defaultValue={data?.info?.studentPrice}
-              />
-              <span className="ml-1">RSD</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <label htmlFor="importantInfo" className="text-lg">
-              Važne informacije:
-            </label>
-            <div className="flex w-full flex-col">
-              <textarea
-                id="importantInfo"
-                name="importantInfo"
-                className="w-full rounded-md border border-brand-black-900 px-2 py-1"
-                rows={
-                  data?.info?.importantInfo.length &&
-                  data?.info?.importantInfo.length > 3
-                    ? data?.info?.importantInfo.length
-                    : 4
-                }
-                defaultValue={importantInformations}
-              />
-              <p className="mt-2 self-center rounded-lg bg-brand-black-900 px-3 py-1 text-center text-xs font-semibold text-green-400">
-                Nakon svake nove informacije (osim poslednje) morate staviti
-                zarez
-              </p>
-              <p className="mt-1 self-center rounded-lg bg-brand-black-900 px-3 py-1 text-center text-xs font-semibold text-green-400">
-                Svaka nova informacija mora biti u novom redu.
-              </p>
-            </div>
-          </div>
+        <div className="grid gap-5 sm:grid-cols-3">
+          {PRICE_FIELDS.map(({ name, label }) => (
+            <FormInput
+              key={name}
+              name={name}
+              text={label}
+              value={values[name]}
+              onChange={handleChange}
+              inputMode="numeric"
+              suffix="RSD"
+              error={
+                showErrors && hasError(name)
+                  ? "Unesite cenu (samo cifre)."
+                  : undefined
+              }
+            />
+          ))}
         </div>
-
-        <button
-          disabled={isPending}
-          className="flex items-center gap-5 self-center rounded-lg border border-brand-black-900 px-4 py-2 font-semibold text-brand-black-900 transition-colors hover:bg-brand-black-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white disabled:hover:text-brand-black-900"
-        >
-          SAČUVAJ PROMENE{" "}
-          {isPending && <AiOutlineLoading className="animate-spin" />}
-        </button>
 
         {isError && (
-          <p className="animate-bounce text-center font-bold text-red-500">
-            Došlo je do greške pri čuvanju podataka
-          </p>
+          <Alert variant="error">
+            Došlo je do greške pri čuvanju cena. Pokušajte ponovo.
+          </Alert>
         )}
+
+        <div className="flex items-center gap-4">
+          <Button type="submit" disabled={isPending || !isDirty}>
+            {isPending ? "ČUVANJE..." : "SAČUVAJ CENE"}
+          </Button>
+
+          {isSuccess && !isDirty && (
+            <p
+              role="status"
+              className="flex items-center gap-2 font-semibold text-accent-ink"
+            >
+              <IoCheckmarkCircle className="size-5" />
+              Cene su sačuvane.
+            </p>
+          )}
+        </div>
       </form>
+    </Card>
+  );
+};
+
+const NotesCard = ({ info }: { info: Information }) => {
+  const { mutateAsync } = useUpdateInformation();
+
+  return (
+    <Card className="flex flex-col gap-4">
+      <div>
+        <h2 className="text-lg font-bold text-ink">Važne informacije</h2>
+        <p className="text-sm text-ink-muted">
+          Prikazuju se u žutom obaveštenju VAŽNO na stranici Informacije.
+          Promene se čuvaju odmah.
+        </p>
+      </div>
+
+      <EditableList
+        items={info.importantInfo}
+        onChange={(importantInfo) =>
+          mutateAsync({ id: info.id, importantInfo })
+        }
+        inputType="text"
+        layout="rows"
+        emptyText="Nema važnih informacija."
+        addLabel="Nova važna informacija"
+        placeholder="Nova informacija..."
+        emptyMessage="Unesite tekst informacije."
+        duplicateMessage="Ta informacija već postoji."
+        confirmTitle={() => "Obrisati ovu informaciju?"}
+        confirmDescription="Informacija će odmah nestati sa stranice Informacije."
+      />
+    </Card>
+  );
+};
+
+export const AdminInformations = () => {
+  const { data, isLoading, isError } = useInformation({ staleTime: 0 });
+  const info = data?.info;
+
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <Helmet>
+        <title>Admin | Cene i informacije</title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
+      <AdminPageHeader
+        title="Cene i informacije"
+        description="Cene karata i obaveštenja sa stranice Informacije."
+      />
+
+      {isError && (
+        <Alert variant="error">
+          Učitavanje podataka nije uspelo. Osvežite stranicu i pokušajte ponovo.
+        </Alert>
+      )}
+
+      {isLoading || !info ? (
+        <>
+          <Skeleton className="h-56" />
+          <Skeleton className="h-64" />
+        </>
+      ) : (
+        <>
+          <PricesCard info={info} />
+          <NotesCard info={info} />
+        </>
+      )}
     </div>
   );
 };

@@ -3,5 +3,7 @@ export * from "./Badge";
 export * from "./Button";
 export * from "./buttonStyles";
 export * from "./Card";
+export * from "./ConfirmDialog";
+export * from "./IconButton";
 export * from "./SectionHeading";
 export * from "./Skeleton";

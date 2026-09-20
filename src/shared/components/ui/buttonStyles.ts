@@ -1,6 +1,11 @@
 import { cn } from "../../utils";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -11,6 +16,8 @@ const variantClasses: Record<ButtonVariant, string> = {
   outline:
     "border border-ink text-ink hover:bg-ink hover:text-on-ink focus-visible:ring-ink-muted",
   ghost: "text-ink hover:bg-sunken focus-visible:ring-line-strong",
+  danger:
+    "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

@@ -24,6 +24,18 @@ import {
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+// A "duplicate" is the same person booking the exact same trip more than
+// once (e.g. a double-submitted form) - not just a returning customer.
+// Keying on email alone would flag nearly every regular rider eventually,
+// since the same person legitimately books different trips all the time.
+const getDuplicateTripKey = (reservation: Reservation) =>
+  [
+    normalizeEmail(reservation.email),
+    reservation.travelDate,
+    reservation.travelTime,
+    reservation.startingLocation.trim().toLowerCase(),
+  ].join("|");
+
 const formatSubmittedAt = (iso: string) =>
   new Date(iso).toLocaleString("sr-RS", {
     timeZone: "Europe/Belgrade",
@@ -69,11 +81,11 @@ const Field = ({ label, value }: { label: string; value: string }) => (
 
 const ReservationRow = ({
   reservation,
-  isReturning,
+  isDuplicateTrip,
   onDelete,
 }: {
   reservation: Reservation;
-  isReturning: boolean;
+  isDuplicateTrip: boolean;
   onDelete: () => void;
 }) => (
   <div className="flex flex-col gap-4 rounded-xl border border-line-strong p-4">
@@ -83,7 +95,7 @@ const ReservationRow = ({
           <p className="truncate font-bold text-ink">
             {reservation.fullName}
           </p>
-          {isReturning && (
+          {isDuplicateTrip && (
             <Badge variant="outline">Ponovljena rezervacija</Badge>
           )}
         </div>
@@ -133,19 +145,20 @@ export const AdminReservations = () => {
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const emailCounts = useMemo(() => {
+  const duplicateTripCounts = useMemo(() => {
     const counts = new Map<string, number>();
 
     reservations?.forEach((reservation) => {
-      const key = normalizeEmail(reservation.email);
+      const key = getDuplicateTripKey(reservation);
       counts.set(key, (counts.get(key) ?? 0) + 1);
     });
 
     return counts;
   }, [reservations]);
 
-  // "Returning" badges stay based on the full list above, not the filtered
-  // one - it's a fact about the customer, not about the current search.
+  // Duplicate-trip badges stay based on the full list above, not the
+  // filtered one, so searching for someone doesn't hide a duplicate that's
+  // sitting outside the current search term.
   const filteredReservations = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
@@ -241,9 +254,9 @@ export const AdminReservations = () => {
               <ReservationRow
                 key={reservation.id}
                 reservation={reservation}
-                isReturning={
-                  (emailCounts.get(normalizeEmail(reservation.email)) ?? 0) >
-                  1
+                isDuplicateTrip={
+                  (duplicateTripCounts.get(getDuplicateTripKey(reservation)) ??
+                    0) > 1
                 }
                 onDelete={() => setPendingDeleteId(reservation.id)}
               />

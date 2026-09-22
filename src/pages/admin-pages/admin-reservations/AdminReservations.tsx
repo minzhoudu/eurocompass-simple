@@ -1,6 +1,10 @@
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
-import { IoTrashOutline } from "react-icons/io5";
+import {
+  IoCloseCircle,
+  IoSearchOutline,
+  IoTrashOutline,
+} from "react-icons/io5";
 
 import { AdminPageHeader } from "../../../components";
 import {
@@ -127,6 +131,7 @@ export const AdminReservations = () => {
     useDeleteReservation();
 
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const emailCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -138,6 +143,23 @@ export const AdminReservations = () => {
 
     return counts;
   }, [reservations]);
+
+  // "Returning" badges stay based on the full list above, not the filtered
+  // one - it's a fact about the customer, not about the current search.
+  const filteredReservations = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+
+    if (!query) return reservations ?? [];
+
+    return (reservations ?? []).filter(
+      (reservation) =>
+        reservation.fullName.toLowerCase().includes(query) ||
+        normalizeEmail(reservation.email).includes(query),
+    );
+  }, [reservations, searchTerm]);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setSearchTerm(event.target.value);
 
   const pendingReservation = reservations?.find(
     (reservation) => reservation.id === pendingDeleteId,
@@ -180,6 +202,32 @@ export const AdminReservations = () => {
         <StatTile label="Ove godine" stats={stats?.year} isLoading={isLoadingStats} />
       </div>
 
+      {!isLoadingReservations && reservations && reservations.length > 0 && (
+        <div className="relative">
+          <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
+
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Pretraga po imenu ili email adresi..."
+            aria-label="Pretraga rezervacija"
+            className="h-12 w-full rounded-lg border border-line-strong bg-raised pl-11 pr-10 text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200"
+          />
+
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => setSearchTerm("")}
+              aria-label="Obriši pretragu"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-subtle hover:text-ink"
+            >
+              <IoCloseCircle className="size-5" />
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-col gap-3">
         {isLoadingReservations ? (
           <>
@@ -188,16 +236,25 @@ export const AdminReservations = () => {
             <Skeleton className="h-32" />
           </>
         ) : reservations && reservations.length > 0 ? (
-          reservations.map((reservation) => (
-            <ReservationRow
-              key={reservation.id}
-              reservation={reservation}
-              isReturning={
-                (emailCounts.get(normalizeEmail(reservation.email)) ?? 0) > 1
-              }
-              onDelete={() => setPendingDeleteId(reservation.id)}
-            />
-          ))
+          filteredReservations.length > 0 ? (
+            filteredReservations.map((reservation) => (
+              <ReservationRow
+                key={reservation.id}
+                reservation={reservation}
+                isReturning={
+                  (emailCounts.get(normalizeEmail(reservation.email)) ?? 0) >
+                  1
+                }
+                onDelete={() => setPendingDeleteId(reservation.id)}
+              />
+            ))
+          ) : (
+            <Card>
+              <p className="text-center text-ink-muted">
+                Nema rezultata za &quot;{searchTerm}&quot;.
+              </p>
+            </Card>
+          )
         ) : (
           <Card>
             <p className="text-center text-ink-muted">

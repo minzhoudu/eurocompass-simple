@@ -13,9 +13,11 @@ import { AdminLayout, AppLayout } from "./layouts";
 import {
   AdminDashboard,
   AdminLoginPage,
+  AdminReservations,
   ErrorPage,
   HomePage,
   Informations,
+  PrivacyPolicy,
   Reservations,
 } from "./pages";
 import { AdminInformations } from "./components";
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "informacije",
         element: <Informations />,
+      },
+      {
+        path: "politika-privatnosti",
+        element: <PrivacyPolicy />,
       },
     ],
   },
@@ -66,6 +72,10 @@ const router = createBrowserRouter([
           {
             path: "informacije",
             element: <AdminInformations />,
+          },
+          {
+            path: "rezervacije",
+            element: <AdminReservations />,
           },
         ],
       },

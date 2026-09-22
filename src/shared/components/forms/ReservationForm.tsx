@@ -7,7 +7,10 @@ import {
   useState,
 } from "react";
 import { IoCallOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
+import { CreateReservationDto } from "../../dtos/CreateReservation";
+import { useCreateReservation } from "../../hooks/useCreateReservation";
 import { useInformation } from "../../hooks/useInformation";
 import { useSendEmail } from "../email";
 import { Alert, Button } from "../ui";
@@ -87,6 +90,7 @@ export const ReservationForm = () => {
     formData,
     subject: "Rezervacija karte",
   });
+  const { mutate: createReservation } = useCreateReservation();
 
   const errors = getFormErrors(formData, schedule);
   const visibleError = (name: string) =>
@@ -178,6 +182,31 @@ export const ReservationForm = () => {
     }
 
     setLoading(true);
+
+    // Fired alongside the email, not awaited: the backend can be slow to
+    // wake up (free-tier cold start), and its outcome shouldn't gate or
+    // fail the customer's confirmation - the email is the reservation of
+    // record from their side. A failure here only means this one booking
+    // is missing from the admin stats.
+    const reservationPayload: CreateReservationDto = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      startingLocation: formData.startingLocation,
+      travelDate: formData.date,
+      travelTime: formData.time,
+      numberOfTickets: Number(formData.numberOfTickets),
+      note: formData.note.trim() || undefined,
+    };
+
+    createReservation(reservationPayload, {
+      onError: (error) => {
+        console.error(
+          "Rezervacija nije sačuvana u bazi (statistika će biti nepotpuna), email je verovatno ipak poslat:",
+          error,
+        );
+      },
+    });
 
     try {
       await sendEmail();
@@ -373,6 +402,17 @@ export const ReservationForm = () => {
       <Button type="submit" size="lg" className="w-full" disabled={loading}>
         {!loading ? "REZERVIŠI KARTU" : "SLANJE PODATAKA..."}
       </Button>
+
+      <p className="text-center text-sm text-ink-muted">
+        Slanjem forme prihvatate našu{" "}
+        <Link
+          to="/politika-privatnosti"
+          className="font-semibold text-accent-ink hover:underline"
+        >
+          Politiku privatnosti
+        </Link>
+        .
+      </p>
     </form>
   );
 };

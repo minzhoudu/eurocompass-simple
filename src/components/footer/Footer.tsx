@@ -25,7 +25,7 @@ export const Footer = () => {
           </p>
 
           <nav aria-label="Footer">
-            <ul className="flex gap-5 font-semibold">
+            <ul className="flex flex-wrap justify-center gap-5 font-semibold">
               {NAV_LINKS.map((link) => (
                 <li key={link.id}>
                   <Link
@@ -36,6 +36,14 @@ export const Footer = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/politika-privatnosti"
+                  className="transition-colors hover:text-accent-ink"
+                >
+                  Politika privatnosti
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

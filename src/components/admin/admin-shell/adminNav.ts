@@ -1,5 +1,9 @@
 import { IconType } from "react-icons";
-import { IoPricetagOutline, IoTimeOutline } from "react-icons/io5";
+import {
+  IoPricetagOutline,
+  IoReceiptOutline,
+  IoTimeOutline,
+} from "react-icons/io5";
 
 type AdminNavLink = {
   id: number;
@@ -25,5 +29,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Cene",
     path: "/admin/dashboard/informacije",
     icon: IoPricetagOutline,
+  },
+  {
+    id: 3,
+    label: "Rezervacije",
+    shortLabel: "Rezervacije",
+    path: "/admin/dashboard/rezervacije",
+    icon: IoReceiptOutline,
   },
 ];

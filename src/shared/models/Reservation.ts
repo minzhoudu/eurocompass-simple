@@ -18,6 +18,7 @@ export type ReservationPeriodStats = {
 
 export type ReservationStats = {
   today: ReservationPeriodStats;
+  week: ReservationPeriodStats;
   month: ReservationPeriodStats;
   year: ReservationPeriodStats;
 };

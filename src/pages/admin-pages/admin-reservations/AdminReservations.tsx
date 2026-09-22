@@ -205,8 +205,13 @@ export const AdminReservations = () => {
         </Alert>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatTile label="Danas" stats={stats?.today} isLoading={isLoadingStats} />
+        <StatTile
+          label="Ova nedelja"
+          stats={stats?.week}
+          isLoading={isLoadingStats}
+        />
         <StatTile
           label="Ovog meseca"
           stats={stats?.month}

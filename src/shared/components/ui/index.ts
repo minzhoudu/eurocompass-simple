@@ -5,5 +5,6 @@ export * from "./buttonStyles";
 export * from "./Card";
 export * from "./ConfirmDialog";
 export * from "./IconButton";
+export * from "./LoadingBar";
 export * from "./SectionHeading";
 export * from "./Skeleton";

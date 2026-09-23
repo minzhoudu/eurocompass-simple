@@ -9,6 +9,14 @@ export type Reservation = {
   numberOfTickets: number;
   note: string | null;
   createdAt: string;
+  isDuplicateTrip: boolean;
+};
+
+export type PaginatedReservations = {
+  items: Reservation[];
+  total: number;
+  page: number;
+  pageSize: number;
 };
 
 export type ReservationPeriodStats = {

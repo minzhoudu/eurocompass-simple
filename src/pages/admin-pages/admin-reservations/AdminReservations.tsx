@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   IoCloseCircle,
@@ -10,31 +10,21 @@ import { AdminPageHeader } from "../../../components";
 import {
   Alert,
   Badge,
+  Button,
   Card,
+  cn,
   ConfirmDialog,
   getFormattedDate,
   IconButton,
+  LoadingBar,
   Reservation,
   ReservationPeriodStats,
   Skeleton,
+  useDebouncedValue,
   useDeleteReservation,
   useReservations,
   useReservationStats,
 } from "../../../shared";
-
-const normalizeEmail = (email: string) => email.trim().toLowerCase();
-
-// A "duplicate" is the same person booking the exact same trip more than
-// once (e.g. a double-submitted form) - not just a returning customer.
-// Keying on email alone would flag nearly every regular rider eventually,
-// since the same person legitimately books different trips all the time.
-const getDuplicateTripKey = (reservation: Reservation) =>
-  [
-    normalizeEmail(reservation.email),
-    reservation.travelDate,
-    reservation.travelTime,
-    reservation.startingLocation.trim().toLowerCase(),
-  ].join("|");
 
 const formatSubmittedAt = (iso: string) =>
   new Date(iso).toLocaleString("sr-RS", {
@@ -81,11 +71,9 @@ const Field = ({ label, value }: { label: string; value: string }) => (
 
 const ReservationRow = ({
   reservation,
-  isDuplicateTrip,
   onDelete,
 }: {
   reservation: Reservation;
-  isDuplicateTrip: boolean;
   onDelete: () => void;
 }) => (
   <div className="flex flex-col gap-4 rounded-xl border border-line-strong p-4">
@@ -95,7 +83,7 @@ const ReservationRow = ({
           <p className="truncate font-bold text-ink">
             {reservation.fullName}
           </p>
-          {isDuplicateTrip && (
+          {reservation.isDuplicateTrip && (
             <Badge variant="outline">Ponovljena rezervacija</Badge>
           )}
         </div>
@@ -133,48 +121,43 @@ const ReservationRow = ({
 );
 
 export const AdminReservations = () => {
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
+
+  // Any new search term invalidates the current page number - without this,
+  // typing a narrower search while sitting on page 3 could land on a page
+  // that no longer exists for the new result set.
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearchTerm]);
+
   const {
-    data: reservations,
+    data: reservationsData,
     isLoading: isLoadingReservations,
+    isFetching: isFetchingReservations,
     isError: isReservationsError,
-  } = useReservations();
+  } = useReservations({ page, search: debouncedSearchTerm });
+
+  // With placeholderData keeping the previous page on screen, isFetching
+  // (not isLoading) is what actually fires while a new page/search request
+  // is in flight - isLoading only ever covers the very first load.
+  const isRefetchingList = isFetchingReservations && !!reservationsData;
   const { data: stats, isLoading: isLoadingStats } = useReservationStats();
   const { mutate: deleteReservation, isPending: isDeleting } =
     useDeleteReservation();
 
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const duplicateTripCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-
-    reservations?.forEach((reservation) => {
-      const key = getDuplicateTripKey(reservation);
-      counts.set(key, (counts.get(key) ?? 0) + 1);
-    });
-
-    return counts;
-  }, [reservations]);
-
-  // Duplicate-trip badges stay based on the full list above, not the
-  // filtered one, so searching for someone doesn't hide a duplicate that's
-  // sitting outside the current search term.
-  const filteredReservations = useMemo(() => {
-    const query = searchTerm.trim().toLowerCase();
-
-    if (!query) return reservations ?? [];
-
-    return (reservations ?? []).filter(
-      (reservation) =>
-        reservation.fullName.toLowerCase().includes(query) ||
-        normalizeEmail(reservation.email).includes(query),
-    );
-  }, [reservations, searchTerm]);
+  const reservations = reservationsData?.items ?? [];
+  const totalPages = reservationsData
+    ? Math.max(1, Math.ceil(reservationsData.total / reservationsData.pageSize))
+    : 1;
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchTerm(event.target.value);
 
-  const pendingReservation = reservations?.find(
+  const pendingReservation = reservations.find(
     (reservation) => reservation.id === pendingDeleteId,
   );
 
@@ -220,7 +203,7 @@ export const AdminReservations = () => {
         <StatTile label="Ove godine" stats={stats?.year} isLoading={isLoadingStats} />
       </div>
 
-      {!isLoadingReservations && reservations && reservations.length > 0 && (
+      {!(isLoadingReservations && !reservationsData) && (
         <div className="relative">
           <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
 
@@ -246,33 +229,35 @@ export const AdminReservations = () => {
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
-        {isLoadingReservations ? (
+      <div className="h-1">{isRefetchingList && <LoadingBar />}</div>
+
+      <div
+        aria-busy={isRefetchingList}
+        className={cn(
+          "flex flex-col gap-3 transition-opacity",
+          isRefetchingList && "pointer-events-none opacity-50",
+        )}
+      >
+        {isLoadingReservations && !reservationsData ? (
           <>
             <Skeleton className="h-32" />
             <Skeleton className="h-32" />
             <Skeleton className="h-32" />
           </>
-        ) : reservations && reservations.length > 0 ? (
-          filteredReservations.length > 0 ? (
-            filteredReservations.map((reservation) => (
-              <ReservationRow
-                key={reservation.id}
-                reservation={reservation}
-                isDuplicateTrip={
-                  (duplicateTripCounts.get(getDuplicateTripKey(reservation)) ??
-                    0) > 1
-                }
-                onDelete={() => setPendingDeleteId(reservation.id)}
-              />
-            ))
-          ) : (
-            <Card>
-              <p className="text-center text-ink-muted">
-                Nema rezultata za &quot;{searchTerm}&quot;.
-              </p>
-            </Card>
-          )
+        ) : reservations.length > 0 ? (
+          reservations.map((reservation) => (
+            <ReservationRow
+              key={reservation.id}
+              reservation={reservation}
+              onDelete={() => setPendingDeleteId(reservation.id)}
+            />
+          ))
+        ) : debouncedSearchTerm ? (
+          <Card>
+            <p className="text-center text-ink-muted">
+              Nema rezultata za &quot;{debouncedSearchTerm}&quot;.
+            </p>
+          </Card>
         ) : (
           <Card>
             <p className="text-center text-ink-muted">
@@ -281,6 +266,36 @@ export const AdminReservations = () => {
           </Card>
         )}
       </div>
+
+      {reservationsData && reservationsData.total > 0 && (
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page <= 1}
+          >
+            Prethodna
+          </Button>
+
+          <p className="text-sm text-ink-muted">
+            Strana {page} od {totalPages}
+          </p>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setPage((current) => Math.min(totalPages, current + 1))
+            }
+            disabled={page >= totalPages}
+          >
+            Sledeća
+          </Button>
+        </div>
+      )}
 
       <ConfirmDialog
         open={pendingDeleteId !== null}

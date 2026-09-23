@@ -60,9 +60,26 @@ body {
   }
 }
 
+.loading-bar-fill {
+  animation: loading-bar-slide 1.1s ease-in-out infinite;
+}
+
+@keyframes loading-bar-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(60%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .map-highlight,
-  .route-line {
+  .route-line,
+  .loading-bar-fill {
     animation: none;
   }
 }

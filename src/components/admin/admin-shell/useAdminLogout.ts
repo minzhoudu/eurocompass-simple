@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import axiosInstance from "../../../config/axiosInstance";
+import axiosInstance, { setAccessToken } from "../../../config/axiosInstance";
 
 export const useAdminLogout = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,11 @@ export const useAdminLogout = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["logout"],
     mutationFn: async () => {
-      await axiosInstance.post("/auth/logout");
+      try {
+        await axiosInstance.post("/auth/logout");
+      } finally {
+        setAccessToken(null);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me"] });

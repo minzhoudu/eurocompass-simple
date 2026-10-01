@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import { IoArrowBack, IoLockClosedOutline, IoMailOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 
-import axiosInstance from "../../../config/axiosInstance";
+import axiosInstance, { setAccessToken } from "../../../config/axiosInstance";
 import { Alert, Button, Card, cn, FormInput, useTheme } from "../../../shared";
 import { ThemeToggle } from "../../header/components/theme-toggle";
 import { LoginResponse } from "../models";
@@ -52,7 +52,12 @@ export const AdminLogin = () => {
     setIsSubmitting(true);
 
     try {
-      await axiosInstance.post<LoginResponse>("/auth/login", credentials);
+      const { data } = await axiosInstance.post<LoginResponse>(
+        "/auth/login",
+        credentials,
+      );
+
+      setAccessToken(data.accessToken);
 
       navigate("/admin/dashboard");
     } catch (error) {

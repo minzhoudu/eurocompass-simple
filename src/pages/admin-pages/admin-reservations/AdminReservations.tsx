@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   IoCloseCircle,
+  IoRefreshOutline,
   IoSearchOutline,
   IoTrashOutline,
 } from "react-icons/io5";
@@ -137,13 +138,19 @@ export const AdminReservations = () => {
     isLoading: isLoadingReservations,
     isFetching: isFetchingReservations,
     isError: isReservationsError,
+    refetch: refetchReservations,
   } = useReservations({ page, search: debouncedSearchTerm });
 
   // With placeholderData keeping the previous page on screen, isFetching
   // (not isLoading) is what actually fires while a new page/search request
   // is in flight - isLoading only ever covers the very first load.
   const isRefetchingList = isFetchingReservations && !!reservationsData;
-  const { data: stats, isLoading: isLoadingStats } = useReservationStats();
+  const {
+    data: stats,
+    isLoading: isLoadingStats,
+    isFetching: isFetchingStats,
+    refetch: refetchStats,
+  } = useReservationStats();
   const { mutate: deleteReservation, isPending: isDeleting } =
     useDeleteReservation();
 
@@ -153,6 +160,13 @@ export const AdminReservations = () => {
   const totalPages = reservationsData
     ? Math.max(1, Math.ceil(reservationsData.total / reservationsData.pageSize))
     : 1;
+
+  const isRefreshing = isFetchingReservations || isFetchingStats;
+
+  const handleRefresh = () => {
+    refetchReservations();
+    refetchStats();
+  };
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchTerm(event.target.value);
@@ -203,31 +217,47 @@ export const AdminReservations = () => {
         <StatTile label="Ove godine" stats={stats?.year} isLoading={isLoadingStats} />
       </div>
 
-      {!(isLoadingReservations && !reservationsData) && (
-        <div className="relative">
-          <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
+      <div className="flex items-center gap-3">
+        {!(isLoadingReservations && !reservationsData) && (
+          <div className="relative flex-1">
+            <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
 
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Pretraga po imenu ili email adresi..."
-            aria-label="Pretraga rezervacija"
-            className="h-12 w-full rounded-lg border border-line-strong bg-raised pl-11 pr-10 text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200"
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Pretraga po imenu ili email adresi..."
+              aria-label="Pretraga rezervacija"
+              className="h-12 w-full rounded-lg border border-line-strong bg-raised pl-11 pr-10 text-ink placeholder:text-ink-subtle focus:border-brand-yellow-500 focus:outline-none focus:ring-2 focus:ring-brand-yellow-200"
+            />
+
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                aria-label="Obriši pretragu"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-subtle hover:text-ink"
+              >
+                <IoCloseCircle className="size-5" />
+              </button>
+            )}
+          </div>
+        )}
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 shrink-0"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          aria-label="Osveži rezervacije"
+        >
+          <IoRefreshOutline
+            className={cn("size-5", isRefreshing && "animate-spin")}
           />
-
-          {searchTerm && (
-            <button
-              type="button"
-              onClick={() => setSearchTerm("")}
-              aria-label="Obriši pretragu"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-subtle hover:text-ink"
-            >
-              <IoCloseCircle className="size-5" />
-            </button>
-          )}
-        </div>
-      )}
+          <span className="hidden sm:inline">Osveži</span>
+        </Button>
+      </div>
 
       <div className="h-1">{isRefetchingList && <LoadingBar />}</div>
 

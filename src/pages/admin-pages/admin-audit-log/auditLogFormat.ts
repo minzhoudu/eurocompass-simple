@@ -7,6 +7,7 @@ export const ENTITY_LABELS: Record<AuditEntityType, string> = {
   blocked_date: "Blokirani termini",
   information: "Cene i informacije",
   user: "Nalozi",
+  audit: "Istorija",
 };
 
 const FIELD_LABELS: Record<string, string> = {

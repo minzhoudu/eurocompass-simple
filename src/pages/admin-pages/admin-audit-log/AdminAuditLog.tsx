@@ -6,6 +6,7 @@ import {
   IoFunnelOutline,
   IoRefreshOutline,
   IoSearchOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
 import {
@@ -30,6 +31,7 @@ import {
   getCurrentDate,
   getFormattedDate,
   LoadingBar,
+  pluralize,
   Skeleton,
   useAuditLog,
   useAutoRefresh,
@@ -44,6 +46,7 @@ import {
   getFieldLabel,
   sortByFieldOrder,
 } from "./auditLogFormat";
+import { ClearAuditDialog } from "./ClearAuditDialog";
 
 const WEEKDAY_NAMES = [
   "nedelja",
@@ -287,6 +290,8 @@ export const AdminAuditLog = () => {
     DEFAULT_AUDIT_LOG_FILTERS,
   );
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [isClearOpen, setIsClearOpen] = useState(false);
+  const [clearedCount, setClearedCount] = useState<number | null>(null);
   const activeFilterCount = countActiveAuditFilters(filters);
 
   // A new search or filter can leave the current page past the end.
@@ -415,7 +420,29 @@ export const AdminAuditLog = () => {
           />
           <span className="hidden sm:inline">Osveži</span>
         </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 flex-1 sm:flex-none"
+          onClick={() => {
+            setClearedCount(null);
+            setIsClearOpen(true);
+          }}
+          aria-label="Obriši zapise istorije"
+        >
+          <IoTrashOutline className="size-5" aria-hidden="true" />
+          <span className="hidden sm:inline">Obriši zapise</span>
+        </Button>
       </div>
+
+      {clearedCount !== null && (
+        <Alert variant="info" role="status">
+          {clearedCount > 0
+            ? `Obrisano: ${clearedCount} ${pluralize(clearedCount, "zapis", "zapisa", "zapisa")}.`
+            : "Nema zapisa za brisanje u izabranom periodu."}
+        </Alert>
+      )}
 
       {isFilterPanelOpen && (
         <div id="audit-log-filters">
@@ -522,6 +549,16 @@ export const AdminAuditLog = () => {
             Sledeća
           </Button>
         </div>
+      )}
+
+      {isClearOpen && (
+        <ClearAuditDialog
+          onClose={() => setIsClearOpen(false)}
+          onCleared={(count) => {
+            setClearedCount(count);
+            setPage(1);
+          }}
+        />
       )}
     </div>
   );

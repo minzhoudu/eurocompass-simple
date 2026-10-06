@@ -1,6 +1,7 @@
 export * from "./useAdminUsers";
 export * from "./useAuditLog";
 export * from "./useAutoRefresh";
+export * from "./useClearAuditLog";
 export * from "./useBelgradeNow";
 export * from "./useBlockedDates";
 export * from "./useCreateReservation";

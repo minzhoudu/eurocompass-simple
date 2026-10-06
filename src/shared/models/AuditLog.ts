@@ -5,6 +5,7 @@ export const AUDIT_ENTITY_TYPES = [
   "blocked_date",
   "information",
   "user",
+  "audit",
 ] as const;
 
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number];

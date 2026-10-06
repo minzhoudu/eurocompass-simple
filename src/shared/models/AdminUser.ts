@@ -15,6 +15,6 @@ export type AdminUser = {
   email: string;
   role: UserRole;
   isActive: boolean;
-  // Already formatted by the server (sr-RS); empty if never logged in.
-  lastLogin: string;
+  // ISO time of the last real use of the admin panel; null if none recorded.
+  lastActiveAt: string | null;
 };

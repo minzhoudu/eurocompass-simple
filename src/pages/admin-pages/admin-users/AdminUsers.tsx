@@ -24,6 +24,7 @@ import {
   useDeleteAdminUser,
   useSaveAdminUser,
 } from "../../../shared";
+import { formatLastActive } from "./lastActive";
 import { PasswordDialog } from "./PasswordDialog";
 import { UserFormDialog } from "./UserFormDialog";
 
@@ -117,6 +118,7 @@ export const AdminUsers = () => {
         ) : (
           users?.map((user) => {
             const isSelf = user.id === me?.id;
+            const lastActive = formatLastActive(user.lastActiveAt);
 
             return (
               <Card key={user.id} className="flex flex-col gap-4">
@@ -138,8 +140,14 @@ export const AdminUsers = () => {
                     </div>
 
                     <p className="break-all text-ink-muted">{user.email}</p>
-                    <p className="text-sm text-ink-subtle">
-                      Poslednja prijava: {user.lastLogin || "još nije bilo"}
+                    <p className="flex items-center gap-1.5 text-sm text-ink-subtle">
+                      {lastActive.isActiveNow && (
+                        <span
+                          aria-hidden="true"
+                          className="size-2 rounded-full bg-green-500"
+                        />
+                      )}
+                      Poslednja aktivnost: {lastActive.text}
                     </p>
                   </div>
                 </div>

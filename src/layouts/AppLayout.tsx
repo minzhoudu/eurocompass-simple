@@ -12,9 +12,13 @@ export const AppLayout = () => {
         theme === "dark" && "dark",
       )}
     >
-      <NoticeBanner />
+      {/* One sticky unit so the banner stays on top and the header sits right
+          below it while scrolling, whatever the banner's height. */}
+      <div className="sticky top-0 z-30 w-full">
+        <NoticeBanner />
 
-      <Header />
+        <Header />
+      </div>
 
       <Main>
         <Outlet />

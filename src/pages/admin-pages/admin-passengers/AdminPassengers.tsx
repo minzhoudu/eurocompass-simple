@@ -9,7 +9,7 @@ import {
 } from "react-icons/io5";
 import { useSearchParams } from "react-router-dom";
 
-import { AdminPageHeader } from "../../../components";
+import { AdminPageHeader, AutoRefreshControl } from "../../../components";
 import {
   Alert,
   Button,
@@ -26,6 +26,7 @@ import {
   parseDateValue,
   Skeleton,
   toDateValue,
+  useAutoRefresh,
   useDepartureSchedule,
   useReservationsByDate,
 } from "../../../shared";
@@ -174,10 +175,18 @@ export const AdminPassengers = () => {
 
   const { schedule } = useDepartureSchedule({ staleTime: 0 });
   const {
+    enabled: isAutoRefreshOn,
+    setEnabled: setAutoRefresh,
+    refetchInterval,
+  } = useAutoRefresh();
+  const {
     data: reservations = [],
     isLoading,
     isError,
-  } = useReservationsByDate(date);
+    isFetching,
+    dataUpdatedAt,
+    refetch,
+  } = useReservationsByDate(date, refetchInterval);
 
   const selectDate = (nextDate: string) =>
     setSearchParams(nextDate === today ? {} : { datum: nextDate }, {
@@ -277,6 +286,15 @@ export const AdminPassengers = () => {
           Štampaj
         </Button>
       </div>
+
+      <AutoRefreshControl
+        enabled={isAutoRefreshOn}
+        onToggle={setAutoRefresh}
+        updatedAt={dataUpdatedAt}
+        onRefresh={() => refetch()}
+        isRefreshing={isFetching}
+        className="-mt-3"
+      />
 
       <p className="hidden text-lg font-bold text-ink print:block">
         {formatDayLabel(date)}

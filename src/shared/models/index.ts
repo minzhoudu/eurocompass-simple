@@ -4,3 +4,4 @@ export * from "./Notice";
 export * from "./ReservationFilters";
 export * from "./BlockedDate";
 export * from "./ReservationAnalytics";
+export * from "./AuditLog";

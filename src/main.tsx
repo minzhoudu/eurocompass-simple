@@ -7,6 +7,7 @@ import "./index.css";
 import { UserProvider } from "./contexts";
 import { AppLayout } from "./layouts";
 import {
+  AdminAuditLog,
   AdminDashboard,
   AdminInformations,
   AdminLayout,
@@ -116,6 +117,14 @@ const router = createBrowserRouter([
             element: (
               <AdminSuspense>
                 <AdminNotices />
+              </AdminSuspense>
+            ),
+          },
+          {
+            path: "istorija",
+            element: (
+              <AdminSuspense>
+                <AdminAuditLog />
               </AdminSuspense>
             ),
           },

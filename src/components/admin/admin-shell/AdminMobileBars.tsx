@@ -9,7 +9,7 @@ import { ADMIN_NAV_LINKS } from "./adminNav";
 import { useAdminLogout } from "./useAdminLogout";
 
 const tabClasses =
-  "flex flex-col items-center justify-center gap-0.5 py-2.5 text-xs font-semibold transition-colors";
+  "flex flex-col items-center justify-center gap-0.5 py-2.5 text-[11px] font-semibold transition-colors min-[400px]:text-xs";
 
 export const AdminTopBar = () => {
   const { user } = useUserContext();

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { NAV_LINKS } from "../header/utils";
+import { InstallApp } from "../pwa";
 import { Addresses, Brand, Contacts, SocialNetworks } from "./components";
 
 export const Footer = () => {
@@ -20,9 +21,9 @@ export const Footer = () => {
 
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-sm text-ink-muted sm:flex-row lg:px-10">
-          <p>
-            © {year} Eurocompass D.o.o
-          </p>
+          <p>© {year} Eurocompass D.o.o</p>
+
+          <InstallApp />
 
           <nav aria-label="Footer">
             <ul className="flex flex-wrap justify-center gap-5 font-semibold">

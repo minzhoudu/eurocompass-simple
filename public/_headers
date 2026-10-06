@@ -1,0 +1,7 @@
+# The service worker and the manifest must never be served from a stale cache,
+# or a new version of the site would not be noticed.
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache

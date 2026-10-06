@@ -4,6 +4,7 @@ type QuantityStepperProps = {
   value: number;
   onChange: (value: number) => void;
   min?: number;
+  max?: number;
 };
 
 const stepperButtonClasses =
@@ -13,6 +14,7 @@ export const QuantityStepper = ({
   value,
   onChange,
   min = 1,
+  max,
 }: QuantityStepperProps) => (
   <div className="inline-flex items-center gap-3">
     <button
@@ -35,6 +37,7 @@ export const QuantityStepper = ({
     <button
       type="button"
       aria-label="Povećaj broj mesta"
+      disabled={max !== undefined && value >= max}
       onClick={() => onChange(value + 1)}
       className={stepperButtonClasses}
     >

@@ -3,3 +3,4 @@ export * from "./downloadBlob";
 export * from "./pluralize";
 export * from "./dates";
 export * from "./belgradeTime";
+export * from "./apiError";

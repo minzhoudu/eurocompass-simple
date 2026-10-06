@@ -1,6 +1,9 @@
 import { IconType } from "react-icons";
+
+import { UserRole } from "../../../shared/models";
 import {
   IoDocumentTextOutline,
+  IoShieldCheckmarkOutline,
   IoMegaphoneOutline,
   IoPeopleOutline,
   IoPricetagOutline,
@@ -15,6 +18,8 @@ type AdminNavLink = {
   path: string;
   icon: IconType;
   end?: boolean;
+  // Hidden from (and refused for) everyone else; omit for all admins.
+  roles?: UserRole[];
 };
 
 export const ADMIN_NAV_LINKS: AdminNavLink[] = [
@@ -60,5 +65,19 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Istorija",
     path: "/admin/dashboard/istorija",
     icon: IoDocumentTextOutline,
+    roles: ["owner"],
+  },
+  {
+    id: 7,
+    label: "Administratori",
+    shortLabel: "Admini",
+    path: "/admin/dashboard/administratori",
+    icon: IoShieldCheckmarkOutline,
+    roles: ["owner"],
   },
 ];
+
+export const getAdminNavLinks = (role: UserRole | undefined) =>
+  ADMIN_NAV_LINKS.filter(
+    (link) => !link.roles || (!!role && link.roles.includes(role)),
+  );

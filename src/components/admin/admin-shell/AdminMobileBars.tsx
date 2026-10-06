@@ -1,11 +1,12 @@
+import { useEffect, useRef } from "react";
 import { IoLogOutOutline, IoOpenOutline } from "react-icons/io5";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { useUserContext } from "../../../contexts";
 import { IconButton } from "../../../shared";
 import { ThemeToggle } from "../../header/components/theme-toggle";
 import logo from "/images/eurocompass_logo.webp";
-import { ADMIN_NAV_LINKS } from "./adminNav";
+import { getAdminNavLinks } from "./adminNav";
 import { useAdminLogout } from "./useAdminLogout";
 
 const tabClasses =
@@ -16,7 +17,7 @@ export const AdminTopBar = () => {
   const { logout, isLoggingOut } = useAdminLogout();
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-raised/95 px-4 backdrop-blur print:hidden lg:hidden">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-raised/95 px-4 backdrop-blur lg:hidden print:hidden">
       <Link to="/admin/dashboard" className="block w-32 shrink-0">
         <img src={logo} alt="Eurocompass" className="w-full" />
       </Link>
@@ -52,12 +53,29 @@ export const AdminTopBar = () => {
 };
 
 export const AdminTabBar = () => {
+  const { user } = useUserContext();
+  const { pathname } = useLocation();
+  const barRef = useRef<HTMLElement>(null);
+
+  // On a phone the bar can be scrolled; keep the open page's tab in view.
+  useEffect(() => {
+    const active = barRef.current?.querySelector<HTMLElement>(
+      '[aria-current="page"]',
+    );
+
+    // Scrolls the bar itself only (it is fixed, so the page doesn't move).
+    active?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [pathname, user?.role]);
+
   return (
+    // Owners have more tabs than fit on a phone, so the bar scrolls sideways
+    // (each tab keeps a tappable minimum width).
     <nav
+      ref={barRef}
       aria-label="Admin"
-      className="fixed inset-x-0 bottom-0 z-20 grid auto-cols-fr grid-flow-col border-t print:hidden border-line bg-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 grid auto-cols-[minmax(4.5rem,1fr)] grid-flow-col overflow-x-auto border-t border-line bg-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden print:hidden"
     >
-      {ADMIN_NAV_LINKS.map((link) => (
+      {getAdminNavLinks(user?.role).map((link) => (
         <NavLink
           key={link.id}
           to={link.path}
@@ -70,7 +88,6 @@ export const AdminTabBar = () => {
           {link.shortLabel}
         </NavLink>
       ))}
-
     </nav>
   );
 };

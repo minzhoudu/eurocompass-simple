@@ -4,7 +4,8 @@ import { Link, NavLink } from "react-router-dom";
 import { useUserContext } from "../../../contexts";
 import { ThemeToggle } from "../../header/components/theme-toggle";
 import logo from "/images/eurocompass_logo.webp";
-import { ADMIN_NAV_LINKS } from "./adminNav";
+import { ROLE_LABELS } from "../../../shared";
+import { getAdminNavLinks } from "./adminNav";
 import { useAdminLogout } from "./useAdminLogout";
 
 const linkClasses =
@@ -17,13 +18,13 @@ export const AdminSidebar = () => {
   const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`;
 
   return (
-    <aside className="sticky top-0 hidden h-screen print:!hidden w-64 shrink-0 flex-col gap-6 border-r border-line bg-raised p-5 lg:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-line bg-raised p-5 lg:flex print:!hidden">
       <Link to="/admin/dashboard" className="block w-40">
         <img src={logo} alt="Eurocompass" className="w-full" />
       </Link>
 
       <nav aria-label="Admin" className="flex flex-col gap-1">
-        {ADMIN_NAV_LINKS.map((link) => (
+        {getAdminNavLinks(user?.role).map((link) => (
           <NavLink
             key={link.id}
             to={link.path}
@@ -61,7 +62,10 @@ export const AdminSidebar = () => {
             <p className="truncate font-semibold text-ink">
               {user?.firstName} {user?.lastName}
             </p>
-            <p className="truncate text-sm text-ink-muted">{user?.email}</p>
+            <p className="truncate text-sm text-ink-muted">
+              {user?.role && `${ROLE_LABELS[user.role]} · `}
+              {user?.email}
+            </p>
           </div>
 
           <ThemeToggle />

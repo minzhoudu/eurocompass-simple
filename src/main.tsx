@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 
+import { OwnerRoute } from "./components/protected-route/OwnerRoute";
 import { UserProvider } from "./contexts";
 import { AppLayout } from "./layouts";
 import {
@@ -16,6 +17,7 @@ import {
   AdminPassengers,
   AdminReservations,
   AdminSuspense,
+  AdminUsers,
 } from "./routes/lazyAdmin";
 import {
   ErrorPage,
@@ -123,9 +125,21 @@ const router = createBrowserRouter([
           {
             path: "istorija",
             element: (
-              <AdminSuspense>
-                <AdminAuditLog />
-              </AdminSuspense>
+              <OwnerRoute>
+                <AdminSuspense>
+                  <AdminAuditLog />
+                </AdminSuspense>
+              </OwnerRoute>
+            ),
+          },
+          {
+            path: "administratori",
+            element: (
+              <OwnerRoute>
+                <AdminSuspense>
+                  <AdminUsers />
+                </AdminSuspense>
+              </OwnerRoute>
             ),
           },
         ],

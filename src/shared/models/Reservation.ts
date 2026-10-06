@@ -30,3 +30,6 @@ export type ReservationStats = {
   month: ReservationPeriodStats;
   year: ReservationPeriodStats;
 };
+
+// A booking as returned by the per-day listing (no duplicate-trip flag).
+export type DepartureReservation = Omit<Reservation, "isDuplicateTrip">;

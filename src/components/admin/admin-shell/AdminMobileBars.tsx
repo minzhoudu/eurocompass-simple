@@ -14,7 +14,7 @@ export const AdminTopBar = () => {
   const { user } = useUserContext();
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-raised/95 px-4 backdrop-blur lg:hidden">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-raised/95 px-4 backdrop-blur print:hidden lg:hidden">
       <Link to="/admin/dashboard" className="block w-32 shrink-0">
         <img src={logo} alt="Eurocompass" className="w-full" />
       </Link>
@@ -35,7 +35,7 @@ export const AdminTabBar = () => {
   return (
     <nav
       aria-label="Admin"
-      className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 grid auto-cols-fr grid-flow-col border-t print:hidden border-line bg-raised/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       {ADMIN_NAV_LINKS.map((link) => (
         <NavLink

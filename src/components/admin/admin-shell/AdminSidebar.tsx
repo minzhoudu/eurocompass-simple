@@ -17,7 +17,7 @@ export const AdminSidebar = () => {
   const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`;
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-line bg-raised p-5 lg:flex">
+    <aside className="sticky top-0 hidden h-screen print:!hidden w-64 shrink-0 flex-col gap-6 border-r border-line bg-raised p-5 lg:flex">
       <Link to="/admin/dashboard" className="block w-40">
         <img src={logo} alt="Eurocompass" className="w-full" />
       </Link>

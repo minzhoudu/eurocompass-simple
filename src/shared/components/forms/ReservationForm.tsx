@@ -3,7 +3,6 @@ import {
   FocusEvent,
   FormEvent,
   ReactNode,
-  useMemo,
   useState,
 } from "react";
 import { IoCallOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
@@ -11,7 +10,7 @@ import { Link } from "react-router-dom";
 
 import { CreateReservationDto } from "../../dtos/CreateReservation";
 import { useCreateReservation } from "../../hooks/useCreateReservation";
-import { useInformation } from "../../hooks/useInformation";
+import { useDepartureSchedule } from "../../hooks/useDepartureSchedule";
 import { useSendEmail } from "../email";
 import { Alert, Button } from "../ui";
 import { ChoiceButton } from "./ChoiceButton";
@@ -22,8 +21,6 @@ import { QuantityStepper } from "./QuantityStepper";
 import { ReservationSuccess } from "./ReservationSuccess";
 import {
   CITY_NAMES,
-  DEFAULT_SCHEDULE,
-  DepartureSchedule,
   FORM_INPUTS,
   FormData,
   getCityName,
@@ -71,20 +68,7 @@ export const ReservationForm = () => {
   const [sendFailed, setSendFailed] = useState(false);
   const [confirmation, setConfirmation] = useState<FormData | null>(null);
 
-  const { data } = useInformation();
-  const info = data?.info;
-
-  const schedule = useMemo<DepartureSchedule>(
-    () =>
-      info
-        ? {
-            krusevac: info.startingTimesKrusevac ?? [],
-            beograd: info.startingTimesBeograd ?? [],
-            beogradSunday: info.saturdayBeograd ?? [],
-          }
-        : DEFAULT_SCHEDULE,
-    [info],
-  );
+  const { schedule } = useDepartureSchedule();
 
   const { sendEmail } = useSendEmail({
     formData,

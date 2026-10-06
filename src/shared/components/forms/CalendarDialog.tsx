@@ -27,6 +27,8 @@ const WEEKDAYS = ["Pon", "Uto", "Sre", "Čet", "Pet", "Sub", "Ned"];
 type CalendarDialogProps = {
   open: boolean;
   value: string;
+  // Admin views need to look at past days too; the booking form does not.
+  allowPastDates?: boolean;
   onSelect: (date: string) => void;
   onClose: () => void;
 };
@@ -40,6 +42,7 @@ const getMonthStart = (date: Date) =>
 export const CalendarDialog = ({
   open,
   value,
+  allowPastDates = false,
   onSelect,
   onClose,
 }: CalendarDialogProps) => {
@@ -57,7 +60,11 @@ export const CalendarDialog = ({
 
     if (open && !dialog.open) {
       setVisibleMonth(
-        getMonthStart(parseDateValue(value >= today ? value : today)),
+        getMonthStart(
+          parseDateValue(
+            value && (allowPastDates || value >= today) ? value : today,
+          ),
+        ),
       );
       dialog.showModal();
     }
@@ -70,7 +77,7 @@ export const CalendarDialog = ({
   const month = visibleMonth.getMonth();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const leadingBlanks = (visibleMonth.getDay() + 6) % 7;
-  const canGoBack = visibleMonth > currentMonth;
+  const canGoBack = allowPastDates || visibleMonth > currentMonth;
 
   const shiftMonth = (offset: number) =>
     setVisibleMonth(new Date(year, month + offset, 1));
@@ -124,7 +131,7 @@ export const CalendarDialog = ({
           {Array.from({ length: daysInMonth }, (_, index) => {
             const day = index + 1;
             const dateValue = toDateValue(new Date(year, month, day));
-            const isPast = dateValue < today;
+            const isPast = !allowPastDates && dateValue < today;
             const isSelected = dateValue === value;
 
             return (

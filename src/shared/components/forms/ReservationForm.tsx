@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { IoCallOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { CreateReservationDto } from "../../dtos/CreateReservation";
 import { useCreateReservation } from "../../hooks/useCreateReservation";
@@ -31,6 +31,7 @@ import {
   FORM_INPUTS,
   FormData,
   getCityName,
+  getCurrentDate,
   getDepartureBlockMessage,
   getFormErrors,
   clearSavedPassenger,
@@ -75,17 +76,53 @@ const ERROR_FOCUS_ORDER = [
 
 // The empty form, with the remembered passenger (if the customer opted in on an
 // earlier visit) already filled in.
-const getInitialFormData = (): FormData => {
+const getInitialFormData = (prefill?: Prefill): FormData => {
   const saved = loadSavedPassenger();
+  const base = saved ? { ...EMPTY_FORM, ...saved } : EMPTY_FORM;
 
-  return saved ? { ...EMPTY_FORM, ...saved } : EMPTY_FORM;
+  if (!prefill) return base;
+
+  // A link to a specific departure ("Rezerviši ovaj polazak" on the homepage):
+  // the city is chosen, the date and time set. A remembered station only
+  // stays if it belongs to that city.
+  return {
+    ...base,
+    startingLocation:
+      prefill.city && getCityName(base.startingLocation) !== prefill.city
+        ? ""
+        : base.startingLocation,
+    date: prefill.date ?? base.date,
+    time: prefill.time ?? base.time,
+  };
+};
+
+type Prefill = { city?: string; date?: string; time?: string };
+
+// Reads and validates ?grad=&datum=&vreme= (anything else is ignored).
+const getPrefill = (params: URLSearchParams): Prefill => {
+  const city = params.get("grad") ?? "";
+  const date = params.get("datum") ?? "";
+  const time = params.get("vreme") ?? "";
+
+  return {
+    city: CITY_NAMES.includes(city) ? city : undefined,
+    date:
+      /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= getCurrentDate()
+        ? date
+        : undefined,
+    time: /^([01]\d|2[0-3]):[0-5]\d$/.test(time) ? time : undefined,
+  };
 };
 
 const wait = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export const ReservationForm = () => {
-  const [formData, setFormData] = useState<FormData>(getInitialFormData);
+  const [searchParams] = useSearchParams();
+  const [prefill] = useState(() => getPrefill(searchParams));
+  const [formData, setFormData] = useState<FormData>(() =>
+    getInitialFormData(prefill),
+  );
   // Opt-in: only people who ticked "remember me" before have anything saved,
   // so a loaded profile means the box starts ticked.
   const [rememberMe, setRememberMe] = useState(
@@ -94,8 +131,8 @@ export const ReservationForm = () => {
   const [hasSavedDetails, setHasSavedDetails] = useState(
     () => loadSavedPassenger() !== null,
   );
-  const [city, setCity] = useState(() =>
-    getCityName(getInitialFormData().startingLocation),
+  const [city, setCity] = useState(
+    () => prefill.city ?? getCityName(getInitialFormData().startingLocation),
   );
   const [noteOpen, setNoteOpen] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -141,7 +178,11 @@ export const ReservationForm = () => {
       ? errors[name]
       : undefined;
 
-  const times = getTravelTimes(formData.startingLocation, formData.date, schedule);
+  const times = getTravelTimes(
+    formData.startingLocation,
+    formData.date,
+    schedule,
+  );
   const canPickTime = formData.startingLocation !== "" && formData.date !== "";
   const missingForTimes = !formData.startingLocation
     ? formData.date

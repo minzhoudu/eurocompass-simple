@@ -5,6 +5,11 @@
 html,
 body {
   overflow-x: hidden;
+  /* `clip` still stops sideways scrolling but, unlike `hidden`, does not turn
+     the body into a scroll container - which silently breaks position:sticky
+     (the header and notice banner) for everything inside it. Browsers without
+     `clip` keep the `hidden` fallback above. */
+  overflow-x: clip;
 }
 
 /* * {

@@ -13,7 +13,9 @@ export const MobileNavBarModal = ({
 }: MobileNavBarProps): ReactNode => {
   return (
     <div
-      className={`top-20 z-20 w-full border-b border-line bg-raised text-ink shadow-lg ${isOpen ? "fixed" : "hidden"} lg:hidden`}
+      // Drops down from the bottom of the sticky banner + header block instead of
+      // a fixed offset, so it follows the header when a notice banner is above.
+      className={`inset-x-0 top-full z-20 border-b border-line bg-raised text-ink shadow-lg ${isOpen ? "absolute" : "hidden"} lg:hidden`}
     >
       <ul className="flex flex-col divide-y divide-line">
         {NAV_LINKS.map((link) => (

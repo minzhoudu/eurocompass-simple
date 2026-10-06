@@ -1,16 +1,14 @@
-import { Helmet } from "react-helmet";
+import { Seo } from "../../components";
 import { Card, ReservationForm, SectionHeading } from "../../shared";
 
 export const Reservations = () => {
   return (
     <div className="flex w-full flex-col items-center gap-8 px-4 lg:px-0">
-      <Helmet>
-        <title>Eurocompass doo | Rezervacija karte</title>
-        <meta
-          name="description"
-          content="Rezervacija karte za prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Rezervišite autobuske karte brzo i lako online. Jednostavna i sigurna rezervacija u par klikova."
-        />
-      </Helmet>
+      <Seo
+        title="Rezervacija karte Kruševac – Beograd | Eurocompass"
+        description="Rezervišite autobusku kartu Kruševac – Beograd ili Beograd – Kruševac online: izaberite stanicu, datum i vreme polaska u nekoliko klikova."
+        path="/rezervacije"
+      />
 
       <SectionHeading as="h1" className="mt-10">
         Rezervacija karte

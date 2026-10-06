@@ -12,7 +12,9 @@ export const MobileNavBarModal = ({
   closeNav,
 }: MobileNavBarProps): ReactNode => {
   return (
-    <div
+    <nav
+      id="mobile-navigation"
+      aria-label="Mobilna navigacija"
       // Drops down from the bottom of the sticky banner + header block instead of
       // a fixed offset, so it follows the header when a notice banner is above.
       className={`inset-x-0 top-full z-20 border-b border-line bg-raised text-ink shadow-lg ${isOpen ? "absolute" : "hidden"} lg:hidden`}
@@ -32,6 +34,6 @@ export const MobileNavBarModal = ({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 };

@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://eurocompass.site/</loc>
-    <lastmod>2024-11-24T17:40:52+00:00</lastmod>
+    <loc>https://eurocompass.rs/</loc>
   </url>
   <url>
-    <loc>https://eurocompass.site/rezervacije</loc>
-    <lastmod>2024-11-24T17:40:52+00:00</lastmod>
+    <loc>https://eurocompass.rs/rezervacije</loc>
   </url>
   <url>
-    <loc>https://eurocompass.site/informacije</loc>
-    <lastmod>2024-11-24T17:40:52+00:00</lastmod>
+    <loc>https://eurocompass.rs/informacije</loc>
   </url>
-
+  <url>
+    <loc>https://eurocompass.rs/politika-privatnosti</loc>
+  </url>
 </urlset>

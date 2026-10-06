@@ -100,7 +100,7 @@ export const NextDepartures = ({
                 Sledeći polazak
               </p>
 
-              <h3 className="text-lg font-bold text-ink">{title}</h3>
+              <h2 className="text-lg font-bold text-ink">{title}</h2>
 
               {next ? (
                 <>

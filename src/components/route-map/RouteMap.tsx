@@ -86,6 +86,8 @@ export const RouteMap = () => {
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
+                // The map is decoration: its shapes must not be tab stops.
+                tabIndex={-1}
                 className="map-highlight fill-brand-yellow-500 stroke-brand-yellow-700 outline-none"
                 strokeWidth={1.2}
               />
@@ -93,6 +95,7 @@ export const RouteMap = () => {
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
+                tabIndex={-1}
                 className="fill-sunken stroke-line-strong outline-none"
                 strokeWidth={0.5}
               />

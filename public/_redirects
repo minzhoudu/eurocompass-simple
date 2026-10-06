@@ -1,1 +1,10 @@
- /* /index.html 200
+# The site is a single-page app: its real pages are served index.html (the
+# router takes over in the browser). Anything else is a genuine 404, so search
+# engines don't index endless "soft 404" copies of the homepage.
+/                       /index.html  200
+/rezervacije            /index.html  200
+/informacije            /index.html  200
+/politika-privatnosti   /index.html  200
+/admin                  /index.html  200
+/admin/*                /index.html  200
+/*                      /404.html    404

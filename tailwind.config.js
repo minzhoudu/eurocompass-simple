@@ -18,9 +18,13 @@ const lightTheme = {
   "--color-line-strong": "209 213 219",
   "--color-ink": "30 41 59",
   "--color-ink-muted": "55 65 81",
-  "--color-ink-subtle": "156 163 175",
+  // Secondary / label text: 4.5:1+ on white, the greys and the page surface
+  // (the previous 156 163 175 was only 2.5:1).
+  "--color-ink-subtle": "96 104 118",
   "--color-on-ink": "255 255 255",
-  "--color-accent-ink": "181 121 14",
+  // Deep amber for TEXT: 4.5:1+ on white, the pale tint and the greys (the
+  // previous 181 121 14 was 3.7:1 and failed WCAG AA).
+  "--color-accent-ink": "140 92 8",
   "--color-danger": "220 38 38",
   "color-scheme": "light",
 };
@@ -33,7 +37,7 @@ const darkTheme = {
   "--color-line-strong": "71 85 105",
   "--color-ink": "241 245 249",
   "--color-ink-muted": "203 213 225",
-  "--color-ink-subtle": "148 163 184",
+  "--color-ink-subtle": "161 174 191",
   "--color-on-ink": "15 23 42",
   "--color-accent-ink": "251 196 112",
   "--color-danger": "248 113 113",

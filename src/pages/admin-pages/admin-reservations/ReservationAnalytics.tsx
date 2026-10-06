@@ -123,7 +123,7 @@ const KpiTile = ({ label, value, delta, detail }: KpiTileProps) => (
         <p
           className={
             delta > 0
-              ? "flex items-center gap-1 text-sm font-semibold text-[#006300] dark:text-[#0ca30c]"
+              ? "flex items-center gap-1 text-sm font-semibold text-[#006300] dark:text-[#22c55e]"
               : "flex items-center gap-1 text-sm font-semibold text-ink-muted"
           }
         >

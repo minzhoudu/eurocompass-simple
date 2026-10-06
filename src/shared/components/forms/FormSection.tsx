@@ -10,12 +10,12 @@ type FormSectionProps = {
 
 export const FormSection = ({ step, title, children }: FormSectionProps) => (
   <section className="flex flex-col gap-5 border-t border-line pt-8 first:border-t-0 first:pt-0">
-    <h3 className="flex items-center gap-3 text-lg font-bold text-ink">
+    <h2 className="flex items-center gap-3 text-lg font-bold text-ink">
       <span className="flex size-7 items-center justify-center rounded-full bg-brand-yellow-500/20 text-sm text-accent-ink">
         {step}
       </span>
       {title}
-    </h3>
+    </h2>
 
     {children}
   </section>

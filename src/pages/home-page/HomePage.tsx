@@ -1,7 +1,7 @@
-import { Helmet } from "react-helmet";
-
+import { Seo } from "../../components";
 import { Departures, NextDepartures } from "../../components/departures";
 import { RouteMap } from "../../components/route-map";
+import { CONTACT, SITE_NAME, SITE_URL, SOCIAL_IMAGE } from "../../config";
 import {
   Alert,
   Card,
@@ -11,6 +11,34 @@ import {
   useDepartureSchedule,
   useInformation,
 } from "../../shared";
+
+// What search engines show about the company (name, contact, where it runs).
+// Only facts that are already on the site: no address beyond the one in the
+// footer, no opening hours or ratings.
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: `${SITE_NAME} D.o.o`,
+  url: SITE_URL,
+  logo: `${SITE_URL}/images/eurocompass_logo.webp`,
+  image: `${SITE_URL}${SOCIAL_IMAGE.path}`,
+  email: CONTACT.email,
+  telephone: "+38137443277",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Jug Bogdanova",
+    addressLocality: "Kruševac",
+    addressCountry: "RS",
+  },
+  areaServed: [
+    { "@type": "City", name: "Kruševac" },
+    { "@type": "City", name: "Beograd" },
+  ],
+  sameAs: [
+    "https://www.facebook.com/eurocompasskrusevac",
+    "https://www.instagram.com/eurocompass.rs/",
+  ],
+};
 
 export const HomePage = () => {
   const { data, isError, isLoading } = useInformation();
@@ -25,13 +53,12 @@ export const HomePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Eurocompass doo | Početna stranica</title>
-        <meta
-          name="description"
-          content="Eurocompass doo - Prevoz putnika na relaciji Kruševac - Beograd i Beograd - Kruševac. Autobus Kruševac - Beograd i Beograd - Kruševac"
-        />
-      </Helmet>
+      <Seo
+        title="Eurocompass | Autobuski prevoz Kruševac – Beograd"
+        description="Redovan autobuski prevoz putnika na relaciji Kruševac – Beograd i Beograd – Kruševac. Pogledajte polaske, cene i rezervišite kartu online."
+        path="/"
+        jsonLd={ORGANIZATION_JSON_LD}
+      />
       <div className="relative left-1/2 h-72 w-screen -translate-x-1/2 self-start overflow-hidden bg-brand-yellow-500/10 sm:h-96 lg:h-[30rem]">
         <RouteMap />
 
@@ -39,6 +66,10 @@ export const HomePage = () => {
           <div className="mx-auto w-full max-w-6xl px-6 pb-8 lg:px-10 lg:pb-12">
             <h1 className="text-3xl font-bold tracking-wide text-ink sm:text-5xl lg:text-6xl">
               Eurocompass
+              <span className="sr-only">
+                {" "}
+                - autobuski prevoz Kruševac - Beograd
+              </span>
             </h1>
             <span className="mt-3 block h-1 w-16 rounded-full bg-brand-yellow-500" />
           </div>

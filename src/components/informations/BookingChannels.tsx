@@ -23,7 +23,9 @@ export const BookingChannels = () => (
         </Badge>
         aplikacije na broj
         <strong className="whitespace-nowrap text-xl font-bold text-ink">
-          060 / 74-21-006
+          <a href="tel:+381607421006" className="hover:text-accent-ink">
+            060 / 74-21-006
+          </a>
         </strong>
       </p>
     </div>

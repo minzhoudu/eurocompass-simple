@@ -33,7 +33,11 @@ import {
   getCityName,
   getDepartureBlockMessage,
   getFormErrors,
+  clearSavedPassenger,
   HONEYPOT_FIELD,
+  loadSavedPassenger,
+  MIN_FILL_TIME_MS,
+  savePassenger,
   getStationName,
   getStationsForCity,
   getTravelTimes,
@@ -69,9 +73,30 @@ const ERROR_FOCUS_ORDER = [
   "numberOfTickets",
 ];
 
+// The empty form, with the remembered passenger (if the customer opted in on an
+// earlier visit) already filled in.
+const getInitialFormData = (): FormData => {
+  const saved = loadSavedPassenger();
+
+  return saved ? { ...EMPTY_FORM, ...saved } : EMPTY_FORM;
+};
+
+const wait = (ms: number) =>
+  new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 export const ReservationForm = () => {
-  const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
-  const [city, setCity] = useState("");
+  const [formData, setFormData] = useState<FormData>(getInitialFormData);
+  // Opt-in: only people who ticked "remember me" before have anything saved,
+  // so a loaded profile means the box starts ticked.
+  const [rememberMe, setRememberMe] = useState(
+    () => loadSavedPassenger() !== null,
+  );
+  const [hasSavedDetails, setHasSavedDetails] = useState(
+    () => loadSavedPassenger() !== null,
+  );
+  const [city, setCity] = useState(() =>
+    getCityName(getInitialFormData().startingLocation),
+  );
   const [noteOpen, setNoteOpen] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showAllErrors, setShowAllErrors] = useState(false);
@@ -173,9 +198,22 @@ export const ReservationForm = () => {
   const setNumberOfTickets = (count: number) =>
     setFormData((prev) => ({ ...prev, numberOfTickets: String(count) }));
 
-  const resetForm = () => {
+  // "Not you?": drop what is saved on this device and start from a blank form.
+  const forgetSavedDetails = () => {
+    clearSavedPassenger();
+    setHasSavedDetails(false);
+    setRememberMe(false);
     setFormData(EMPTY_FORM);
     setCity("");
+    setTouched({});
+    setShowAllErrors(false);
+  };
+
+  const resetForm = () => {
+    const next = getInitialFormData();
+
+    setFormData(next);
+    setCity(getCityName(next.startingLocation));
     setNoteOpen(false);
     setTouched({});
     setShowAllErrors(false);
@@ -218,6 +256,14 @@ export const ReservationForm = () => {
       return;
     }
 
+    // A pre-filled form can be completed in a couple of seconds. Rather than
+    // have the server turn that person away as "too fast", wait out the
+    // remainder here (the button already says it is sending).
+    const remaining =
+      MIN_FILL_TIME_MS + 150 - (Date.now() - formOpenedAt.current);
+
+    if (remaining > 0) await wait(remaining);
+
     const botChecks = {
       hp: honeypot,
       elapsedMs: Date.now() - formOpenedAt.current,
@@ -252,6 +298,20 @@ export const ReservationForm = () => {
           );
         },
       });
+
+      // Only after the booking went through, and only if they ticked the box.
+      if (rememberMe) {
+        savePassenger({
+          fullName: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          startingLocation: formData.startingLocation,
+        });
+        setHasSavedDetails(true);
+      } else {
+        clearSavedPassenger();
+        setHasSavedDetails(false);
+      }
 
       setConfirmation(formData);
       resetForm();
@@ -325,11 +385,43 @@ export const ReservationForm = () => {
       </div>
 
       <FormSection step={1} title="Putnik">
+        {hasSavedDetails && (
+          <p className="flex flex-wrap items-center gap-x-2 rounded-lg bg-sunken px-3 py-2 text-sm text-ink-muted">
+            Podaci su popunjeni iz vaše prethodne rezervacije.
+            <button
+              type="button"
+              onClick={forgetSavedDetails}
+              className="font-semibold text-accent-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow-500"
+            >
+              Nisam ja / zaboravi podatke
+            </button>
+          </p>
+        )}
+
         {selectedInputs(["fullName"]).map(renderInput)}
 
         <div className="grid gap-5 sm:grid-cols-2">
           {selectedInputs(["email", "phone"]).map(renderInput)}
         </div>
+
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(event) => setRememberMe(event.target.checked)}
+            className="mt-0.5 size-5 shrink-0 accent-brand-yellow-500"
+          />
+          <span className="text-sm">
+            <span className="font-semibold text-ink">
+              Zapamti moje podatke na ovom uređaju
+            </span>
+            <span className="block text-ink-muted">
+              Ime, email, telefon i polazna stanica se čuvaju samo u ovom
+              pregledaču (ne na našem serveru), da sledeća rezervacija bude
+              brža. Možete ih obrisati u bilo kom trenutku.
+            </span>
+          </span>
+        </label>
       </FormSection>
 
       <FormSection step={2} title="Polazak">

@@ -1,10 +1,17 @@
 import { Outlet } from "react-router-dom";
 
-import { AdminSidebar, AdminTabBar, AdminTopBar } from "../components";
+import {
+  ActivityTracker,
+  AdminSidebar,
+  AdminTabBar,
+  AdminTopBar,
+} from "../components";
+import { useUserContext } from "../contexts";
 import { cn, useTheme } from "../shared";
 
 export const AdminLayout = () => {
   const { theme } = useTheme();
+  const { isLoggedIn } = useUserContext();
 
   return (
     <div
@@ -13,6 +20,8 @@ export const AdminLayout = () => {
         theme === "dark" && "dark",
       )}
     >
+      {isLoggedIn && <ActivityTracker />}
+
       <AdminSidebar />
 
       <div className="flex min-w-0 flex-1 flex-col lg:min-h-0">

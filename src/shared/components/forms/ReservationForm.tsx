@@ -10,6 +10,10 @@ import { Link } from "react-router-dom";
 
 import { CreateReservationDto } from "../../dtos/CreateReservation";
 import { useCreateReservation } from "../../hooks/useCreateReservation";
+import {
+  useBlockedDates,
+  useFetchLatestBlockedDates,
+} from "../../hooks/useBlockedDates";
 import { useDepartureSchedule } from "../../hooks/useDepartureSchedule";
 import { useSendEmail } from "../email";
 import { Alert, Button } from "../ui";
@@ -21,9 +25,12 @@ import { QuantityStepper } from "./QuantityStepper";
 import { ReservationSuccess } from "./ReservationSuccess";
 import {
   CITY_NAMES,
+  findDayBlock,
+  findDepartureBlock,
   FORM_INPUTS,
   FormData,
   getCityName,
+  getDepartureBlockMessage,
   getFormErrors,
   getStationName,
   getStationsForCity,
@@ -76,9 +83,30 @@ export const ReservationForm = () => {
   });
   const { mutate: createReservation } = useCreateReservation();
 
-  const errors = getFormErrors(formData, schedule);
+  const { blockedDates } = useBlockedDates();
+  const fetchLatestBlockedDates = useFetchLatestBlockedDates();
+
+  const errors = getFormErrors(formData, schedule, blockedDates);
+
+  // Blocks apply to the chosen city, which is known as soon as its tile is
+  // picked (before a station is).
+  const activeCity = city || getCityName(formData.startingLocation);
+  const isDateBlocked = (date: string) =>
+    !!findDayBlock(blockedDates, date, activeCity);
+  const isDayBlocked = formData.date !== "" && isDateBlocked(formData.date);
+  const selectedTimeBlock =
+    formData.time !== "" &&
+    findDepartureBlock(blockedDates, formData.date, activeCity, formData.time);
+
+  // A block is shown right away, not only after the field was touched or the
+  // form submitted - the customer should see why they can't book it.
   const visibleError = (name: string) =>
-    showAllErrors || touched[name] ? errors[name] : undefined;
+    showAllErrors ||
+    touched[name] ||
+    (name === "date" && isDayBlocked) ||
+    (name === "time" && selectedTimeBlock)
+      ? errors[name]
+      : undefined;
 
   const times = getTravelTimes(formData.startingLocation, formData.date, schedule);
   const canPickTime = formData.startingLocation !== "" && formData.date !== "";
@@ -124,7 +152,9 @@ export const ReservationForm = () => {
       const keepTime =
         getTravelTimes(prev.startingLocation, date, schedule).includes(
           prev.time,
-        ) && !isDeparturePassed(date, prev.time);
+        ) &&
+        !isDeparturePassed(date, prev.time) &&
+        !findDepartureBlock(blockedDates, date, activeCity, prev.time);
 
       return { ...prev, date, time: keepTime ? prev.time : "" };
     });
@@ -166,6 +196,18 @@ export const ReservationForm = () => {
     }
 
     setLoading(true);
+
+    // The page may have been open for a while: re-check the blocked days with
+    // fresh data before anything is sent. If the backend can't be reached in a
+    // few seconds the cached list is used and the booking is not held up.
+    const latestBlockedDates = await fetchLatestBlockedDates(blockedDates);
+    const latestErrors = getFormErrors(formData, schedule, latestBlockedDates);
+
+    if (latestErrors.date || latestErrors.time) {
+      focusField(latestErrors.date ? "date" : "time");
+      setLoading(false);
+      return;
+    }
 
     // Fired alongside the email, not awaited: the backend can be slow to
     // wake up (free-tier cold start), and its outcome shouldn't gate or
@@ -305,7 +347,11 @@ export const ReservationForm = () => {
           required
           error={visibleError("date")}
         >
-          <DateSelector value={formData.date} onChange={selectDate} />
+          <DateSelector
+            value={formData.date}
+            onChange={selectDate}
+            isDateBlocked={isDateBlocked}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -318,6 +364,10 @@ export const ReservationForm = () => {
             <p className="text-sm text-ink-muted">
               {missingForTimes} da biste videli polaske.
             </p>
+          ) : isDayBlocked ? (
+            <p className="text-sm text-ink-muted">
+              Za izabrani datum nema polazaka. Izaberite drugi datum.
+            </p>
           ) : times.length === 0 ? (
             <p className="text-sm text-ink-muted">
               Nema polazaka za izabranu stanicu.
@@ -327,18 +377,43 @@ export const ReservationForm = () => {
               Svi polasci za danas su već prošli. Izaberite drugi datum.
             </p>
           ) : (
-            <div className="flex flex-wrap gap-2">
-              {times.map((time) => (
-                <ChoiceButton
-                  key={time}
-                  selected={formData.time === time}
-                  disabled={isDeparturePassed(formData.date, time)}
-                  onClick={() => selectTime(time)}
-                >
-                  {time}
-                </ChoiceButton>
-              ))}
-            </div>
+            <>
+              <div className="flex flex-wrap gap-2">
+                {times.map((time) => (
+                  <ChoiceButton
+                    key={time}
+                    selected={formData.time === time}
+                    disabled={
+                      isDeparturePassed(formData.date, time) ||
+                      !!findDepartureBlock(
+                        blockedDates,
+                        formData.date,
+                        activeCity,
+                        time,
+                      )
+                    }
+                    onClick={() => selectTime(time)}
+                  >
+                    {time}
+                  </ChoiceButton>
+                ))}
+              </div>
+
+              {times.map((time) => {
+                const block = findDepartureBlock(
+                  blockedDates,
+                  formData.date,
+                  activeCity,
+                  time,
+                );
+
+                return block ? (
+                  <p key={time} className="text-sm text-ink-muted">
+                    {getDepartureBlockMessage(block, time)}
+                  </p>
+                ) : null;
+              })}
+            </>
           )}
         </FieldGroup>
       </FormSection>

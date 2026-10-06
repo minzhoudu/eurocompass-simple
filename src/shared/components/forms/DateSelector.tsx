@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoCalendarOutline } from "react-icons/io5";
 
+import { cn } from "../../utils";
 import { CalendarDialog } from "./CalendarDialog";
 import { ChoiceButton } from "./ChoiceButton";
 import { getFormattedDate, getUpcomingDates } from "./utils";
@@ -10,9 +11,15 @@ const QUICK_DATE_COUNT = 6;
 type DateSelectorProps = {
   value: string;
   onChange: (date: string) => void;
+  // Days with no departures: shown struck through and not selectable.
+  isDateBlocked?: (date: string) => boolean;
 };
 
-export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
+export const DateSelector = ({
+  value,
+  onChange,
+  isDateBlocked,
+}: DateSelectorProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const quickDates = getUpcomingDates(QUICK_DATE_COUNT);
@@ -26,17 +33,28 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {quickDates.map((date) => (
-        <ChoiceButton
-          key={date.value}
-          variant="date"
-          selected={value === date.value}
-          onClick={() => onChange(date.value)}
-        >
-          <span className="text-xs">{date.label}</span>
-          <span className="text-base font-bold">{date.display}</span>
-        </ChoiceButton>
-      ))}
+      {quickDates.map((date) => {
+        const isBlocked = !!isDateBlocked?.(date.value);
+
+        return (
+          <ChoiceButton
+            key={date.value}
+            variant="date"
+            selected={value === date.value}
+            disabled={isBlocked}
+            title={isBlocked ? "Nema polazaka" : undefined}
+            onClick={() => onChange(date.value)}
+          >
+            <span className="text-xs">{date.label}</span>
+            <span
+              className={cn("text-base font-bold", isBlocked && "line-through")}
+            >
+              {date.display}
+            </span>
+            {isBlocked && <span className="sr-only">nema polazaka</span>}
+          </ChoiceButton>
+        );
+      })}
 
       <ChoiceButton
         variant="date"
@@ -58,6 +76,7 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
       <CalendarDialog
         open={isCalendarOpen}
         value={value}
+        isDateDisabled={isDateBlocked}
         onSelect={handleCustomDateSelect}
         onClose={() => setIsCalendarOpen(false)}
       />

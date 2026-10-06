@@ -29,6 +29,8 @@ type CalendarDialogProps = {
   value: string;
   // Admin views need to look at past days too; the booking form does not.
   allowPastDates?: boolean;
+  // Extra days that can't be picked (e.g. days with no departures).
+  isDateDisabled?: (date: string) => boolean;
   onSelect: (date: string) => void;
   onClose: () => void;
 };
@@ -43,6 +45,7 @@ export const CalendarDialog = ({
   open,
   value,
   allowPastDates = false,
+  isDateDisabled,
   onSelect,
   onClose,
 }: CalendarDialogProps) => {
@@ -132,13 +135,16 @@ export const CalendarDialog = ({
             const day = index + 1;
             const dateValue = toDateValue(new Date(year, month, day));
             const isPast = !allowPastDates && dateValue < today;
+            const isUnavailable = !isPast && !!isDateDisabled?.(dateValue);
             const isSelected = dateValue === value;
 
             return (
               <button
                 key={dateValue}
                 type="button"
-                disabled={isPast}
+                disabled={isPast || isUnavailable}
+                aria-label={isUnavailable ? `${day}, nema polazaka` : undefined}
+                title={isUnavailable ? "Nema polazaka" : undefined}
                 aria-pressed={isSelected}
                 onClick={() => onSelect(dateValue)}
                 className={cn(
@@ -146,6 +152,7 @@ export const CalendarDialog = ({
                   isSelected
                     ? "bg-brand-yellow-500 text-brand-black-900"
                     : "text-ink hover:bg-sunken",
+                  isUnavailable && "line-through",
                   dateValue === today &&
                     !isSelected &&
                     "ring-1 ring-brand-yellow-500",
@@ -158,7 +165,9 @@ export const CalendarDialog = ({
         </div>
 
         <div className="flex justify-end">
-          <Button variant="ghost" onClick={onClose}>
+          {/* Explicit type: the calendar sits inside the booking form, where a
+              default (submit) button would send the reservation. */}
+          <Button type="button" variant="ghost" onClick={onClose}>
             Zatvori
           </Button>
         </div>

@@ -1,9 +1,9 @@
-import { ChangeEvent, MouseEvent, useId } from "react";
+import { useState } from "react";
 import { IoCalendarOutline } from "react-icons/io5";
 
-import { cn } from "../../utils";
+import { CalendarDialog } from "./CalendarDialog";
 import { ChoiceButton } from "./ChoiceButton";
-import { getCurrentDate, getFormattedDate, getUpcomingDates } from "./utils";
+import { getFormattedDate, getUpcomingDates } from "./utils";
 
 const QUICK_DATE_COUNT = 6;
 
@@ -13,25 +13,15 @@ type DateSelectorProps = {
 };
 
 export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
-  const customDateInputId = useId();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const quickDates = getUpcomingDates(QUICK_DATE_COUNT);
   const hasCustomDate =
     value !== "" && !quickDates.some((date) => date.value === value);
 
-  const handleCustomDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value) onChange(event.target.value);
-  };
-
-  // Desktop and Android browsers only open the picker from the input's tiny
-  // built-in calendar icon; a click anywhere else just focuses a date segment.
-  // Called on the input itself so it still counts as a direct tap on iOS.
-  const handleCustomDateClick = (event: MouseEvent<HTMLInputElement>) => {
-    try {
-      event.currentTarget.showPicker();
-    } catch {
-      // Unsupported or already open - the native behaviour still applies.
-    }
+  const handleCustomDateSelect = (date: string) => {
+    onChange(date);
+    setIsCalendarOpen(false);
   };
 
   return (
@@ -48,46 +38,29 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
         </ChoiceButton>
       ))}
 
-      {/*
-        iOS Safari only opens a date input's native picker on a direct tap on
-        the input itself - calling showPicker()/focus() from another
-        element's click handler silently does nothing there. So the real
-        input sits on top of the visible tile (transparent, not hidden),
-        making the tap itself the interaction, instead of a decorative
-        button that tries to open it programmatically. Other browsers get
-        showPicker() on that same direct click (see handleCustomDateClick).
-      */}
-      <div className="relative">
-        <input
-          id={customDateInputId}
-          type="date"
-          min={getCurrentDate()}
-          value={value}
-          onChange={handleCustomDateChange}
-          onClick={handleCustomDateClick}
-          aria-label="Izaberite drugi datum polaska"
-          className="peer absolute inset-0 size-full cursor-pointer opacity-0"
-        />
+      <ChoiceButton
+        variant="date"
+        selected={hasCustomDate}
+        aria-haspopup="dialog"
+        aria-label="Izaberite drugi datum polaska"
+        onClick={() => setIsCalendarOpen(true)}
+      >
+        <span className="text-xs">drugi</span>
+        {hasCustomDate ? (
+          <span className="text-base font-bold">
+            {getFormattedDate(value).slice(0, 6)}
+          </span>
+        ) : (
+          <IoCalendarOutline className="size-6" />
+        )}
+      </ChoiceButton>
 
-        <label
-          htmlFor={customDateInputId}
-          className={cn(
-            "flex min-w-[4.5rem] flex-col items-center rounded-xl border px-3 py-2 text-center transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand-yellow-500",
-            hasCustomDate
-              ? "border-brand-yellow-500 bg-brand-yellow-500/10 text-accent-ink ring-1 ring-brand-yellow-500"
-              : "border-line-strong bg-raised text-ink-muted",
-          )}
-        >
-          <span className="text-xs">drugi</span>
-          {hasCustomDate ? (
-            <span className="text-base font-bold">
-              {getFormattedDate(value).slice(0, 6)}
-            </span>
-          ) : (
-            <IoCalendarOutline className="size-6" />
-          )}
-        </label>
-      </div>
+      <CalendarDialog
+        open={isCalendarOpen}
+        value={value}
+        onSelect={handleCustomDateSelect}
+        onClose={() => setIsCalendarOpen(false)}
+      />
     </div>
   );
 };

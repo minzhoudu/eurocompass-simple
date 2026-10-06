@@ -12,6 +12,7 @@ import {
   useInformation,
   useUpdateInformation,
 } from "../../../shared";
+import { BlockedDatesCard } from "./BlockedDatesCard";
 
 type TimesField =
   | "startingTimesKrusevac"
@@ -160,6 +161,8 @@ export const AdminDashboard = () => {
           />
         </Card>
       </div>
+
+      <BlockedDatesCard />
     </div>
   );
 };

@@ -22,13 +22,16 @@ import {
   getCityName,
   getCurrentDate,
   getFormattedDate,
+  getBlockScopeText,
   getStationName,
   getTravelTimes,
   IconButton,
   parseDateValue,
+  pluralize,
   Skeleton,
   toDateValue,
   useAutoRefresh,
+  useBlockedDates,
   useDepartureSchedule,
   useExportReservations,
   useReservationsByDate,
@@ -49,22 +52,6 @@ const DATE_PARAM_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const DIRECTION_TITLES: Record<string, string> = {
   Kruševac: "Kruševac → Beograd",
   Beograd: "Beograd → Kruševac",
-};
-
-// Serbian plural: 1 / 21 -> one, 2-4 / 22-24 -> few, everything else -> many.
-const pluralize = (count: number, one: string, few: string, many: string) => {
-  const lastDigit = count % 10;
-  const lastTwoDigits = count % 100;
-
-  if (lastDigit === 1 && lastTwoDigits !== 11) return one;
-  if (
-    lastDigit >= 2 &&
-    lastDigit <= 4 &&
-    (lastTwoDigits < 12 || lastTwoDigits > 14)
-  )
-    return few;
-
-  return many;
 };
 
 const formatSeats = (seats: number) =>
@@ -177,6 +164,10 @@ export const AdminPassengers = () => {
     dateParam && DATE_PARAM_PATTERN.test(dateParam) ? dateParam : today;
 
   const { schedule } = useDepartureSchedule({ staleTime: 0 });
+  const { blockedDates } = useBlockedDates();
+  const dayBlocks = blockedDates.filter(
+    (block) => block.startsOn <= date && date <= block.endsOn,
+  );
   const {
     enabled: isAutoRefreshOn,
     setEnabled: setAutoRefresh,
@@ -331,6 +322,19 @@ export const AdminPassengers = () => {
       <p className="hidden text-lg font-bold text-ink print:block">
         {formatDayLabel(date)}
       </p>
+
+      {dayBlocks.length > 0 && (
+        <Alert variant="warning" title="Blokirano na ovaj dan">
+          <ul className="flex flex-col gap-1">
+            {dayBlocks.map((block) => (
+              <li key={block.id}>
+                {getBlockScopeText(block)}
+                {block.reason ? ` - ${block.reason}` : ""}
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      )}
 
       {isExportError && (
         <Alert variant="error" className="print:hidden">

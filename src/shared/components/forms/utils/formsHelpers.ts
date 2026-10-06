@@ -1,3 +1,10 @@
+import { BlockedDate } from "../../../models";
+import {
+  findDayBlock,
+  findDepartureBlock,
+  getDayBlockMessage,
+  getDepartureBlockMessage,
+} from "./blockedDates";
 import {
   BEOGRAD_TIME_OPTIONS,
   BEOGRAD_TIME_OPTIONS_WEEKEND,
@@ -112,6 +119,7 @@ export const getFormattedDate = (date: string) => {
 export const getFormErrors = (
   formData: FormData,
   schedule: DepartureSchedule = DEFAULT_SCHEDULE,
+  blockedDates: BlockedDate[] = [],
 ) => {
   const errors: Record<string, string> = {};
 
@@ -135,6 +143,15 @@ export const getFormErrors = (
     errors.date = "Datum polaska ne može biti u prošlosti";
   }
 
+  const city = getCityName(formData.startingLocation);
+  const dayBlock = formData.date
+    ? findDayBlock(blockedDates, formData.date, city)
+    : undefined;
+
+  if (dayBlock && !errors.date) {
+    errors.date = getDayBlockMessage(dayBlock);
+  }
+
   const availableTimes = getTravelTimes(
     formData.startingLocation,
     formData.date,
@@ -146,6 +163,17 @@ export const getFormErrors = (
     isDeparturePassed(formData.date, formData.time)
   ) {
     errors.time = "Izaberite vreme polaska";
+  } else {
+    const departureBlock = findDepartureBlock(
+      blockedDates,
+      formData.date,
+      city,
+      formData.time,
+    );
+
+    if (departureBlock) {
+      errors.time = getDepartureBlockMessage(departureBlock, formData.time);
+    }
   }
 
   if (!(Number(formData.numberOfTickets) >= 1)) {

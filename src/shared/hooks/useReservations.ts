@@ -12,6 +12,7 @@ type UseReservationsParams = {
   search: string;
   filters?: ReservationFilters;
   refetchInterval?: number | false;
+  enabled?: boolean;
 };
 
 export const useReservations = ({
@@ -19,6 +20,7 @@ export const useReservations = ({
   search,
   filters = DEFAULT_RESERVATION_FILTERS,
   refetchInterval = false,
+  enabled = true,
 }: UseReservationsParams) =>
   useQuery({
     queryKey: ["reservations", { page, search, filters }],
@@ -47,4 +49,5 @@ export const useReservations = ({
     staleTime: 1000 * 60,
     placeholderData: keepPreviousData,
     refetchInterval,
+    enabled,
   });

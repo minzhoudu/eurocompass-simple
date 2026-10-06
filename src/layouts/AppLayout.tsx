@@ -5,6 +5,7 @@ import {
   Main,
   NoticeBanner,
   OfflineBanner,
+  PublicTabBar,
   RouteFocus,
   UpdateBanner,
 } from "../components";
@@ -16,7 +17,8 @@ export const AppLayout = () => {
   return (
     <div
       className={cn(
-        "flex min-h-screen flex-col items-center bg-surface text-ink",
+        // Room at the bottom so the phone tab bar never covers the footer.
+        "flex min-h-screen flex-col items-center bg-surface pb-[calc(4.5rem+env(safe-area-inset-bottom))] text-ink lg:pb-0",
         theme === "dark" && "dark",
       )}
     >
@@ -46,6 +48,8 @@ export const AppLayout = () => {
       </Main>
 
       <Footer />
+
+      <PublicTabBar />
 
       <RouteFocus />
 

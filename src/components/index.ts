@@ -1,5 +1,6 @@
 export * from "./header";
 export * from "./footer";
+export * from "./mobile-tab-bar";
 export * from "./pwa";
 export * from "./main";
 export * from "./informations";

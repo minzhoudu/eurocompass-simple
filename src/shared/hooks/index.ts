@@ -3,6 +3,7 @@ export * from "./useDebouncedValue";
 export * from "./useDepartureSchedule";
 export * from "./useDeleteReservation";
 export * from "./useInformation";
+export * from "./useNotices";
 export * from "./useReservations";
 export * from "./useReservationsByDate";
 export * from "./useReservationStats";

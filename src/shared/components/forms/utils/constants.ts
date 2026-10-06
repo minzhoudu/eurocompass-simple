@@ -1,5 +1,11 @@
 import { HTMLInputTypeAttribute } from "react";
 
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_NAME_LENGTH,
+  MAX_PHONE_LENGTH,
+} from "./limits";
+
 export type FormInputType = {
   id: number;
   name: string;
@@ -8,6 +14,7 @@ export type FormInputType = {
   placeholder: string;
   autoComplete: string;
   required: boolean;
+  maxLength?: number;
   errorMessage: string;
   invalidMessage?: string;
   isValid?: (value: string) => boolean;
@@ -25,6 +32,7 @@ export const FORM_INPUTS: FormInputType[] = [
     placeholder: "Unesite svoje prezime i ime",
     autoComplete: "name",
     required: true,
+    maxLength: MAX_NAME_LENGTH,
     errorMessage: "Unesite prezime i ime",
   },
   {
@@ -35,6 +43,7 @@ export const FORM_INPUTS: FormInputType[] = [
     placeholder: "Unesite svoju email adresu",
     autoComplete: "email",
     required: true,
+    maxLength: MAX_EMAIL_LENGTH,
     errorMessage: "Unesite email adresu",
     invalidMessage: "Unesite ispravnu email adresu",
     isValid: (value) => EMAIL_PATTERN.test(value),
@@ -47,6 +56,7 @@ export const FORM_INPUTS: FormInputType[] = [
     placeholder: "npr. 0631234567",
     autoComplete: "tel",
     required: true,
+    maxLength: MAX_PHONE_LENGTH,
     errorMessage: "Unesite broj telefona",
     invalidMessage: "Unesite ispravan broj telefona",
     isValid: (value) =>

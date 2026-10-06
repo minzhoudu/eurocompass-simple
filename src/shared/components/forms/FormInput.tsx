@@ -21,6 +21,7 @@ type FormInputProps = {
   placeholder?: string;
   autoComplete?: string;
   autoFocus?: boolean;
+  maxLength?: number;
   inputMode?: "text" | "numeric" | "decimal" | "tel" | "email";
   icon?: ReactNode;
   suffix?: ReactNode;
@@ -41,6 +42,7 @@ export const FormInput = ({
   type,
   autoComplete,
   autoFocus,
+  maxLength,
   inputMode,
   icon,
   suffix,
@@ -56,6 +58,7 @@ export const FormInput = ({
     placeholder,
     autoComplete,
     autoFocus,
+    maxLength,
     inputMode,
     "aria-invalid": error ? true : undefined,
     "aria-describedby": error ? errorId : undefined,

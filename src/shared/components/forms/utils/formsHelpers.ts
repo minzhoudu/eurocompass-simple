@@ -1,4 +1,5 @@
 import { BlockedDate } from "../../../models";
+import { MAX_TICKETS } from "./limits";
 import {
   findDayBlock,
   findDepartureBlock,
@@ -178,6 +179,8 @@ export const getFormErrors = (
 
   if (!(Number(formData.numberOfTickets) >= 1)) {
     errors.numberOfTickets = "Broj mesta mora biti najmanje 1";
+  } else if (Number(formData.numberOfTickets) > MAX_TICKETS) {
+    errors.numberOfTickets = `Najviše ${MAX_TICKETS} mesta po rezervaciji`;
   }
 
   return errors;

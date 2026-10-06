@@ -3,6 +3,7 @@ import {
   FocusEvent,
   FormEvent,
   ReactNode,
+  useRef,
   useState,
 } from "react";
 import { IoCallOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
@@ -15,7 +16,7 @@ import {
   useFetchLatestBlockedDates,
 } from "../../hooks/useBlockedDates";
 import { useDepartureSchedule } from "../../hooks/useDepartureSchedule";
-import { useSendEmail } from "../email";
+import { getSendEmailErrorMessage, useSendEmail } from "../email";
 import { Alert, Button } from "../ui";
 import { ChoiceButton } from "./ChoiceButton";
 import { DateSelector } from "./DateSelector";
@@ -32,10 +33,13 @@ import {
   getCityName,
   getDepartureBlockMessage,
   getFormErrors,
+  HONEYPOT_FIELD,
   getStationName,
   getStationsForCity,
   getTravelTimes,
   isDeparturePassed,
+  MAX_NOTE_LENGTH,
+  MAX_TICKETS,
 } from "./utils";
 
 const EMPTY_FORM: FormData = {
@@ -72,7 +76,11 @@ export const ReservationForm = () => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showAllErrors, setShowAllErrors] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [sendFailed, setSendFailed] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  // Bot checks: a hidden field only a script fills in, and how long the form
+  // has been open (a person needs a few seconds; a script posts at once).
+  const [honeypot, setHoneypot] = useState("");
+  const formOpenedAt = useRef(Date.now());
   const [confirmation, setConfirmation] = useState<FormData | null>(null);
 
   const { schedule } = useDepartureSchedule();
@@ -171,6 +179,7 @@ export const ReservationForm = () => {
     setNoteOpen(false);
     setTouched({});
     setShowAllErrors(false);
+    setHoneypot("");
   };
 
   const focusField = (name: string) => {
@@ -186,7 +195,7 @@ export const ReservationForm = () => {
     if (loading) return;
 
     setShowAllErrors(true);
-    setSendFailed(false);
+    setSendError(null);
 
     const firstInvalidField = ERROR_FOCUS_ORDER.find((name) => errors[name]);
 
@@ -209,38 +218,45 @@ export const ReservationForm = () => {
       return;
     }
 
-    // Fired alongside the email, not awaited: the backend can be slow to
-    // wake up (free-tier cold start), and its outcome shouldn't gate or
-    // fail the customer's confirmation - the email is the reservation of
-    // record from their side. A failure here only means this one booking
-    // is missing from the admin stats.
-    const reservationPayload: CreateReservationDto = {
-      fullName: formData.fullName.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim(),
-      startingLocation: formData.startingLocation,
-      travelDate: formData.date,
-      travelTime: formData.time,
-      numberOfTickets: Number(formData.numberOfTickets),
-      note: formData.note.trim() || undefined,
+    const botChecks = {
+      hp: honeypot,
+      elapsedMs: Date.now() - formOpenedAt.current,
     };
 
-    createReservation(reservationPayload, {
-      onError: (error) => {
-        console.error(
-          "Rezervacija nije sačuvana u bazi (statistika će biti nepotpuna), email je verovatno ipak poslat:",
-          error,
-        );
-      },
-    });
-
     try {
-      await sendEmail();
+      // The email is the reservation of record, and it is also where the
+      // server-side bot checks and limits apply - so it goes first.
+      await sendEmail(botChecks);
+
+      // Then the booking is saved for the admin, but not awaited: the backend
+      // can be slow to wake up (free-tier cold start), and its outcome
+      // shouldn't gate or fail the customer's confirmation. A failure here
+      // only means this one booking is missing from the admin stats.
+      const reservationPayload: CreateReservationDto = {
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        startingLocation: formData.startingLocation,
+        travelDate: formData.date,
+        travelTime: formData.time,
+        numberOfTickets: Number(formData.numberOfTickets),
+        note: formData.note.trim() || undefined,
+        ...botChecks,
+      };
+
+      createReservation(reservationPayload, {
+        onError: (error) => {
+          console.error(
+            "Rezervacija nije sačuvana u bazi (statistika će biti nepotpuna), email je ipak poslat:",
+            error,
+          );
+        },
+      });
 
       setConfirmation(formData);
       resetForm();
     } catch (error) {
-      setSendFailed(true);
+      setSendError(getSendEmailErrorMessage(error));
       console.error("Došlo je do greške prilikom slanja emaila!", error);
     } finally {
       setLoading(false);
@@ -251,7 +267,10 @@ export const ReservationForm = () => {
     return (
       <ReservationSuccess
         data={confirmation}
-        onReset={() => setConfirmation(null)}
+        onReset={() => {
+          setConfirmation(null);
+          formOpenedAt.current = Date.now();
+        }}
       />
     );
   }
@@ -272,6 +291,7 @@ export const ReservationForm = () => {
       icon={FIELD_ICONS[input.name]}
       value={formData[input.name]}
       onChange={handleTextChange}
+      maxLength={input.maxLength}
       onBlur={handleBlur}
       error={visibleError(input.name)}
     />
@@ -285,6 +305,25 @@ export const ReservationForm = () => {
       className="flex flex-col gap-8"
       data-netlify="true"
     >
+      {/* Bot trap: off-screen (not display:none, which bots skip), out of the
+          tab order and hidden from screen readers. A person never fills it. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-[9999px] top-auto size-px overflow-hidden"
+      >
+        <label>
+          Ne popunjavajte ovo polje
+          <input
+            type="text"
+            name={HONEYPOT_FIELD}
+            value={honeypot}
+            onChange={(event) => setHoneypot(event.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </label>
+      </div>
+
       <FormSection step={1} title="Putnik">
         {selectedInputs(["fullName"]).map(renderInput)}
 
@@ -428,6 +467,7 @@ export const ReservationForm = () => {
           <QuantityStepper
             value={Number(formData.numberOfTickets) || 1}
             onChange={setNumberOfTickets}
+            max={MAX_TICKETS}
           />
         </FieldGroup>
 
@@ -439,6 +479,7 @@ export const ReservationForm = () => {
             placeholder="Unesite napomenu"
             autoFocus={noteOpen && !formData.note}
             value={formData.note}
+            maxLength={MAX_NOTE_LENGTH}
             onChange={handleTextChange}
           />
         ) : (
@@ -452,9 +493,9 @@ export const ReservationForm = () => {
         )}
       </FormSection>
 
-      {sendFailed && (
+      {sendError && (
         <Alert variant="error" role="alert">
-          Došlo je do greške prilikom slanja emaila!
+          {sendError}
         </Alert>
       )}
 

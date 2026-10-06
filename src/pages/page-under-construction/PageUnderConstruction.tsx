@@ -1,16 +1,15 @@
-import { Helmet } from "react-helmet";
+import { Seo } from "../../components";
 import { Link } from "react-router-dom";
 
 export const PageUnderConstruction = () => {
   return (
     <div className="flex h-[calc(100vh-20rem)] flex-col items-center justify-center gap-5 font-semibold">
-      <Helmet>
-        <title>Eurocompass doo | Stranica u izradi</title>
-        <meta
-          name="description"
-          content="Eurocompass doo | Stranica u izradi"
-        />
-      </Helmet>
+      <Seo
+        title="Stranica u izradi | Eurocompass"
+        description="Ova stranica je u izradi."
+        path="/"
+        noindex
+      />
       <div className="text-center">
         <h1 className="text-3xl">Stranica je u izradi</h1>
         <p>Molim vas vratite se kasnije</p>

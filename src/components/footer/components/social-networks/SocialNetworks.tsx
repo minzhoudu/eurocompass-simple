@@ -1,5 +1,6 @@
 import { FaFacebook, FaInstagram, FaWhatsapp, FaViber } from "react-icons/fa";
 
+import { CONTACT } from "../../../../config";
 import { FooterHeading } from "../footer-heading";
 
 export const SocialNetworks = () => {
@@ -16,26 +17,36 @@ export const SocialNetworks = () => {
           href="https://www.facebook.com/eurocompasskrusevac"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Facebook"
+          aria-label="Facebook (otvara se u novom prozoru)"
           className={socialNetworkClasses}
         >
-          <FaFacebook size={socialNetworkSize} />
+          <FaFacebook size={socialNetworkSize} aria-hidden="true" />
         </a>
         <a
           href="https://www.instagram.com/eurocompass.rs/"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Instagram"
+          aria-label="Instagram (otvara se u novom prozoru)"
           className={socialNetworkClasses}
         >
-          <FaInstagram size={socialNetworkSize} />
+          <FaInstagram size={socialNetworkSize} aria-hidden="true" />
         </a>
       </div>
 
       <div className="flex items-center gap-2 font-semibold">
-        <FaWhatsapp className="text-social-whatsapp" size={22} />
-        <FaViber className="text-social-viber" size={20} />
-        <p>060 / 74-21-006</p>
+        <FaWhatsapp
+          className="text-social-whatsapp"
+          size={22}
+          aria-hidden="true"
+        />
+        <FaViber className="text-social-viber" size={20} aria-hidden="true" />
+        <a
+          href={CONTACT.mobileHref}
+          className="transition-colors hover:text-accent-ink"
+        >
+          <span className="sr-only">WhatsApp i Viber: </span>
+          {CONTACT.mobile}
+        </a>
       </div>
     </div>
   );

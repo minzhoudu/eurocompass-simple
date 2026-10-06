@@ -6,3 +6,4 @@ export * from "./about";
 export * from "./informations";
 export * from "./privacy-policy";
 export * from "./admin-pages";
+export * from "./not-found";

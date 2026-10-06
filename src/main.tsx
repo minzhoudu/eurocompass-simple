@@ -1,28 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  Navigate,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 
 import { UserProvider } from "./contexts";
-import { AdminLayout, AppLayout } from "./layouts";
+import { AppLayout } from "./layouts";
 import {
   AdminDashboard,
+  AdminInformations,
+  AdminLayout,
   AdminLoginPage,
   AdminNotices,
   AdminPassengers,
   AdminReservations,
+  AdminSuspense,
+} from "./routes/lazyAdmin";
+import {
   ErrorPage,
   HomePage,
   Informations,
+  NotFound,
   PrivacyPolicy,
   Reservations,
 } from "./pages";
-import { AdminInformations } from "./components";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
         path: "politika-privatnosti",
         element: <PrivacyPolicy />,
       },
+      {
+        // Anything else is a real "not found" page, not a silent redirect.
+        path: "*",
+        element: <NotFound />,
+      },
     ],
   },
   {
@@ -57,43 +63,65 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AdminLoginPage />,
+        element: (
+          <AdminSuspense>
+            <AdminLoginPage />
+          </AdminSuspense>
+        ),
       },
       {
         path: "dashboard",
         element: (
-          <UserProvider>
-            <AdminLayout />
-          </UserProvider>
+          <AdminSuspense>
+            <UserProvider>
+              <AdminLayout />
+            </UserProvider>
+          </AdminSuspense>
         ),
         children: [
           {
             index: true,
-            element: <AdminDashboard />,
+            element: (
+              <AdminSuspense>
+                <AdminDashboard />
+              </AdminSuspense>
+            ),
           },
           {
             path: "informacije",
-            element: <AdminInformations />,
+            element: (
+              <AdminSuspense>
+                <AdminInformations />
+              </AdminSuspense>
+            ),
           },
           {
             path: "rezervacije",
-            element: <AdminReservations />,
+            element: (
+              <AdminSuspense>
+                <AdminReservations />
+              </AdminSuspense>
+            ),
           },
           {
             path: "putnici",
-            element: <AdminPassengers />,
+            element: (
+              <AdminSuspense>
+                <AdminPassengers />
+              </AdminSuspense>
+            ),
           },
           {
             path: "obavestenja",
-            element: <AdminNotices />,
+            element: (
+              <AdminSuspense>
+                <AdminNotices />
+              </AdminSuspense>
+            ),
           },
         ],
       },
     ],
-  },
-  {
-    path: "*",
-    element: <Navigate to="/" replace />,
   },
 ]);
 

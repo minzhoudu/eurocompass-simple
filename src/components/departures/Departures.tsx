@@ -56,7 +56,7 @@ const TimeChips = ({
             variant={status === "next" ? "yellow" : "outline"}
             size="md"
             className={cn(
-              status === "passed" && "line-through opacity-50",
+              status === "passed" && "!border-line line-through",
               status === "blocked" &&
                 "!border-red-400 !text-danger line-through",
               status === "next" && "ring-2 ring-brand-yellow-500/40",

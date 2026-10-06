@@ -1,5 +1,5 @@
-import { Helmet } from "react-helmet";
 
+import { Seo } from "../../components";
 import { Card, SectionHeading } from "../../shared";
 
 const Section = ({
@@ -18,13 +18,11 @@ const Section = ({
 export const PrivacyPolicy = () => {
   return (
     <div className="flex w-full max-w-3xl flex-col gap-6 px-4 lg:px-0">
-      <Helmet>
-        <title>Eurocompass doo | Politika privatnosti</title>
-        <meta
-          name="description"
-          content="Politika privatnosti Eurocompass doo - koji podaci se prikupljaju prilikom rezervacije karte, zašto, koliko dugo se čuvaju i kako ostvariti svoja prava."
-        />
-      </Helmet>
+      <Seo
+        title="Politika privatnosti | Eurocompass"
+        description="Koje lične podatke Eurocompass doo prikuplja prilikom rezervacije karte, zašto, koliko dugo ih čuva i kako možete ostvariti svoja prava."
+        path="/politika-privatnosti"
+      />
 
       <SectionHeading as="h1" className="mt-10">
         Politika privatnosti

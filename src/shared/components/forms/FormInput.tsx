@@ -60,6 +60,7 @@ export const FormInput = ({
     autoFocus,
     maxLength,
     inputMode,
+    required: required || undefined,
     "aria-invalid": error ? true : undefined,
     "aria-describedby": error ? errorId : undefined,
   };

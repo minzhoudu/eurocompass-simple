@@ -1,5 +1,9 @@
-import { Helmet } from "react-helmet";
-import { BookingChannels, FareTicket, GoogleMap } from "../../components";
+import {
+  BookingChannels,
+  FareTicket,
+  GoogleMap,
+  Seo,
+} from "../../components";
 import { Alert, SectionHeading, Skeleton, useInformation } from "../../shared";
 
 export const Informations = () => {
@@ -8,13 +12,11 @@ export const Informations = () => {
 
   return (
     <div className="flex w-full max-w-4xl flex-col gap-8 px-4 lg:px-0">
-      <Helmet>
-        <title>Eurocompass doo | Informacije</title>
-        <meta
-          name="description"
-          content="Informacije o cenama karata, specijalnim ponudama i polascima autobusa Eurocompass. Pronađite sve potrebne informacije o destinacijama, polascima i cenama na našoj stranici."
-        />
-      </Helmet>
+      <Seo
+        title="Cene karata i informacije | Eurocompass"
+        description="Cene autobuskih karata na liniji Kruševac – Beograd (jedan smer, povratna, studentska), polasci i važne informacije za putnike."
+        path="/informacije"
+      />
 
       <SectionHeading as="h1" className="mt-10">
         Informacije o cenama i polascima

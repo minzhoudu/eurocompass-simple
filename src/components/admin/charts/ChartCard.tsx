@@ -36,9 +36,9 @@ export const ChartCard = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 id={titleId} className="text-lg font-bold text-ink">
+          <h2 id={titleId} className="text-lg font-bold text-ink">
             {title}
-          </h3>
+          </h2>
           {subtitle && <p className="text-sm text-ink-muted">{subtitle}</p>}
         </div>
 

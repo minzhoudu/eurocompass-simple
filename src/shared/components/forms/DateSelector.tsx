@@ -1,4 +1,4 @@
-import { ChangeEvent, useId } from "react";
+import { ChangeEvent, MouseEvent, useId } from "react";
 import { IoCalendarOutline } from "react-icons/io5";
 
 import { cn } from "../../utils";
@@ -23,6 +23,17 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
     if (event.target.value) onChange(event.target.value);
   };
 
+  // Desktop and Android browsers only open the picker from the input's tiny
+  // built-in calendar icon; a click anywhere else just focuses a date segment.
+  // Called on the input itself so it still counts as a direct tap on iOS.
+  const handleCustomDateClick = (event: MouseEvent<HTMLInputElement>) => {
+    try {
+      event.currentTarget.showPicker();
+    } catch {
+      // Unsupported or already open - the native behaviour still applies.
+    }
+  };
+
   return (
     <div className="flex flex-wrap gap-2">
       {quickDates.map((date) => (
@@ -43,7 +54,8 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
         element's click handler silently does nothing there. So the real
         input sits on top of the visible tile (transparent, not hidden),
         making the tap itself the interaction, instead of a decorative
-        button that tries to open it programmatically.
+        button that tries to open it programmatically. Other browsers get
+        showPicker() on that same direct click (see handleCustomDateClick).
       */}
       <div className="relative">
         <input
@@ -52,6 +64,7 @@ export const DateSelector = ({ value, onChange }: DateSelectorProps) => {
           min={getCurrentDate()}
           value={value}
           onChange={handleCustomDateChange}
+          onClick={handleCustomDateClick}
           aria-label="Izaberite drugi datum polaska"
           className="peer absolute inset-0 size-full cursor-pointer opacity-0"
         />

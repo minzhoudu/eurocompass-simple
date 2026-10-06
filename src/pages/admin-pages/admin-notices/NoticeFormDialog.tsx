@@ -1,15 +1,10 @@
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
-import { IoCalendarOutline, IoClose } from "react-icons/io5";
-
-import { NoticeMessage } from "../../../components";
+import { DateField, NoticeMessage } from "../../../components";
 import {
   Alert,
   Button,
-  CalendarDialog,
   ChoiceButton,
   FormInput,
-  getFormattedDate,
-  IconButton,
   Notice,
   NoticeSeverity,
   SaveNoticeDto,
@@ -23,51 +18,6 @@ const SEVERITY_OPTIONS: { value: NoticeSeverity; label: string }[] = [
   { value: "warning", label: "Upozorenje" },
   { value: "danger", label: "Hitno" },
 ];
-
-type DateFieldProps = {
-  label: string;
-  value: string | null;
-  onChange: (date: string | null) => void;
-};
-
-const DateField = ({ label, value, onChange }: DateFieldProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-sm font-semibold text-ink">{label}</span>
-
-      <div className="flex items-center gap-1">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-12 flex-1 justify-start"
-          aria-haspopup="dialog"
-          onClick={() => setIsOpen(true)}
-        >
-          <IoCalendarOutline className="size-5 shrink-0" aria-hidden="true" />
-          {value ? getFormattedDate(value) : "Bez ograničenja"}
-        </Button>
-
-        {value && (
-          <IconButton label="Ukloni datum" onClick={() => onChange(null)}>
-            <IoClose className="size-5" />
-          </IconButton>
-        )}
-      </div>
-
-      <CalendarDialog
-        open={isOpen}
-        value={value ?? ""}
-        onSelect={(date) => {
-          onChange(date);
-          setIsOpen(false);
-        }}
-        onClose={() => setIsOpen(false)}
-      />
-    </div>
-  );
-};
 
 type NoticeFormDialogProps = {
   // Omit to create a new notice.

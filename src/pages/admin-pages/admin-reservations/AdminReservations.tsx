@@ -2,12 +2,14 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   IoCloseCircle,
+  IoFunnelOutline,
   IoRefreshOutline,
   IoSearchOutline,
   IoTrashOutline,
 } from "react-icons/io5";
 
 import { AdminPageHeader, AutoRefreshControl } from "../../../components";
+import { ReservationFiltersPanel } from "./ReservationFiltersPanel";
 import {
   Alert,
   Badge,
@@ -15,10 +17,13 @@ import {
   Card,
   cn,
   ConfirmDialog,
+  countActiveFilters,
+  DEFAULT_RESERVATION_FILTERS,
   getFormattedDate,
   IconButton,
   LoadingBar,
   Reservation,
+  ReservationFilters,
   ReservationPeriodStats,
   Skeleton,
   useAutoRefresh,
@@ -126,13 +131,18 @@ export const AdminReservations = () => {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
+  const [filters, setFilters] = useState<ReservationFilters>(
+    DEFAULT_RESERVATION_FILTERS,
+  );
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const activeFilterCount = countActiveFilters(filters);
 
-  // Any new search term invalidates the current page number - without this,
-  // typing a narrower search while sitting on page 3 could land on a page
-  // that no longer exists for the new result set.
+  // Any new search term or filter invalidates the current page number -
+  // without this, narrowing the results while sitting on page 3 could land on
+  // a page that no longer exists for the new result set.
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, filters]);
 
   const {
     enabled: isAutoRefreshOn,
@@ -148,7 +158,12 @@ export const AdminReservations = () => {
     isError: isReservationsError,
     dataUpdatedAt,
     refetch: refetchReservations,
-  } = useReservations({ page, search: debouncedSearchTerm, refetchInterval });
+  } = useReservations({
+    page,
+    search: debouncedSearchTerm,
+    filters,
+    refetchInterval,
+  });
 
   // The list dims while a new page/search (placeholderData keeps the previous
   // one on screen) or a manual refresh loads. Background auto-refreshes stay
@@ -229,9 +244,9 @@ export const AdminReservations = () => {
         <StatTile label="Ove godine" stats={stats?.year} isLoading={isLoadingStats} />
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {!(isLoadingReservations && !reservationsData) && (
-          <div className="relative flex-1">
+          <div className="relative basis-full sm:basis-0 sm:flex-1">
             <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
 
             <input
@@ -259,7 +274,29 @@ export const AdminReservations = () => {
         <Button
           type="button"
           variant="outline"
-          className="h-12 shrink-0"
+          className="h-12 flex-1 sm:flex-none"
+          aria-label={
+            activeFilterCount > 0
+              ? `Filteri (aktivno: ${activeFilterCount})`
+              : "Filteri"
+          }
+          aria-expanded={isFilterPanelOpen}
+          aria-controls="reservation-filters"
+          onClick={() => setIsFilterPanelOpen((open) => !open)}
+        >
+          <IoFunnelOutline className="size-5" aria-hidden="true" />
+          <span className="hidden sm:inline">Filteri</span>
+          {activeFilterCount > 0 && (
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-brand-yellow-500 text-xs font-bold text-brand-black-900">
+              {activeFilterCount}
+            </span>
+          )}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 flex-1 sm:flex-none"
           onClick={handleRefresh}
           disabled={isManualRefreshing}
           aria-label="Osveži rezervacije"
@@ -271,12 +308,30 @@ export const AdminReservations = () => {
         </Button>
       </div>
 
+      {isFilterPanelOpen && (
+        <div id="reservation-filters">
+          <ReservationFiltersPanel
+            filters={filters}
+            onChange={setFilters}
+            onReset={() => setFilters(DEFAULT_RESERVATION_FILTERS)}
+            canReset={activeFilterCount > 0}
+          />
+        </div>
+      )}
+
       <AutoRefreshControl
         enabled={isAutoRefreshOn}
         onToggle={setAutoRefresh}
         updatedAt={dataUpdatedAt}
         className="-mb-2"
       />
+
+      {reservationsData && (debouncedSearchTerm || activeFilterCount > 0) && (
+        <p className="-mb-2 text-sm text-ink-muted">
+          Pronađeno:{" "}
+          <span className="font-bold text-ink">{reservationsData.total}</span>
+        </p>
+      )}
 
       <div className="h-1">{isRefetchingList && <LoadingBar />}</div>
 
@@ -301,11 +356,24 @@ export const AdminReservations = () => {
               onDelete={() => setPendingDeleteId(reservation.id)}
             />
           ))
-        ) : debouncedSearchTerm ? (
-          <Card>
+        ) : activeFilterCount > 0 || debouncedSearchTerm ? (
+          <Card className="flex flex-col items-center gap-3">
             <p className="text-center text-ink-muted">
-              Nema rezultata za &quot;{debouncedSearchTerm}&quot;.
+              {activeFilterCount > 0
+                ? "Nema rezervacija za izabrane filtere."
+                : `Nema rezultata za "${debouncedSearchTerm}".`}
             </p>
+
+            {activeFilterCount > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setFilters(DEFAULT_RESERVATION_FILTERS)}
+              >
+                Poništi filtere
+              </Button>
+            )}
           </Card>
         ) : (
           <Card>

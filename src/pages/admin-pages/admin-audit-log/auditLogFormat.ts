@@ -38,12 +38,19 @@ const FIELD_LABELS: Record<string, string> = {
   firstName: "Ime",
   lastName: "Prezime",
   email: "Email",
+  role: "Uloga",
+  isActive: "Aktivan",
 };
 
 const SEVERITY_LABELS: Record<string, string> = {
   info: "Obaveštenje",
   warning: "Upozorenje",
   danger: "Hitno",
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  owner: "Vlasnik",
+  admin: "Administrator",
 };
 
 const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -68,6 +75,7 @@ export const formatValue = (field: string, value: unknown): string => {
   const text = String(value);
 
   if (field === "severity") return SEVERITY_LABELS[text] ?? text;
+  if (field === "role") return ROLE_LABELS[text] ?? text;
 
   const date = DATE_PATTERN.exec(text);
 

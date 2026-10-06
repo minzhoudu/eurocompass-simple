@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createContext, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance, { setAccessToken } from "../config/axiosInstance";
+import { UserRole } from "../shared/models";
 
 const SESSION_CHECK_INTERVAL_MS = 5 * 60 * 1000;
 
@@ -14,6 +15,8 @@ export const UserContext = createContext<{
 });
 
 export type UserContextType = {
+  id: number;
+  role: UserRole;
   firstName: string;
   lastName: string;
   email: string;

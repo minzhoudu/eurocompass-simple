@@ -34,6 +34,11 @@ export const AdminAuditLog = lazy(() =>
     default: module.AdminAuditLog,
   })),
 );
+export const AdminUsers = lazy(() =>
+  import("../pages/admin-pages/admin-users").then((module) => ({
+    default: module.AdminUsers,
+  })),
+);
 export const AdminInformations = lazy(() =>
   import("../components/admin/AdminInformations").then((module) => ({
     default: module.AdminInformations,

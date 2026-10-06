@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Chart colours (validated with the data-viz palette checker against the
+   white / slate-800 card surfaces: colour-blind separation, contrast >= 3:1).
+   A colour follows its entity everywhere: blue = Kruševac, orange = Beograd,
+   green = "all passengers"; grey is the de-emphasis colour. */
+.viz-root {
+  --viz-krusevac: #2a78d6;
+  --viz-beograd: #eb6834;
+  --viz-total: #1baf7a;
+  --viz-dim: #8f8d87;
+}
+
+.dark .viz-root {
+  --viz-krusevac: #3987e5;
+  --viz-beograd: #d95926;
+  --viz-total: #199e70;
+  --viz-dim: #64748b;
+}
+
 html,
 body {
   overflow-x: hidden;

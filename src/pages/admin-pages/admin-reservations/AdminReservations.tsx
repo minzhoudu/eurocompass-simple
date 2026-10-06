@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useSearchParams } from "react-router-dom";
 import {
   IoCloseCircle,
   IoDownloadOutline,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/io5";
 
 import { AdminPageHeader, AutoRefreshControl } from "../../../components";
+import { ReservationAnalytics } from "./ReservationAnalytics";
 import { ReservationFiltersPanel } from "./ReservationFiltersPanel";
 import {
   Alert,
@@ -90,9 +92,7 @@ const ReservationRow = ({
     <div className="flex items-start justify-between gap-3">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="truncate font-bold text-ink">
-            {reservation.fullName}
-          </p>
+          <p className="truncate font-bold text-ink">{reservation.fullName}</p>
           {reservation.isDuplicateTrip && (
             <Badge variant="outline">Ponovljena rezervacija</Badge>
           )}
@@ -116,10 +116,7 @@ const ReservationRow = ({
         label="Datum putovanja"
         value={`${getFormattedDate(reservation.travelDate)} u ${reservation.travelTime}`}
       />
-      <Field
-        label="Poslato"
-        value={formatSubmittedAt(reservation.createdAt)}
-      />
+      <Field label="Poslato" value={formatSubmittedAt(reservation.createdAt)} />
     </div>
 
     {reservation.note && (
@@ -130,7 +127,7 @@ const ReservationRow = ({
   </div>
 );
 
-export const AdminReservations = () => {
+const ReservationsList = () => {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 400);
@@ -227,21 +224,9 @@ export const AdminReservations = () => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-      <Helmet>
-        <title>Admin | Rezervacije</title>
-        <meta name="robots" content="noindex" />
-      </Helmet>
-
-      <AdminPageHeader
-        title="Rezervacije"
-        description="Rezervacije poslate preko sajta u poslednjih godinu dana."
-      />
-
+    <div className="flex flex-col gap-6">
       {isExportError && (
-        <Alert variant="error">
-          Izvoz nije uspeo. Pokušajte ponovo.
-        </Alert>
+        <Alert variant="error">Izvoz nije uspeo. Pokušajte ponovo.</Alert>
       )}
 
       {isReservationsError && (
@@ -252,7 +237,11 @@ export const AdminReservations = () => {
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatTile label="Danas" stats={stats?.today} isLoading={isLoadingStats} />
+        <StatTile
+          label="Danas"
+          stats={stats?.today}
+          isLoading={isLoadingStats}
+        />
         <StatTile
           label="Ova nedelja"
           stats={stats?.week}
@@ -263,12 +252,16 @@ export const AdminReservations = () => {
           stats={stats?.month}
           isLoading={isLoadingStats}
         />
-        <StatTile label="Ove godine" stats={stats?.year} isLoading={isLoadingStats} />
+        <StatTile
+          label="Ove godine"
+          stats={stats?.year}
+          isLoading={isLoadingStats}
+        />
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
         {!(isLoadingReservations && !reservationsData) && (
-          <div className="relative basis-full sm:basis-0 sm:flex-1">
+          <div className="relative basis-full sm:flex-1 sm:basis-0">
             <IoSearchOutline className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-ink-subtle" />
 
             <input
@@ -466,6 +459,69 @@ export const AdminReservations = () => {
         onConfirm={confirmDelete}
         onCancel={() => setPendingDeleteId(null)}
       />
+    </div>
+  );
+};
+
+type View = "list" | "stats";
+
+const VIEWS: { key: View; label: string }[] = [
+  { key: "list", label: "Lista" },
+  { key: "stats", label: "Statistika" },
+];
+
+export const AdminReservations = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view: View =
+    searchParams.get("prikaz") === "statistika" ? "stats" : "list";
+
+  const selectView = (next: View) =>
+    setSearchParams(next === "stats" ? { prikaz: "statistika" } : {}, {
+      replace: true,
+    });
+
+  return (
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+      <Helmet>
+        <title>
+          {view === "stats" ? "Admin | Statistika" : "Admin | Rezervacije"}
+        </title>
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
+      <AdminPageHeader
+        title="Rezervacije"
+        description={
+          view === "stats"
+            ? "Pregled rezervacija po datumu putovanja."
+            : "Rezervacije poslate preko sajta u poslednjih godinu dana."
+        }
+      />
+
+      <div
+        role="group"
+        aria-label="Prikaz"
+        className="inline-flex self-start rounded-lg bg-sunken p-1"
+      >
+        {VIEWS.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            aria-pressed={view === item.key}
+            onClick={() => selectView(item.key)}
+            className={cn(
+              "rounded-md px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow-500",
+              view === item.key
+                ? "bg-raised text-ink shadow-card"
+                : "text-ink-muted hover:text-ink",
+            )}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {view === "stats" ? <ReservationAnalytics /> : <ReservationsList />}
     </div>
   );
 };

@@ -7,6 +7,7 @@ export * from "./useDeleteReservation";
 export * from "./useExportReservations";
 export * from "./useInformation";
 export * from "./useNotices";
+export * from "./useReservationAnalytics";
 export * from "./useReservations";
 export * from "./useReservationsByDate";
 export * from "./useReservationStats";

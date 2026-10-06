@@ -7,6 +7,7 @@ export const ENTITY_LABELS: Record<AuditEntityType, string> = {
   blocked_date: "Blokirani termini",
   information: "Cene i informacije",
   user: "Nalozi",
+  audit: "Istorija",
 };
 
 const FIELD_LABELS: Record<string, string> = {
@@ -40,6 +41,10 @@ const FIELD_LABELS: Record<string, string> = {
   email: "Email",
   role: "Uloga",
   isActive: "Aktivan",
+  // deleted audit entry
+  entrySummary: "Obrisani zapis",
+  entryActor: "Zapis je napravio",
+  entryTime: "Vreme zapisa",
 };
 
 const SEVERITY_LABELS: Record<string, string> = {

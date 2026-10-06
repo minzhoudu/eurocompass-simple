@@ -6,6 +6,7 @@ import {
   IoFunnelOutline,
   IoRefreshOutline,
   IoSearchOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
 import {
@@ -25,15 +26,20 @@ import {
   Card,
   ChoiceButton,
   cn,
+  ConfirmDialog,
   countActiveAuditFilters,
   DEFAULT_AUDIT_LOG_FILTERS,
   getCurrentDate,
   getFormattedDate,
+  getApiErrorMessage,
+  IconButton,
   LoadingBar,
+  pluralize,
   Skeleton,
   useAuditLog,
   useAutoRefresh,
   useDebouncedValue,
+  useDeleteAuditEntry,
 } from "../../../shared";
 import {
   ENTITY_LABELS,
@@ -44,6 +50,7 @@ import {
   getFieldLabel,
   sortByFieldOrder,
 } from "./auditLogFormat";
+import { ClearAuditDialog } from "./ClearAuditDialog";
 
 const WEEKDAY_NAMES = [
   "nedelja",
@@ -130,7 +137,13 @@ const EntryDetails = ({ entry }: { entry: AuditLogEntry }) => {
   );
 };
 
-const EntryRow = ({ entry }: { entry: AuditLogEntry }) => (
+const EntryRow = ({
+  entry,
+  onDelete,
+}: {
+  entry: AuditLogEntry;
+  onDelete: () => void;
+}) => (
   <li className="flex gap-3 py-3 first:pt-0 last:pb-0 sm:gap-4">
     <time
       dateTime={entry.createdAt}
@@ -154,6 +167,15 @@ const EntryRow = ({ entry }: { entry: AuditLogEntry }) => (
 
       <EntryDetails entry={entry} />
     </div>
+
+    <IconButton
+      label={`Obriši zapis: ${entry.summary}`}
+      tone="danger"
+      className="-my-1 shrink-0 self-start"
+      onClick={onDelete}
+    >
+      <IoTrashOutline className="size-[1.15rem]" />
+    </IconButton>
   </li>
 );
 
@@ -287,6 +309,19 @@ export const AdminAuditLog = () => {
     DEFAULT_AUDIT_LOG_FILTERS,
   );
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [isClearOpen, setIsClearOpen] = useState(false);
+  // Result of the last delete, shown above the list until the next action.
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<AuditLogEntry | null>(
+    null,
+  );
+  const {
+    mutate: deleteEntry,
+    isPending: isDeletingEntry,
+    isError: isDeleteEntryError,
+    error: deleteEntryError,
+    reset: resetDeleteEntry,
+  } = useDeleteAuditEntry();
   const activeFilterCount = countActiveAuditFilters(filters);
 
   // A new search or filter can leave the current page past the end.
@@ -415,7 +450,37 @@ export const AdminAuditLog = () => {
           />
           <span className="hidden sm:inline">Osveži</span>
         </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 flex-1 sm:flex-none"
+          onClick={() => {
+            setResultMessage(null);
+            resetDeleteEntry();
+            setIsClearOpen(true);
+          }}
+          aria-label="Obriši zapise istorije"
+        >
+          <IoTrashOutline className="size-5" aria-hidden="true" />
+          <span className="hidden sm:inline">Obriši zapise</span>
+        </Button>
       </div>
+
+      {resultMessage && (
+        <Alert variant="info" role="status">
+          {resultMessage}
+        </Alert>
+      )}
+
+      {isDeleteEntryError && (
+        <Alert variant="error">
+          {getApiErrorMessage(
+            deleteEntryError,
+            "Brisanje nije uspelo. Pokušajte ponovo.",
+          )}
+        </Alert>
+      )}
 
       {isFilterPanelOpen && (
         <div id="audit-log-filters">
@@ -466,7 +531,15 @@ export const AdminAuditLog = () => {
               <Card>
                 <ul className="divide-y divide-line">
                   {dayEntries.map((entry) => (
-                    <EntryRow key={entry.id} entry={entry} />
+                    <EntryRow
+                      key={entry.id}
+                      entry={entry}
+                      onDelete={() => {
+                        setResultMessage(null);
+                        resetDeleteEntry();
+                        setPendingDelete(entry);
+                      }}
+                    />
                   ))}
                 </ul>
               </Card>
@@ -522,6 +595,48 @@ export const AdminAuditLog = () => {
             Sledeća
           </Button>
         </div>
+      )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Obrisati ovaj zapis?"
+        description={
+          pendingDelete ? (
+            <>
+              <span className="block font-semibold text-ink">
+                {pendingDelete.summary}
+              </span>
+              <span className="mt-2 block">
+                Zapis se briše trajno. U istoriji ostaje nova stavka da je
+                obrisan, sa vašim imenom.
+              </span>
+            </>
+          ) : undefined
+        }
+        isLoading={isDeletingEntry}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+
+          deleteEntry(pendingDelete.id, {
+            onSuccess: () => setResultMessage("Zapis je obrisan."),
+            onSettled: () => setPendingDelete(null),
+          });
+        }}
+        onCancel={() => setPendingDelete(null)}
+      />
+
+      {isClearOpen && (
+        <ClearAuditDialog
+          onClose={() => setIsClearOpen(false)}
+          onCleared={(count) => {
+            setResultMessage(
+              count > 0
+                ? `Obrisano: ${count} ${pluralize(count, "zapis", "zapisa", "zapisa")}.`
+                : "Nema zapisa za brisanje u izabranom periodu.",
+            );
+            setPage(1);
+          }}
+        />
       )}
     </div>
   );

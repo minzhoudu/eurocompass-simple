@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import {
   IoCloseCircle,
+  IoDownloadOutline,
   IoFunnelOutline,
   IoRefreshOutline,
   IoSearchOutline,
@@ -19,6 +20,7 @@ import {
   ConfirmDialog,
   countActiveFilters,
   DEFAULT_RESERVATION_FILTERS,
+  getCurrentDate,
   getFormattedDate,
   IconButton,
   LoadingBar,
@@ -29,6 +31,7 @@ import {
   useAutoRefresh,
   useDebouncedValue,
   useDeleteReservation,
+  useExportReservations,
   useReservations,
   useReservationStats,
 } from "../../../shared";
@@ -171,6 +174,12 @@ export const AdminReservations = () => {
   const isRefetchingList =
     (isShowingPreviousList || isManualRefreshing) && !!reservationsData;
   const {
+    mutate: exportReservations,
+    isPending: isExporting,
+    isError: isExportError,
+  } = useExportReservations();
+
+  const {
     data: stats,
     isLoading: isLoadingStats,
     refetch: refetchStats,
@@ -194,6 +203,13 @@ export const AdminReservations = () => {
       setIsManualRefreshing(false);
     }
   };
+
+  const handleExport = () =>
+    exportReservations({
+      search: debouncedSearchTerm,
+      filters,
+      filename: `rezervacije-${getCurrentDate()}.csv`,
+    });
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchTerm(event.target.value);
@@ -221,6 +237,12 @@ export const AdminReservations = () => {
         title="Rezervacije"
         description="Rezervacije poslate preko sajta u poslednjih godinu dana."
       />
+
+      {isExportError && (
+        <Alert variant="error">
+          Izvoz nije uspeo. Pokušajte ponovo.
+        </Alert>
+      )}
 
       {isReservationsError && (
         <Alert variant="error">
@@ -305,6 +327,24 @@ export const AdminReservations = () => {
             className={cn("size-5", isManualRefreshing && "animate-spin")}
           />
           <span className="hidden sm:inline">Osveži</span>
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 flex-1 sm:flex-none"
+          onClick={handleExport}
+          disabled={isExporting || !reservationsData?.total}
+          aria-label="Izvezi u CSV sve rezervacije koje odgovaraju pretrazi i filterima"
+          title="Izvezi u CSV (sve rezervacije po pretrazi i filterima)"
+        >
+          <IoDownloadOutline
+            className={cn("size-5", isExporting && "animate-pulse")}
+            aria-hidden="true"
+          />
+          <span className="hidden sm:inline">
+            {isExporting ? "Izvoz..." : "Izvezi"}
+          </span>
         </Button>
       </div>
 

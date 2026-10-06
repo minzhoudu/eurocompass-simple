@@ -5,6 +5,7 @@ import {
   IoCallOutline,
   IoChevronBack,
   IoChevronForward,
+  IoDownloadOutline,
   IoPrintOutline,
 } from "react-icons/io5";
 import { useSearchParams } from "react-router-dom";
@@ -16,6 +17,7 @@ import {
   CalendarDialog,
   Card,
   CITY_NAMES,
+  DEFAULT_RESERVATION_FILTERS,
   DepartureReservation,
   getCityName,
   getCurrentDate,
@@ -28,6 +30,7 @@ import {
   toDateValue,
   useAutoRefresh,
   useDepartureSchedule,
+  useExportReservations,
   useReservationsByDate,
 } from "../../../shared";
 
@@ -188,6 +191,24 @@ export const AdminPassengers = () => {
     refetch,
   } = useReservationsByDate(date, refetchInterval);
 
+  const {
+    mutate: exportReservations,
+    isPending: isExporting,
+    isError: isExportError,
+  } = useExportReservations();
+
+  // The whole day, ordered by departure time then station.
+  const handleExport = () =>
+    exportReservations({
+      filters: {
+        ...DEFAULT_RESERVATION_FILTERS,
+        travelFrom: date,
+        travelTo: date,
+        sort: "travel_asc",
+      },
+      filename: `putnici-${date}.csv`,
+    });
+
   const selectDate = (nextDate: string) =>
     setSearchParams(nextDate === today ? {} : { datum: nextDate }, {
       replace: true,
@@ -280,6 +301,17 @@ export const AdminPassengers = () => {
           variant="outline"
           size="sm"
           className="ml-auto"
+          onClick={handleExport}
+          disabled={isExporting || reservations.length === 0}
+        >
+          <IoDownloadOutline className="size-4" aria-hidden="true" />
+          {isExporting ? "Izvoz..." : "Izvezi CSV"}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
           onClick={() => window.print()}
         >
           <IoPrintOutline className="size-4" aria-hidden="true" />
@@ -299,6 +331,12 @@ export const AdminPassengers = () => {
       <p className="hidden text-lg font-bold text-ink print:block">
         {formatDayLabel(date)}
       </p>
+
+      {isExportError && (
+        <Alert variant="error" className="print:hidden">
+          Izvoz nije uspeo. Pokušajte ponovo.
+        </Alert>
+      )}
 
       {isError && (
         <Alert variant="error">

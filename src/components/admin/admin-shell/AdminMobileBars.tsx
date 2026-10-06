@@ -2,6 +2,7 @@ import { IoLogOutOutline, IoOpenOutline } from "react-icons/io5";
 import { Link, NavLink } from "react-router-dom";
 
 import { useUserContext } from "../../../contexts";
+import { IconButton } from "../../../shared";
 import { ThemeToggle } from "../../header/components/theme-toggle";
 import logo from "/images/eurocompass_logo.webp";
 import { ADMIN_NAV_LINKS } from "./adminNav";
@@ -12,6 +13,7 @@ const tabClasses =
 
 export const AdminTopBar = () => {
   const { user } = useUserContext();
+  const { logout, isLoggingOut } = useAdminLogout();
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-line bg-raised/95 px-4 backdrop-blur print:hidden lg:hidden">
@@ -24,14 +26,32 @@ export const AdminTopBar = () => {
           {user?.firstName}
         </span>
         <ThemeToggle />
+
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Pogledaj sajt"
+          title="Pogledaj sajt"
+          className="inline-flex size-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-sunken hover:text-ink"
+        >
+          <IoOpenOutline className="size-5" />
+        </a>
+
+        <IconButton
+          label="Izloguj se"
+          onClick={logout}
+          disabled={isLoggingOut}
+          className="sm:size-10"
+        >
+          <IoLogOutOutline className="size-5" />
+        </IconButton>
       </div>
     </header>
   );
 };
 
 export const AdminTabBar = () => {
-  const { logout, isLoggingOut } = useAdminLogout();
-
   return (
     <nav
       aria-label="Admin"
@@ -51,25 +71,6 @@ export const AdminTabBar = () => {
         </NavLink>
       ))}
 
-      <a
-        href="/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${tabClasses} text-ink-muted`}
-      >
-        <IoOpenOutline className="size-6" />
-        Sajt
-      </a>
-
-      <button
-        type="button"
-        onClick={logout}
-        disabled={isLoggingOut}
-        className={`${tabClasses} text-ink-muted disabled:opacity-50`}
-      >
-        <IoLogOutOutline className="size-6" />
-        Izlaz
-      </button>
     </nav>
   );
 };

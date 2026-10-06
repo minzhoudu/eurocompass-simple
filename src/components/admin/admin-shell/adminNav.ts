@@ -1,5 +1,6 @@
 import { IconType } from "react-icons";
 import {
+  IoMegaphoneOutline,
   IoPeopleOutline,
   IoPricetagOutline,
   IoReceiptOutline,
@@ -44,5 +45,12 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Putnici",
     path: "/admin/dashboard/putnici",
     icon: IoPeopleOutline,
+  },
+  {
+    id: 5,
+    label: "Obaveštenja",
+    shortLabel: "Obaveštenja",
+    path: "/admin/dashboard/obavestenja",
+    icon: IoMegaphoneOutline,
   },
 ];

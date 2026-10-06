@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Header, Footer, Main } from "../components";
+import { Header, Footer, Main, NoticeBanner } from "../components";
 import { cn, useTheme } from "../shared";
 
 export const AppLayout = () => {
@@ -12,6 +12,8 @@ export const AppLayout = () => {
         theme === "dark" && "dark",
       )}
     >
+      <NoticeBanner />
+
       <Header />
 
       <Main>

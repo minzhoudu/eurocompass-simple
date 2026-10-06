@@ -13,6 +13,7 @@ import { AdminLayout, AppLayout } from "./layouts";
 import {
   AdminDashboard,
   AdminLoginPage,
+  AdminNotices,
   AdminPassengers,
   AdminReservations,
   ErrorPage,
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
           {
             path: "putnici",
             element: <AdminPassengers />,
+          },
+          {
+            path: "obavestenja",
+            element: <AdminNotices />,
           },
         ],
       },

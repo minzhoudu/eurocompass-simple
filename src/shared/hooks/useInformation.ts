@@ -18,4 +18,7 @@ export const useInformation = ({
       return data;
     },
     staleTime,
+    // The service worker keeps the last answer, so ask even when the browser
+    // reports no connection (react-query would otherwise not try at all).
+    networkMode: "offlineFirst",
   });

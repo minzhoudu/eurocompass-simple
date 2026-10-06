@@ -1,5 +1,6 @@
 export * from "./header";
 export * from "./footer";
+export * from "./pwa";
 export * from "./main";
 export * from "./informations";
 export * from "./admin";

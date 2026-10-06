@@ -7,6 +7,7 @@ import "./index.css";
 import { OwnerRoute } from "./components/protected-route/OwnerRoute";
 import { UserProvider } from "./contexts";
 import { AppLayout } from "./layouts";
+import { listenForInstallPrompt, registerServiceWorker } from "./pwa";
 import {
   AdminAuditLog,
   AdminDashboard,
@@ -157,3 +158,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </div>
   </React.StrictMode>,
 );
+
+listenForInstallPrompt();
+registerServiceWorker();

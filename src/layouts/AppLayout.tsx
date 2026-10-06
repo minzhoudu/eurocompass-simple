@@ -1,5 +1,13 @@
 import { Outlet } from "react-router-dom";
-import { Header, Footer, Main, NoticeBanner, RouteFocus } from "../components";
+import {
+  Header,
+  Footer,
+  Main,
+  NoticeBanner,
+  OfflineBanner,
+  RouteFocus,
+  UpdateBanner,
+} from "../components";
 import { cn, useTheme } from "../shared";
 
 export const AppLayout = () => {
@@ -24,6 +32,8 @@ export const AppLayout = () => {
       {/* One sticky unit so the banner stays on top and the header sits right
           below it while scrolling, whatever the banner's height. */}
       <div className="sticky top-0 z-30 w-full">
+        <OfflineBanner />
+
         <NoticeBanner />
 
         <header>
@@ -38,6 +48,8 @@ export const AppLayout = () => {
       <Footer />
 
       <RouteFocus />
+
+      <UpdateBanner />
     </div>
   );
 };

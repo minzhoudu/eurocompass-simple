@@ -28,11 +28,11 @@ const WEEKDAYS = ["ned", "pon", "uto", "sre", "čet", "pet", "sub"];
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
-const toDateValue = (date: Date) =>
+export const toDateValue = (date: Date) =>
   `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
 // "YYYY-MM-DD" parsed as a local date; `new Date(string)` would read it as UTC.
-const parseDateValue = (date: string) => {
+export const parseDateValue = (date: string) => {
   const [year, month, day] = date.split("-").map(Number);
 
   return new Date(year, month - 1, day);

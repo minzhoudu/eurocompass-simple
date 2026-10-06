@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../config/axiosInstance";
 import { ReservationStats } from "../models";
 
-export const useReservationStats = () =>
+export const useReservationStats = (refetchInterval: number | false = false) =>
   useQuery({
     queryKey: ["reservationStats"],
     queryFn: async () => {
@@ -12,4 +12,5 @@ export const useReservationStats = () =>
       return data;
     },
     staleTime: 1000 * 60,
+    refetchInterval,
   });

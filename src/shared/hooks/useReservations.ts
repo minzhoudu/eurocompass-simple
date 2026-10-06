@@ -6,9 +6,14 @@ import { PaginatedReservations } from "../models";
 type UseReservationsParams = {
   page: number;
   search: string;
+  refetchInterval?: number | false;
 };
 
-export const useReservations = ({ page, search }: UseReservationsParams) =>
+export const useReservations = ({
+  page,
+  search,
+  refetchInterval = false,
+}: UseReservationsParams) =>
   useQuery({
     queryKey: ["reservations", { page, search }],
     queryFn: async () => {
@@ -20,4 +25,5 @@ export const useReservations = ({ page, search }: UseReservationsParams) =>
     },
     staleTime: 1000 * 60,
     placeholderData: keepPreviousData,
+    refetchInterval,
   });

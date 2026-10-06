@@ -7,7 +7,7 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 
-import { AdminPageHeader } from "../../../components";
+import { AdminPageHeader, AutoRefreshControl } from "../../../components";
 import {
   Alert,
   Badge,
@@ -21,6 +21,7 @@ import {
   Reservation,
   ReservationPeriodStats,
   Skeleton,
+  useAutoRefresh,
   useDebouncedValue,
   useDeleteReservation,
   useReservations,
@@ -134,23 +135,31 @@ export const AdminReservations = () => {
   }, [debouncedSearchTerm]);
 
   const {
+    enabled: isAutoRefreshOn,
+    setEnabled: setAutoRefresh,
+    refetchInterval,
+  } = useAutoRefresh();
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
+
+  const {
     data: reservationsData,
     isLoading: isLoadingReservations,
-    isFetching: isFetchingReservations,
+    isPlaceholderData: isShowingPreviousList,
     isError: isReservationsError,
+    dataUpdatedAt,
     refetch: refetchReservations,
-  } = useReservations({ page, search: debouncedSearchTerm });
+  } = useReservations({ page, search: debouncedSearchTerm, refetchInterval });
 
-  // With placeholderData keeping the previous page on screen, isFetching
-  // (not isLoading) is what actually fires while a new page/search request
-  // is in flight - isLoading only ever covers the very first load.
-  const isRefetchingList = isFetchingReservations && !!reservationsData;
+  // The list dims while a new page/search (placeholderData keeps the previous
+  // one on screen) or a manual refresh loads. Background auto-refreshes stay
+  // invisible so the list doesn't flicker every few seconds.
+  const isRefetchingList =
+    (isShowingPreviousList || isManualRefreshing) && !!reservationsData;
   const {
     data: stats,
     isLoading: isLoadingStats,
-    isFetching: isFetchingStats,
     refetch: refetchStats,
-  } = useReservationStats();
+  } = useReservationStats(refetchInterval);
   const { mutate: deleteReservation, isPending: isDeleting } =
     useDeleteReservation();
 
@@ -161,11 +170,14 @@ export const AdminReservations = () => {
     ? Math.max(1, Math.ceil(reservationsData.total / reservationsData.pageSize))
     : 1;
 
-  const isRefreshing = isFetchingReservations || isFetchingStats;
+  const handleRefresh = async () => {
+    setIsManualRefreshing(true);
 
-  const handleRefresh = () => {
-    refetchReservations();
-    refetchStats();
+    try {
+      await Promise.all([refetchReservations(), refetchStats()]);
+    } finally {
+      setIsManualRefreshing(false);
+    }
   };
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) =>
@@ -249,15 +261,22 @@ export const AdminReservations = () => {
           variant="outline"
           className="h-12 shrink-0"
           onClick={handleRefresh}
-          disabled={isRefreshing}
+          disabled={isManualRefreshing}
           aria-label="Osveži rezervacije"
         >
           <IoRefreshOutline
-            className={cn("size-5", isRefreshing && "animate-spin")}
+            className={cn("size-5", isManualRefreshing && "animate-spin")}
           />
           <span className="hidden sm:inline">Osveži</span>
         </Button>
       </div>
+
+      <AutoRefreshControl
+        enabled={isAutoRefreshOn}
+        onToggle={setAutoRefresh}
+        updatedAt={dataUpdatedAt}
+        className="-mb-2"
+      />
 
       <div className="h-1">{isRefetchingList && <LoadingBar />}</div>
 

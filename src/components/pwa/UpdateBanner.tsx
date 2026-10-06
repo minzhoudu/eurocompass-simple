@@ -14,7 +14,7 @@ export const UpdateBanner = () => {
   return (
     <div
       role="status"
-      className="fixed inset-x-4 bottom-4 z-40 mx-auto flex max-w-md flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-raised p-4 text-ink shadow-2xl"
+      className="fixed inset-x-4 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-md flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-raised p-4 text-ink shadow-2xl lg:bottom-4"
     >
       <p className="font-semibold">Dostupna je nova verzija sajta.</p>
 

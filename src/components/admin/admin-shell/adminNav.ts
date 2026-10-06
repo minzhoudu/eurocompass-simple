@@ -2,12 +2,19 @@ import { IconType } from "react-icons";
 
 import { UserRole } from "../../../shared/models";
 import {
+  IoDocumentText,
   IoDocumentTextOutline,
-  IoShieldCheckmarkOutline,
+  IoMegaphone,
   IoMegaphoneOutline,
+  IoPeople,
   IoPeopleOutline,
+  IoPricetag,
   IoPricetagOutline,
+  IoReceipt,
   IoReceiptOutline,
+  IoShieldCheckmark,
+  IoShieldCheckmarkOutline,
+  IoTime,
   IoTimeOutline,
 } from "react-icons/io5";
 
@@ -17,6 +24,8 @@ type AdminNavLink = {
   shortLabel: string;
   path: string;
   icon: IconType;
+  // Filled version for the open page (bottom tab bar on phones).
+  activeIcon: IconType;
   end?: boolean;
   // Hidden from (and refused for) everyone else; omit for all admins.
   roles?: UserRole[];
@@ -29,6 +38,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Polasci",
     path: "/admin/dashboard",
     icon: IoTimeOutline,
+    activeIcon: IoTime,
     end: true,
   },
   {
@@ -37,6 +47,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Cene",
     path: "/admin/dashboard/informacije",
     icon: IoPricetagOutline,
+    activeIcon: IoPricetag,
   },
   {
     id: 3,
@@ -44,6 +55,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Rezervacije",
     path: "/admin/dashboard/rezervacije",
     icon: IoReceiptOutline,
+    activeIcon: IoReceipt,
   },
   {
     id: 4,
@@ -51,6 +63,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Putnici",
     path: "/admin/dashboard/putnici",
     icon: IoPeopleOutline,
+    activeIcon: IoPeople,
   },
   {
     id: 5,
@@ -58,6 +71,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Obaveštenja",
     path: "/admin/dashboard/obavestenja",
     icon: IoMegaphoneOutline,
+    activeIcon: IoMegaphone,
   },
   {
     id: 6,
@@ -65,6 +79,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Istorija",
     path: "/admin/dashboard/istorija",
     icon: IoDocumentTextOutline,
+    activeIcon: IoDocumentText,
     roles: ["owner"],
   },
   {
@@ -73,6 +88,7 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
     shortLabel: "Admini",
     path: "/admin/dashboard/administratori",
     icon: IoShieldCheckmarkOutline,
+    activeIcon: IoShieldCheckmark,
     roles: ["owner"],
   },
 ];

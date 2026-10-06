@@ -77,6 +77,24 @@ export const PrivacyPolicy = () => {
         </p>
       </Section>
 
+      <Section title="Pamćenje podataka na vašem uređaju (opciono)">
+        <p>
+          Ako na formi za rezervaciju označite opciju &quot;Zapamti moje
+          podatke na ovom uređaju&quot;, vaše ime, email adresa, broj telefona
+          i polazna stanica sačuvaju se u memoriji vašeg internet pregledača
+          (localStorage) kako bi sledeća rezervacija bila brža. Ovi podaci
+          ostaju samo na vašem uređaju, ne šalju se našem serveru zbog ovog
+          pamćenja i ne koriste se za praćenje.
+        </p>
+        <p>
+          Opcija je podrazumevano isključena. Sačuvane podatke možete obrisati
+          u bilo kom trenutku dugmetom &quot;Nisam ja / zaboravi podatke&quot;
+          na formi za rezervaciju, ili brisanjem podataka sajta u podešavanjima
+          pregledača. Automatski se brišu nakon godinu dana. Ne preporučujemo
+          korišćenje ove opcije na tuđem ili zajedničkom uređaju.
+        </p>
+      </Section>
+
       <Section title="Kolačići (cookies)">
         <p>
           Naš sajt ne koristi kolačiće za praćenje ili analitiku posetilaca.

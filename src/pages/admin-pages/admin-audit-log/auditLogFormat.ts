@@ -41,6 +41,10 @@ const FIELD_LABELS: Record<string, string> = {
   email: "Email",
   role: "Uloga",
   isActive: "Aktivan",
+  // deleted audit entry
+  entrySummary: "Obrisani zapis",
+  entryActor: "Zapis je napravio",
+  entryTime: "Vreme zapisa",
 };
 
 const SEVERITY_LABELS: Record<string, string> = {

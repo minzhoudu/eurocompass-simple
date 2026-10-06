@@ -21,3 +21,16 @@ export const useClearAuditLog = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["audit-log"] }),
   });
 };
+
+// Owner only. The server keeps a trace of what was removed.
+export const useDeleteAuditEntry = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["deleteAuditEntry"],
+    mutationFn: async (id: number) => {
+      await axiosInstance.delete(`/audit-log/${id}`);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["audit-log"] }),
+  });
+};

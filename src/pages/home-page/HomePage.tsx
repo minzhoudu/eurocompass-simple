@@ -1,11 +1,27 @@
 import { Helmet } from "react-helmet";
 
-import { Departures } from "../../components/departures";
+import { Departures, NextDepartures } from "../../components/departures";
 import { RouteMap } from "../../components/route-map";
-import { Alert, Card, SectionHeading, useInformation } from "../../shared";
+import {
+  Alert,
+  Card,
+  SectionHeading,
+  useBelgradeNow,
+  useBlockedDates,
+  useDepartureSchedule,
+  useInformation,
+} from "../../shared";
 
 export const HomePage = () => {
   const { data, isError, isLoading } = useInformation();
+  const { schedule } = useDepartureSchedule();
+  const { blockedDates } = useBlockedDates();
+  const now = useBelgradeNow();
+
+  // Live departure info needs the real saved schedule, not the built-in
+  // fallback used while it loads.
+  const live =
+    data?.info && !isError ? { schedule, blockedDates, now } : undefined;
 
   return (
     <>
@@ -29,7 +45,9 @@ export const HomePage = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-4xl px-4 lg:px-0">
+      <div className="flex w-full max-w-4xl flex-col gap-6 px-4 lg:px-0">
+        {live && <NextDepartures {...live} />}
+
         <Card className="flex flex-col gap-8">
           <SectionHeading eyebrow="Prevoz putnika na relaciji">
             Polasci
@@ -41,6 +59,7 @@ export const HomePage = () => {
               krusevac={data?.info?.startingTimesKrusevac}
               beograd={data?.info?.startingTimesBeograd}
               beogradSunday={data?.info?.saturdayBeograd}
+              live={live}
             />
           ) : (
             <Alert variant="error">

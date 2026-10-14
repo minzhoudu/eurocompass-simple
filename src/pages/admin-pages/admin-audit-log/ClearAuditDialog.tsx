@@ -64,8 +64,8 @@ export const ClearAuditDialog = ({
             Obrisati zapise istorije?
           </h2>
           <p className="text-ink-muted">
-            Izabrani zapisi se brišu trajno i ne mogu se vratiti. Sama akcija
-            brisanja ostaje zabeležena u istoriji.
+            Izabrani zapisi se brišu trajno i ne mogu se vratiti. Brisanje se ne
+            beleži u istoriji.
           </p>
         </div>
 

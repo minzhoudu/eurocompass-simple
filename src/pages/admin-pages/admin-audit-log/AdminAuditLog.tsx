@@ -607,8 +607,8 @@ export const AdminAuditLog = () => {
                 {pendingDelete.summary}
               </span>
               <span className="mt-2 block">
-                Zapis se briše trajno. U istoriji ostaje nova stavka da je
-                obrisan, sa vašim imenom.
+                Zapis se briše trajno i ne može se vratiti. Brisanje se ne
+                beleži u istoriji.
               </span>
             </>
           ) : undefined

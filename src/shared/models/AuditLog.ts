@@ -5,10 +5,11 @@ export const AUDIT_ENTITY_TYPES = [
   "blocked_date",
   "information",
   "user",
-  "audit",
 ] as const;
 
-export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number];
+// "audit" only exists on old entries from when deleting history was itself
+// recorded; they still display, but there is no filter for it any more.
+export type AuditEntityType = (typeof AUDIT_ENTITY_TYPES)[number] | "audit";
 
 export type AuditLogEntry = {
   id: number;
